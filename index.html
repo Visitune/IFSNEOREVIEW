@@ -196,6 +196,30 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Filters for Profile -->
+                <div class="filters-card">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label>Statut commentaires</label>
+                            <select id="profileCommentStatusFilter" class="filter-select">
+                                <option value="">Tous</option>
+                                <option value="pending">En attente</option>
+                                <option value="resolved">Résolus</option>
+                                <option value="with_comments">Avec commentaires</option>
+                                <option value="none">Sans commentaires</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Recherche</label>
+                            <input type="text" id="profileSearchInput" placeholder="Mots-clés..." class="filter-input">
+                        </div>
+                    </div>
+                    <div class="filters-actions">
+                        <button onclick="showAll()" class="btn btn-secondary">Afficher Tout</button>
+                        <button onclick="showOnlyWithComments()" class="btn btn-primary">Avec commentaires</button>
+                    </div>
+                </div>
                 
                 <!-- Upload Zone -->
                 <div id="uploadZone" class="upload-zone">

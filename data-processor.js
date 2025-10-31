@@ -390,7 +390,7 @@ class DataProcessor {
                         `<div class="field-display">${value || 'N/A'}</div>` : 
                         `<span>${value || 'N/A'}</span>`;
                     
-                    html += `<tr class="table-row-clickable" data-field-id="${fieldId}" onclick="openCommentModal(this)">
+                    html += `<tr class="table-row-clickable" data-field-id="${fieldId}" data-comment-status="${commentStatus}" onclick="openCommentModal(this)">
                                 <td class="font-medium">${field}</td>
                                 <td>${displayValue}</td>
                                 <td class="comment-status-cell">
@@ -737,6 +737,16 @@ class DataProcessor {
     setupTableFilters() {
         const filterChecklistDebounced = debounce(() => this.filterChecklist(), 300);
         const filterNonConformitiesDebounced = debounce(() => this.filterNonConformities(), 300);
+        const filterProfileDebounced = debounce(() => this.filterProfileTable(), 300);
+
+        ['profileCommentStatusFilter', 'profileSearchInput'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                const eventType = id === 'profileSearchInput' ? 'keyup' : 'change';
+                element.removeEventListener(eventType, filterProfileDebounced);
+                element.addEventListener(eventType, filterProfileDebounced);
+            }
+        });
 
         ['chapterFilter', 'scoreFilter', 'commentStatusFilter', 'searchInput'].forEach(id => {
             const element = document.getElementById(id);
@@ -813,22 +823,66 @@ class DataProcessor {
     }
 
     showAll() {
-        const filters = ['chapterFilter', 'scoreFilter', 'commentStatusFilter', 'searchInput'];
-        filters.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.value = '';
-            }
-        });
-        
-        this.filterChecklist();
+        const activeTab = document.querySelector('.tab-content.active')?.id;
+
+        if (activeTab === 'profil') {
+            const filters = ['profileCommentStatusFilter', 'profileSearchInput'];
+            filters.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.value = '';
+            });
+            this.filterProfileTable();
+        } else {
+            const filters = ['chapterFilter', 'scoreFilter', 'commentStatusFilter', 'searchInput'];
+            filters.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.value = '';
+            });
+            this.filterChecklist();
+        }
     }
 
     showOnlyWithComments() {
-        const commentStatusFilter = document.getElementById('commentStatusFilter');
-        if (commentStatusFilter) {
-            commentStatusFilter.value = 'pending';
+        const activeTab = document.querySelector('.tab-content.active')?.id;
+
+        if (activeTab === 'profil') {
+            const commentStatusFilter = document.getElementById('profileCommentStatusFilter');
+            if (commentStatusFilter) {
+                commentStatusFilter.value = 'with_comments';
+            }
+            this.filterProfileTable();
+        } else {
+            const commentStatusFilter = document.getElementById('commentStatusFilter');
+            if (commentStatusFilter) {
+                commentStatusFilter.value = 'pending'; // Or a more general 'with comments' status if available
+            }
+            this.filterChecklist();
         }
-        this.filterChecklist();
+    }
+
+    filterProfileTable() {
+        const status = document.getElementById('profileCommentStatusFilter')?.value;
+        const search = document.getElementById('profileSearchInput')?.value.toLowerCase();
+        
+        const rows = document.querySelectorAll('#companyProfileTable tr');
+        
+        rows.forEach(row => {
+            if (row.cells.length <= 1) return;
+            
+            let show = true;
+            const commentStatus = row.dataset.commentStatus;
+
+            if (status) {
+                if (status === 'with_comments') {
+                    if (commentStatus === 'none') show = false;
+                } else {
+                    if (commentStatus !== status) show = false;
+                }
+            }
+
+            if (search && !row.textContent.toLowerCase().includes(search)) show = false;
+            
+            row.style.display = show ? '' : ''; // Using table-row display
+        });
     }
 }
