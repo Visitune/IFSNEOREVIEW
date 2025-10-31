@@ -1,4 +1,4 @@
-# IFS BEO Reviewer
+# IFS NEO Reviewer
 
 Outil d'assistance pour les auditeurs et reviewers travaillant sur les référentiels IFS (International Featured Standards).
 
