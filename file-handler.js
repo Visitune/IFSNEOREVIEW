@@ -136,7 +136,7 @@ class FileHandler {
                 }
             });
             
-            this.uiManager.updateCurrentAuditName(`IFS Reviewer V2 - ${companyName}`);
+            this.uiManager.updateCurrentAuditName(`IFS Reviewer - ${companyName}`);
             this.uiManager.updateSessionInfo(coid);
             
             if (this.state.get().auditData?.data?.modules?.food_8?.result?.overall) {
@@ -203,7 +203,7 @@ class FileHandler {
                 }
             });
             
-            this.uiManager.updateCurrentAuditName(`IFS Reviewer V2 - ${companyName} (Package v${this.state.get().packageVersion})`);
+            this.uiManager.updateCurrentAuditName(`IFS Reviewer - ${companyName} (Package v${this.state.get().packageVersion})`);
             this.uiManager.updateSessionInfo(coid);
             
             this.uiManager.updateElementText('totalRequirements', this.state.get().checklistData.length);
@@ -331,6 +331,7 @@ class FileHandler {
             };
             
             this.downloadFile(workPackage, `TRAVAIL_${coid}_${this.sanitizeFileName(companyName)}_${this.getDateStamp()}.ifsr`);
+            this.state.setState({ hasUnsavedChanges: false });
             this.uiManager.showSuccess(`✅ Travail sauvegardé`);
             
         } catch (error) {
@@ -372,6 +373,7 @@ class FileHandler {
             
             const filename = `PACKAGE_${packageType}_${coid}_${this.sanitizeFileName(companyName)}_v${this.state.get().packageVersion}_${this.getDateStamp()}.ifsp`;
             this.downloadFile(packageData, filename);
+            this.state.setState({ hasUnsavedChanges: false });
             
             this.uiManager.showSuccess(`📦 Package créé : ${filename}`);
             this.uiManager.closePackageModal();
@@ -428,6 +430,7 @@ class FileHandler {
             const filename = `RAPPORT_IFS_${coid}_${this.sanitizeFileName(companyName)}_${this.getDateStamp()}.xlsx`;
             
             XLSX.writeFile(wb, filename);
+            this.state.setState({ hasUnsavedChanges: false });
             this.uiManager.showSuccess(`📊 Rapport Excel généré : ${filename}`);
             
         } catch (error) {

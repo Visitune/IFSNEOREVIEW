@@ -6,7 +6,7 @@ L'application permet de charger des fichiers d'audit, de naviguer dans les exige
 
 ## Comment utiliser
 
-1.  Ouvrez le fichier `IFSNOEREVIEWERv2 fonctionenlle.html` dans votre navigateur web.
+1.  Ouvrez le fichier `index.html` dans votre navigateur web.
 2.  Chargez un fichier d'audit (`.ifsr`) ou un package de revue (`.ifsp`) via la zone d'upload.
 3.  Naviguez entre les onglets "Profil", "Checklist" et "Non-conformités" pour analyser les données.
 4.  Cliquez sur une ligne pour ouvrir la fenêtre de commentaires et échanger entre le mode "Reviewer" et "Auditeur".

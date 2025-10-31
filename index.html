@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IFS Reviewer V2 - Mode Collaboratif</title>
+    <title>IFS Reviewer - Mode Collaboratif</title>
     
     <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script> 
@@ -30,8 +30,7 @@
         <div class="sidebar-header">
             <div class="sidebar-brand">
                 <i class="fas fa-shield-alt text-xl"></i>
-                <span class="font-bold text-lg sidebar-text">IFS Review Tool V2</span>
-            </div>
+                                        <span class="font-bold text-lg sidebar-text">IFS Review Tool</span>            </div>
             <button id="sidebarCollapse" class="sidebar-collapse-btn">
                 <i class="fas fa-chevron-left"></i>
             </button>
@@ -167,6 +166,7 @@
                         <span id="storageTypeTop">Mode: <strong id="headerMode">Reviewer</strong></span>
                         <span class="separator">|</span>
                         <span id="sessionIdTop">COID: ----</span>
+                        <span id="unsavedChangesWarning" class="text-yellow-500 font-bold ml-4 hidden"><i class="fas fa-exclamation-triangle"></i> Modifs non enregistrées</span>
                         <span class="separator">|</span>
                         <span id="packageVersionInfo">v1</span>
                     </div>
@@ -470,7 +470,7 @@
                     <h2>Aide et Workflow</h2>
                 </div>
                 <div class="content-card">
-                    <h3>Guide d'Utilisation - IFS Reviewer V2</h3>
+                    <h3>Guide d'Utilisation - IFS Reviewer</h3>
                     <p>Cet outil est conçu pour simplifier et structurer les échanges entre le <strong>Reviewer</strong> (qui relit et commente l'audit) et l'<strong>Auditeur</strong> (qui répond aux commentaires).</p>
             
                     <div class="accordion-item">

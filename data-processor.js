@@ -77,7 +77,7 @@ class DataProcessor {
                 }
             });
 
-            this.uiManager.updateCurrentAuditName(`IFS Reviewer V2 - ${companyName}`);
+            this.uiManager.updateCurrentAuditName(`IFS Reviewer - ${companyName}`);
             this.uiManager.updateSessionInfo(coid);
             
             this.uiManager.showSuccess(`✅ Nouveau dossier créé : ${companyName} (${totalRequirements} exigences)`);
@@ -572,7 +572,7 @@ class DataProcessor {
             [fieldId]: newConversation
         };
 
-        this.state.setState({ conversations: newConversations });
+        this.state.setState({ conversations: newConversations, hasUnsavedChanges: true });
     }
 
     getConversationStatus(conversation) {
@@ -614,7 +614,7 @@ class DataProcessor {
                 details
             });
             conversations[fieldId].lastActivity = new Date().toISOString();
-            this.state.setState({ conversations });
+            this.state.setState({ conversations, hasUnsavedChanges: true });
         }
     }
 

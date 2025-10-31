@@ -12,6 +12,7 @@ class State {
             requirementNumberMapping: {},
             currentSession: { id: null, name: '', created: null, lastModified: null, data: null },
             packageVersion: 1,
+            hasUnsavedChanges: false,
         };
         this.subscribers = [];
         this.subscribe = this.subscribe.bind(this); // Explicitly bind subscribe

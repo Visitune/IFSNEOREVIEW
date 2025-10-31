@@ -18,6 +18,12 @@ class UIManager {
         }
         // Also refresh counters on all state changes for simplicity
         this.dataProcessor.refreshAllCounters();
+
+        // Show/hide unsaved changes warning
+        const warningElement = document.getElementById('unsavedChangesWarning');
+        if (warningElement) {
+            warningElement.classList.toggle('hidden', !newState.hasUnsavedChanges);
+        }
     }
 
     initUI() {
@@ -71,6 +77,13 @@ class UIManager {
         window.showAll = () => this.dataProcessor.showAll(); // Delegate to DataProcessor
         window.showOnlyWithComments = () => this.dataProcessor.showOnlyWithComments(); // Delegate to DataProcessor
         window.toggleAccordion = (element) => this.toggleAccordion(element);
+
+        window.addEventListener('beforeunload', (event) => {
+            if (this.state.get().hasUnsavedChanges) {
+                event.preventDefault();
+                event.returnValue = ''; // For Chrome/Firefox
+            }
+        });
     }
 
     setupFileUIEventListeners() {
