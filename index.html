@@ -344,6 +344,7 @@
                             <label>Statut commentaires</label>
                             <select id="commentStatusFilter" class="filter-select">
                                 <option value="">Tous</option>
+                                <option value="with_comments">Avec commentaires</option>
                                 <option value="pending">En attente</option>
                                 <option value="resolved">Résolus</option>
                                 <option value="none">Sans commentaires</option>
@@ -385,15 +386,15 @@
                     <h2>Non-Conformités & Non-Applicables</h2>
                     <div class="tab-counters">
                         <div class="counter-badge pending">
-                            <span class="count" id="ncPendingCount">0</span>
+                            <span class="count" id="nonconformitesPendingCount">0</span>
                             <span class="label">En attente</span>
                         </div>
                         <div class="counter-badge resolved">
-                            <span class="count" id="ncResolvedCount">0</span>
+                            <span class="count" id="nonconformitesResolvedCount">0</span>
                             <span class="label">Résolus</span>
                         </div>
                         <div class="counter-badge total">
-                            <span class="count" id="ncTotalCount">0</span>
+                            <span class="count" id="nonconformitesTotalCount">0</span>
                             <span class="label">Total</span>
                         </div>
                     </div>

@@ -10,13 +10,20 @@ class UIManager {
 
     onStateChange(newState) {
         console.log('UIManager State changed:', newState);
-        // If a comment modal is open, refresh its history.
+
+        // Always refresh all table views
+        this.dataProcessor.renderCompanyProfile();
+        this.dataProcessor.renderChecklistTable();
+        this.dataProcessor.renderNonConformitiesTable();
+
+        // If a comment modal is open, refresh its content
         if (this.currentFieldId) {
             this.loadConversationHistory(this.currentFieldId);
             this.renderHistoryTimeline(this.currentFieldId);
             this.setupModalForCurrentMode(this.currentFieldId);
         }
-        // Also refresh counters on all state changes for simplicity
+        
+        // Always refresh counters (this will also be called by render functions, but good to ensure)
         this.dataProcessor.refreshAllCounters();
 
         // Show/hide unsaved changes warning
@@ -78,12 +85,13 @@ class UIManager {
         window.showOnlyWithComments = () => this.dataProcessor.showOnlyWithComments(); // Delegate to DataProcessor
         window.toggleAccordion = (element) => this.toggleAccordion(element);
 
-        window.addEventListener('beforeunload', (event) => {
+        window.addEventListener('beforeunload', function(event) {
+            console.log('beforeunload triggered. Unsaved changes:', this.state.get().hasUnsavedChanges);
             if (this.state.get().hasUnsavedChanges) {
                 event.preventDefault();
                 event.returnValue = ''; // For Chrome/Firefox
             }
-        });
+        }.bind(this));
     }
 
     setupFileUIEventListeners() {
