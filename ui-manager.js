@@ -1,4 +1,8 @@
 class UIManager {
+    // Codes d'accès définis ici
+    static REVIEWER_CODE = "CDOECO2025";
+    static AUDITOR_CODE = "moldu2025";
+
     constructor(state, dataProcessor, fileHandler) {
         this.state = state;
         this.dataProcessor = dataProcessor;
@@ -6,6 +10,7 @@ class UIManager {
         this.state.subscribe(this.onStateChange.bind(this));
         this.currentFieldId = null;
         this.draftSaveInterval = null;
+        this.pendingModeChange = null; // Pour stocker le mode vers lequel on veut basculer
     }
 
     onStateChange(newState) {
@@ -48,7 +53,7 @@ class UIManager {
         
         const modeToggle = document.getElementById('modeToggle');
         if (modeToggle) {
-            modeToggle.addEventListener('change', () => this.switchMode());
+            modeToggle.addEventListener('change', () => this.handleModeToggleChange());
         }
 
         const darkModeToggle = document.getElementById('darkModeToggle');
@@ -84,6 +89,10 @@ class UIManager {
         window.showAll = () => this.dataProcessor.showAll(); // Delegate to DataProcessor
         window.showOnlyWithComments = () => this.dataProcessor.showOnlyWithComments(); // Delegate to DataProcessor
         window.toggleAccordion = (element) => this.toggleAccordion(element);
+        // Nouvelles fonctions pour la modale de code d'accès
+        window.closeAccessCodeModal = () => this.closeAccessCodeModal();
+        window.verifyAccessCode = () => this.verifyAccessCode();
+        window.toggleAccessCodeVisibility = () => this.toggleAccessCodeVisibility(); // Nouvelle fonction
 
         window.addEventListener('beforeunload', function(event) {
             console.log('beforeunload triggered. Unsaved changes:', this.state.get().hasUnsavedChanges);
@@ -92,6 +101,11 @@ class UIManager {
                 event.returnValue = ''; // For Chrome/Firefox
             }
         }.bind(this));
+
+        const toggleAccessCodeVisibilityBtn = document.getElementById('toggleAccessCodeVisibility');
+        if (toggleAccessCodeVisibilityBtn) {
+            toggleAccessCodeVisibilityBtn.addEventListener('click', () => this.toggleAccessCodeVisibility());
+        }
     }
 
     setupFileUIEventListeners() {
@@ -238,14 +252,80 @@ class UIManager {
         });
     }
 
-    switchMode() {
-        const newMode = this.state.get().currentMode === 'reviewer' ? 'auditor' : 'reviewer';
-        this.selectMode(newMode, false);
+    handleModeToggleChange() {
+        const currentMode = this.state.get().currentMode;
+        const targetMode = currentMode === 'reviewer' ? 'auditor' : 'reviewer';
+        this.pendingModeChange = targetMode; // Stocke le mode vers lequel on veut basculer
+        this.showAccessCodeModal();
+    }
+
+    showAccessCodeModal() {
+        const modal = document.getElementById('accessCodeModal');
+        const input = document.getElementById('accessCodeInput');
+        const error = document.getElementById('accessCodeError');
         
-        document.body.style.transition = 'all 0.3s ease';
-        setTimeout(() => {
-            document.body.style.transition = '';
-        }, 300);
+        if (modal) modal.classList.remove('hidden');
+        if (input) {
+            input.value = '';
+            input.focus();
+        }
+        if (error) error.classList.add('hidden');
+    }
+
+    closeAccessCodeModal() {
+        const modal = document.getElementById('accessCodeModal');
+        if (modal) modal.classList.add('hidden');
+        this.pendingModeChange = null; // Réinitialise le mode en attente
+        // Réinitialise le toggle si l'utilisateur annule le changement de mode
+        const modeToggle = document.getElementById('modeToggle');
+        if (modeToggle) {
+            modeToggle.checked = this.state.get().currentMode === 'auditor';
+        }
+    }
+
+    verifyAccessCode() {
+        const input = document.getElementById('accessCodeInput');
+        const error = document.getElementById('accessCodeError');
+        const enteredCode = input?.value;
+        
+        if (!enteredCode) {
+            if (error) error.textContent = 'Veuillez entrer un code.';
+            if (error) error.classList.remove('hidden');
+            return;
+        }
+
+        let codeCorrect = false;
+        if (this.pendingModeChange === 'reviewer' && enteredCode === UIManager.REVIEWER_CODE) {
+            codeCorrect = true;
+        } else if (this.pendingModeChange === 'auditor' && enteredCode === UIManager.AUDITOR_CODE) {
+            codeCorrect = true;
+        }
+
+        if (codeCorrect) {
+            this.selectMode(this.pendingModeChange, false);
+            this.closeAccessCodeModal();
+            document.body.style.transition = 'all 0.3s ease';
+            setTimeout(() => {
+                document.body.style.transition = '';
+            }, 300);
+        } else {
+            if (error) error.textContent = 'Code incorrect. Veuillez réessayer.';
+            if (error) error.classList.remove('hidden');
+        }
+    }
+
+    toggleAccessCodeVisibility() {
+        const input = document.getElementById('accessCodeInput');
+        const icon = document.getElementById('toggleAccessCodeVisibility')?.querySelector('i');
+        if (input && icon) {
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
     }
 
     setupDarkMode() {

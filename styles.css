@@ -2079,3 +2079,72 @@ body.mode-auditor .header-title {
 .dark .timeline-details {
     color: #d1d5db;
 }
+
+/* Access Code Modal Specific Styles */
+#accessCodeModal .modal-content {
+    max-width: 450px; /* Rendre la modale un peu plus étroite */
+    text-align: center; /* Centrer le texte à l'intérieur */
+}
+
+#accessCodeModal .modal-body {
+    padding: 2rem; /* Augmenter le padding pour un look plus aéré */
+}
+
+#accessCodeModal .form-group {
+    margin-bottom: 1.5rem; /* Espacement entre les éléments du formulaire */
+}
+
+#accessCodeModal .form-group label {
+    font-size: 1rem; /* Taille de police légèrement plus grande pour la lisibilité */
+    margin-bottom: 1rem; /* Plus d'espace sous le label */
+    color: #1f2937; /* Couleur de texte plus foncée */
+}
+
+.dark #accessCodeModal .form-group label {
+    color: #f9fafb; /* Couleur claire en mode sombre */
+}
+
+#accessCodeModal .form-input {
+    padding: 0.75rem 1rem; /* Augmenter le padding pour une meilleure ergonomie */
+    font-size: 1.1rem; /* Taille de police plus grande pour le code */
+    text-align: center; /* Centrer le texte dans l'input */
+    border-radius: 0.75rem; /* Bords plus arrondis */
+    border: 2px solid #d1d5db; /* Bordure plus prononcée */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Légère ombre */
+}
+
+#accessCodeModal .form-input:focus {
+    border-color: var(--current-primary);
+    box-shadow: 0 0 0 4px rgba(var(--current-primary-rgb), 0.2); /* Ombre plus visible au focus */
+}
+
+.dark #accessCodeModal .form-input {
+    background: #2d3748; /* Fond plus sombre en mode sombre */
+    border-color: #4a5568;
+    color: #f9fafb;
+}
+
+#toggleAccessCodeVisibility {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #9ca3af;
+    transition: color 0.2s ease;
+}
+
+#toggleAccessCodeVisibility:hover {
+    color: var(--current-primary);
+}
+
+.dark #toggleAccessCodeVisibility {
+    color: #a0aec0;
+}
+
+.dark #toggleAccessCodeVisibility:hover {
+    color: var(--current-accent);
+}
+
+#accessCodeModal .neo-update-actions {
+    margin-top: 2rem; /* Plus d'espace au-dessus des boutons d'action */
+}

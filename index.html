@@ -787,5 +787,34 @@
     <script src="ui-manager.js"></script>
     <script src="utils.js"></script>
     <script src="app.js"></script>
+
+    <!-- Access Code Modal -->
+    <div id="accessCodeModal" class="comment-modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Changer de mode</h3>
+                <button class="modal-close" onclick="closeAccessCodeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="neo-update-form">
+                    <div class="form-group">
+                        <label for="accessCodeInput" class="block text-center mb-2">Veuillez entrer le code d'accès pour changer de mode :</label>
+                        <div class="relative flex items-center justify-center">
+                            <input type="password" id="accessCodeInput" class="form-input pr-10 text-center" placeholder="Code d'accès">
+                            <button type="button" id="toggleAccessCodeVisibility" class="absolute right-2 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <small id="accessCodeError" class="text-red-500 text-center mt-2 hidden">Code incorrect. Veuillez réessayer.</small>
+                    </div>
+                    <div class="neo-update-actions">
+                        <button class="btn btn-secondary" onclick="closeAccessCodeModal()">Annuler</button>
+                        <button class="btn btn-primary" onclick="verifyAccessCode()">Valider</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
