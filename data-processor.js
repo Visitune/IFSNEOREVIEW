@@ -472,7 +472,7 @@ class DataProcessor {
         
         let html = '';
         nonConformItems.forEach(item => {
-            const fieldId = `nc-${item.uuid}`;
+            const fieldId = `req-${item.uuid}`;
             const conversation = conversations[fieldId];
             const commentStatus = this.getConversationStatus(conversation);
             const commentCount = conversation?.thread?.length || 0;
@@ -647,45 +647,59 @@ class DataProcessor {
     }
 
     refreshCountersForTab(tabId) {
+        console.log(`--- Refreshing counters for tab: ${tabId} ---`);
         let pending = 0, resolved = 0, total = 0;
         const conversations = this.state.get().conversations;
-        
-        Object.values(conversations).forEach(conversation => {
-            if (!conversation || !conversation.thread || conversation.thread.length === 0) return;
-            
-            const fieldId = Object.keys(conversations).find(key => conversations[key] === conversation);
-            const isTabRelevant = this.isFieldRelevantForTab(fieldId, tabId);
-            
-            if (!isTabRelevant) return;
-            
-            total++;
-            const status = this.getConversationStatus(conversation);
-            
-            if (status === 'resolved') {
-                resolved++;
-            } else if (status === 'pending') {
-                pending++;
-            }
-        });
-        
+        const checklistData = this.state.get().checklistData;
+        const companyProfileData = this.state.get().companyProfileData;
+
+        if (tabId === 'profil') {
+            Object.keys(companyProfileData).forEach(field => {
+                const fieldId = `profile-${this.sanitizeFieldId(field)}`;
+                const conversation = conversations[fieldId];
+                if (conversation && conversation.thread?.length > 0) {
+                    total++;
+                    const status = this.getConversationStatus(conversation);
+                    if (status === 'resolved') resolved++;
+                    else if (status === 'pending') pending++;
+                }
+            });
+        } else if (tabId === 'checklist') {
+            checklistData.forEach(item => {
+                const fieldId = `req-${item.uuid}`;
+                const conversation = conversations[fieldId];
+                if (conversation && conversation.thread?.length > 0) {
+                    total++;
+                    const status = this.getConversationStatus(conversation);
+                    if (status === 'resolved') resolved++;
+                    else if (status === 'pending') pending++;
+                }
+            });
+        } else if (tabId === 'nonconformites') {
+            const nonConformItems = checklistData.filter(item => ['B', 'C', 'D', 'NA'].includes(item.score));
+            console.log(`Found ${nonConformItems.length} non-conforming items.`);
+            nonConformItems.forEach((item, index) => {
+                const fieldId = `req-${item.uuid}`;
+                const conversation = conversations[fieldId];
+                console.log(`[${index}] Checking item ${item.requirementNumber} (ID: ${fieldId})`);
+                if (conversation && conversation.thread?.length > 0) {
+                    console.log(`   -> Found conversation with ${conversation.thread.length} message(s). Incrementing total.`);
+                    total++;
+                    const status = this.getConversationStatus(conversation);
+                    if (status === 'resolved') resolved++;
+                    else if (status === 'pending') pending++;
+                } else {
+                    console.log(`   -> No conversation found or thread is empty.`);
+                }
+            });
+        }
+
+        console.log(`--- Finished refreshing for ${tabId}. Total: ${total} ---`);
         this.updateElementText(`${tabId}PendingCount`, pending);
         this.updateElementText(`${tabId}ResolvedCount`, resolved);
         this.updateElementText(`${tabId}TotalCount`, total);
         
         this.updateElementText(`${tabId}CommentCounter`, total > 0 ? total : '');
-    }
-
-    isFieldRelevantForTab(fieldId, tabId) {
-        switch (tabId) {
-            case 'profil':
-                return fieldId.startsWith('profile-');
-            case 'checklist':
-                return fieldId.startsWith('req-');
-            case 'nonconformites':
-                return fieldId.startsWith('nc-');
-            default:
-                return false;
-        }
     }
 
     updateProgressStats() {
@@ -776,19 +790,40 @@ class DataProcessor {
         const commentStatus = document.getElementById('commentStatusFilter')?.value;
         const search = document.getElementById('searchInput')?.value.toLowerCase();
         
+        console.log(`Filtering Checklist: Chapter=${chapter}, Score=${score}, CommentStatus=${commentStatus}, Search=${search}`);
+
         const rows = document.querySelectorAll('#checklistTableBody tr');
         
         rows.forEach(row => {
             if (row.cells.length <= 1) return; 
             
             let show = true;
+            const rowChapter = row.dataset.chapter;
+            const rowScore = row.dataset.score;
+            const rowCommentStatus = row.dataset.commentStatus;
+            const rowTextContent = row.textContent.toLowerCase();
+
+            if (chapter && rowChapter !== chapter) {
+                show = false;
+            }
+            if (score && rowScore !== score) {
+                show = false;
+            }
             
-            if (chapter && row.dataset.chapter !== chapter) show = false;
-            if (score && row.dataset.score !== score) show = false;
-            if (commentStatus && commentStatus !== '' && row.dataset.commentStatus !== commentStatus) show = false;
-            if (search && !row.textContent.toLowerCase().includes(search)) show = false;
+            if (commentStatus) {
+                if (commentStatus === 'with_comments') {
+                    if (rowCommentStatus === 'none') show = false;
+                } else {
+                    if (rowCommentStatus !== commentStatus) show = false;
+                }
+            }
+
+            if (search && !rowTextContent.includes(search)) {
+                show = false;
+            }
             
             row.style.display = show ? '' : 'none';
+            // console.log(`Row ${row.dataset.fieldId}: show=${show}, chapter=${rowChapter}, score=${rowScore}, commentStatus=${rowCommentStatus}, text=${rowTextContent.substring(0, 50)}...`);
         });
     }
 
@@ -798,27 +833,46 @@ class DataProcessor {
         const correction = document.getElementById('correctionFilter')?.value;
         const search = document.getElementById('ncSearchInput')?.value.toLowerCase();
         
+        console.log(`Filtering Non-Conformities: Type=${type}, Chapter=${chapter}, Correction=${correction}, Search=${search}`);
+
         const rows = document.querySelectorAll('#nonConformitiesTableBody tr');
         
         rows.forEach(row => {
             if (row.cells.length <= 1) return; 
             
             let show = true;
-            
+            const rowType = row.dataset.score; // Assuming type filter is based on score
+            const rowChapter = row.dataset.chapter;
+            const rowCommentStatus = row.dataset.commentStatus;
+            const rowTextContent = row.textContent.toLowerCase();
+
             if (type) {
                 const scores = type.split(',');
-                if (!scores.includes(row.dataset.score)) show = false;
+                if (!scores.includes(rowType)) {
+                    show = false;
+                }
             }
-            if (chapter && row.dataset.chapter !== chapter) show = false;
+            if (chapter && rowChapter !== chapter) {
+                show = false;
+            }
             if (correction) {
-                const hasComments = row.dataset.commentStatus !== 'none';
-                if (correction === 'with' && !hasComments) show = false;
-                if (correction === 'without' && hasComments) show = false;
-                if (correction === 'pending' && row.dataset.commentStatus !== 'pending') show = false;
+                const hasComments = rowCommentStatus !== 'none';
+                if (correction === 'with' && !hasComments) {
+                    show = false;
+                }
+                if (correction === 'without' && hasComments) {
+                    show = false;
+                }
+                if (correction === 'pending' && rowCommentStatus !== 'pending') {
+                    show = false;
+                }
             }
-            if (search && !row.textContent.toLowerCase().includes(search)) show = false;
+            if (search && !rowTextContent.includes(search)) {
+                show = false;
+            }
             
             row.style.display = show ? '' : 'none';
+            // console.log(`Row ${row.dataset.fieldId}: show=${show}, type=${rowType}, chapter=${rowChapter}, commentStatus=${rowCommentStatus}, text=${rowTextContent.substring(0, 50)}...`);
         });
     }
 
@@ -854,7 +908,7 @@ class DataProcessor {
         } else {
             const commentStatusFilter = document.getElementById('commentStatusFilter');
             if (commentStatusFilter) {
-                commentStatusFilter.value = 'pending'; // Or a more general 'with comments' status if available
+                commentStatusFilter.value = 'with_comments';
             }
             this.filterChecklist();
         }
@@ -864,25 +918,54 @@ class DataProcessor {
         const status = document.getElementById('profileCommentStatusFilter')?.value;
         const search = document.getElementById('profileSearchInput')?.value.toLowerCase();
         
-        const rows = document.querySelectorAll('#companyProfileTable tr');
+        console.log(`Filtering Profile Table: Status=${status}, Search=${search}`);
+
+        const categories = document.querySelectorAll('#companyProfileTable .category-header');
         
-        rows.forEach(row => {
-            if (row.cells.length <= 1) return;
-            
-            let show = true;
-            const commentStatus = row.dataset.commentStatus;
+        categories.forEach(header => {
+            const tableContainer = header.nextElementSibling;
+            if (!tableContainer || !tableContainer.classList.contains('table-container')) return;
 
-            if (status) {
-                if (status === 'with_comments') {
-                    if (commentStatus === 'none') show = false;
-                } else {
-                    if (commentStatus !== status) show = false;
+            const rows = tableContainer.querySelectorAll('tbody tr');
+            let visibleRowsInCategory = 0;
+
+            rows.forEach(row => {
+                let show = true;
+                const rowCommentStatus = row.dataset.commentStatus;
+                const hasComments = rowCommentStatus !== 'none';
+                const rowTextContent = row.textContent.toLowerCase();
+
+                if (status) {
+                    if (status === 'with_comments' && !hasComments) {
+                        show = false;
+                    }
+                    if (status === 'none' && hasComments) {
+                        show = false;
+                    }
+                    if (status === 'pending' && rowCommentStatus !== 'pending') {
+                        show = false;
+                    }
+                    if (status === 'resolved' && rowCommentStatus !== 'resolved') {
+                        show = false;
+                    }
                 }
-            }
 
-            if (search && !row.textContent.toLowerCase().includes(search)) show = false;
-            
-            row.style.display = show ? '' : ''; // Using table-row display
+                if (search && !rowTextContent.includes(search)) {
+                    show = false;
+                }
+                
+                row.style.display = show ? '' : 'none';
+                if (show) {
+                    visibleRowsInCategory++;
+                }
+                // console.log(`Row ${row.dataset.fieldId}: show=${show}, commentStatus=${rowCommentStatus}, text=${rowTextContent.substring(0, 50)}...`);
+            });
+
+            // Now hide the whole category if no rows are visible
+            const shouldShowCategory = visibleRowsInCategory > 0;
+            header.style.display = shouldShowCategory ? '' : 'none';
+            tableContainer.style.display = shouldShowCategory ? '' : 'none';
+            // console.log(`Category ${header.textContent}: visibleRows=${visibleRowsInCategory}, shouldShowCategory=${shouldShowCategory}`);
         });
     }
 }
