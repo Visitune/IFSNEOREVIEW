@@ -1,0 +1,11 @@
+# System files
+desktop.ini
+
+# Node dependencies
+node_modules/
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp

@@ -1,0 +1,5244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFS Reviewer V2 - Mode Collaboratif</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+/* ==========================================================================
+   IFS REVIEWER V2 - CSS COMPLET AVEC THEMES PAR MODE
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+/* Variables de couleurs par mode */
+:root {
+    /* Mode Reviewer - Bleu */
+    --reviewer-primary: #2563eb;
+    --reviewer-primary-dark: #1e40af;
+    --reviewer-primary-light: #3b82f6;
+    --reviewer-accent: #60a5fa;
+    --reviewer-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    
+    /* Mode Auditeur - Vert */
+    --auditor-primary: #059669;
+    --auditor-primary-dark: #047857;
+    --auditor-primary-light: #10b981;
+    --auditor-accent: #34d399;
+    --auditor-gradient: linear-gradient(135deg, #047857 0%, #059669 100%);
+    
+    /* Couleurs communes */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+    --neutral: #6b7280;
+    
+    /* Couleurs statut */
+    --status-pending: #f59e0b;
+    --status-resolved: #10b981;
+    --status-read: #6b7280;
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+}
+/* Application du thème par mode */
+body.mode-reviewer {
+    --current-primary: var(--reviewer-primary);
+    --current-primary-dark: var(--reviewer-primary-dark);
+    --current-primary-light: var(--reviewer-primary-light);
+    --current-accent: var(--reviewer-accent);
+    --current-gradient: var(--reviewer-gradient);
+}
+body.mode-auditor {
+    --current-primary: var(--auditor-primary);
+    --current-primary-dark: var(--auditor-primary-dark);
+    --current-primary-light: var(--auditor-primary-light);
+    --current-accent: var(--auditor-accent);
+    --current-gradient: var(--auditor-gradient);
+}
+/* ==========================================================================
+   BASE STYLES
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    transition: var(--transition-normal);
+    overflow-x: hidden;
+}
+/* Utilitaires d'affichage par mode */
+.reviewer-only {
+    display: none;
+}
+.auditor-only {
+    display: none;
+}
+body.mode-reviewer .reviewer-only {
+    display: initial;
+}
+body.mode-auditor .auditor-only {
+    display: initial;
+}
+body.mode-reviewer .auditor-only {
+    display: none !important;
+}
+body.mode-auditor .reviewer-only {
+    display: none !important;
+}
+/* ==========================================================================
+   MODE SELECTOR OVERLAY
+   ========================================================================== */
+.mode-selector-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 2rem;
+    animation: fadeIn 0.5s ease;
+}
+.mode-selection-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 3rem;
+    max-width: 900px;
+    width: 100%;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    text-align: center;
+    animation: slideUp 0.7s ease;
+}
+.mode-header {
+    margin-bottom: 3rem;
+}
+.mode-header .mode-icon {
+    font-size: 3rem;
+    color: var(--reviewer-primary);
+    margin-bottom: 1rem;
+}
+.mode-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+.mode-header p {
+    font-size: 1.1rem;
+    color: #6b7280;
+}
+.mode-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+.mode-btn {
+    background: white;
+    border: 3px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 2rem;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 300px;
+}
+.mode-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+.mode-btn.reviewer-mode {
+    border-color: var(--reviewer-primary);
+}
+.mode-btn.reviewer-mode:hover {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border-color: var(--reviewer-primary-dark);
+}
+.mode-btn.auditor-mode {
+    border-color: var(--auditor-primary);
+}
+.mode-btn.auditor-mode:hover {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border-color: var(--auditor-primary-dark);
+}
+.mode-btn-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+.mode-btn.reviewer-mode .mode-btn-icon {
+    color: var(--reviewer-primary);
+}
+.mode-btn.auditor-mode .mode-btn-icon {
+    color: var(--auditor-primary);
+}
+.mode-btn-content h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #1f2937;
+}
+.mode-btn-content p {
+    color: #6b7280;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+.mode-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+.mode-features li {
+    padding: 0.25rem 0;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+.mode-footer {
+    margin-top: 1rem;
+    color: #9ca3af;
+}
+/* ==========================================================================
+   SIDEBAR
+   ========================================================================== */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 16rem;
+    height: 100vh;
+    background: var(--current-gradient);
+    color: white;
+    transition: var(--transition-normal);
+    z-index: 30;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.sidebar-collapsed {
+    width: 4rem;
+}
+.sidebar-collapsed .sidebar-text {
+    display: none;
+}
+.sidebar-collapsed .comment-counter {
+    display: none;
+}
+.sidebar-header {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 70px;
+}
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.sidebar-collapsed .sidebar-brand {
+    justify-content: center;
+}
+.sidebar-collapse-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    transition: var(--transition-fast);
+}
+.sidebar-collapse-btn:hover {
+    background: rgba(255,255,255,0.1);
+}
+.sidebar-collapsed .sidebar-collapse-btn i {
+    transform: rotate(180deg);
+}
+/* Mode Switch Section */
+.mode-switch-section {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.mode-switch-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.sidebar-collapsed .mode-switch-container {
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.mode-switch-info {
+    flex: 1;
+}
+.sidebar-collapsed .mode-switch-info {
+    display: none;
+}
+.mode-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: block;
+}
+.mode-description {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    display: block;
+}
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+}
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255,255,255,0.2);
+    transition: var(--transition-normal);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    padding: 3px;
+}
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    background-color: white;
+    transition: var(--transition-normal);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+input:checked + .toggle-slider:before {
+    transform: translateX(30px);
+}
+body.mode-reviewer .toggle-slider {
+    background-color: var(--reviewer-accent);
+}
+body.mode-auditor .toggle-slider {
+    background-color: var(--auditor-accent);
+}
+.toggle-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    transition: var(--transition-fast);
+    z-index: 1;
+}
+.toggle-icon.reviewer {
+    left: 8px;
+    opacity: 1;
+}
+.toggle-icon.auditor {
+    right: 8px;
+    opacity: 0.5;
+}
+input:checked ~ .toggle-icon.reviewer {
+    opacity: 0.5;
+}
+input:checked ~ .toggle-icon.auditor {
+    opacity: 1;
+}
+/* Sidebar Content */
+.sidebar-content {
+    flex: 1;
+    padding: 1rem 0;
+}
+.nav-section {
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+}
+.nav-section-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+}
+.nav-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.nav-item {
+    margin-bottom: 0.25rem;
+}
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: var(--transition-fast);
+    position: relative;
+}
+.nav-link:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+.nav-link.active {
+    background: rgba(255,255,255,0.15);
+    color: white;
+}
+.nav-icon {
+    width: 1.25rem;
+    text-align: center;
+    margin-right: 0.75rem;
+}
+.sidebar-collapsed .nav-link {
+    justify-content: center;
+}
+.sidebar-collapsed .nav-icon {
+    margin-right: 0;
+}
+/* Comment Counters */
+.comment-counter {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 1rem;
+    margin-left: auto;
+}
+.comment-counter:empty {
+    display: none;
+}
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-size: 0.9rem;
+}
+.action-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+.sidebar-collapsed .action-btn {
+    justify-content: center;
+}
+.sidebar-collapsed .action-btn i {
+    margin-right: 0;
+}
+/* ==========================================================================
+   MAIN CONTENT
+   ========================================================================== */
+.main-content {
+    margin-left: 16rem;
+    min-height: 100vh;
+    transition: var(--transition-normal);
+}
+.main-content-collapsed {
+    margin-left: 4rem;
+}
+.main-header {
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+.dark .main-header {
+    background: #1f2937;
+    border-bottom-color: #374151;
+}
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+}
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #6b7280;
+}
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+body.mode-reviewer .header-title {
+    color: var(--reviewer-primary);
+}
+body.mode-auditor .header-title {
+    color: var(--auditor-primary);
+}
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.session-info {
+    font-size: 0.875rem;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.separator {
+    color: #d1d5db;
+}
+/* Mobile Sidebar Toggle */
+.mobile-sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 40;
+    background: var(--current-primary);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+/* ==========================================================================
+   TAB CONTENT
+   ========================================================================== */
+.main-section {
+    padding: 2rem;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+.tab-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.tab-header h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin: 0;
+    color: #1f2937;
+}
+.dark .tab-header h2 {
+    color: #f9fafb;
+}
+/* Tab Counters */
+.tab-counters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.counter-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    min-width: 80px;
+    transition: var(--transition-fast);
+}
+.counter-badge.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+.counter-badge.resolved {
+    background: #d1fae5;
+    color: #065f46;
+}
+.counter-badge.total {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+.dark .counter-badge.pending {
+    background: #451a03;
+    color: #fbbf24;
+}
+.dark .counter-badge.resolved {
+    background: #064e3b;
+    color: #34d399;
+}
+.dark .counter-badge.total {
+    background: #312e81;
+    color: #a5b4fc;
+}
+.counter-badge .count {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+.counter-badge .label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+/* ==========================================================================
+   UPLOAD ZONE
+   ========================================================================== */
+.upload-zone {
+    border: 3px dashed #d1d5db;
+    border-radius: 1rem;
+    padding: 3rem;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    background: white;
+    margin-bottom: 2rem;
+}
+.upload-zone:hover {
+    border-color: var(--current-primary);
+    background: #f9fafb;
+}
+.dark .upload-zone {
+    background: #1f2937;
+    border-color: #4b5563;
+}
+.dark .upload-zone:hover {
+    background: #374151;
+}
+.upload-icon {
+    font-size: 4rem;
+    color: #9ca3af;
+    margin-bottom: 1rem;
+}
+.upload-zone h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #1f2937;
+}
+.dark .upload-zone h3 {
+    color: #f9fafb;
+}
+.upload-options {
+    margin-bottom: 1rem;
+}
+.upload-options p {
+    margin: 0.5rem 0;
+    color: #6b7280;
+}
+.upload-hint {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    margin-top: 1rem;
+}
+/* ==========================================================================
+   LOADING
+   ========================================================================== */
+.loading-section {
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+.dark .loading-section {
+    background: #1f2937;
+}
+.loading-spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 4px solid #e5e7eb;
+    border-top: 4px solid var(--current-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+.progress-fill {
+    height: 100%;
+    background: var(--current-primary);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+/* ==========================================================================
+   CARDS AND CONTENT
+   ========================================================================== */
+.content-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+.dark .content-card {
+    background: #1f2937;
+}
+.content-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #1f2937;
+}
+.dark .content-card h3 {
+    color: #f9fafb;
+}
+.info-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+.dark .info-banner {
+    background: #1e3a8a;
+    border-color: #3b82f6;
+}
+.info-banner i {
+    color: #3b82f6;
+    margin-top: 0.125rem;
+}
+.info-banner div {
+    flex: 1;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #1e40af;
+}
+.dark .info-banner div {
+    color: #bfdbfe;
+}
+/* ==========================================================================
+   STATISTICS GRID
+   ========================================================================== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: var(--transition-fast);
+    border-left: 4px solid #e5e7eb;
+}
+.dark .stat-card {
+    background: #1f2937;
+    border-left-color: #4b5563;
+}
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.stat-card.primary {
+    border-left-color: var(--current-primary);
+    background: linear-gradient(135deg, var(--current-primary), var(--current-primary-light));
+    color: white;
+}
+.stat-card.secondary {
+    border-left-color: var(--info);
+    background: linear-gradient(135deg, var(--info), #60a5fa);
+    color: white;
+}
+.stat-card.warning {
+    border-left-color: var(--warning);
+}
+.stat-card.danger {
+    border-left-color: var(--danger);
+}
+.stat-card.critical {
+    border-left-color: #dc2626;
+}
+.stat-card.neutral {
+    border-left-color: var(--neutral);
+}
+.stat-card.info {
+    border-left-color: var(--info);
+}
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--current-primary);
+}
+.stat-card.primary .stat-number,
+.stat-card.secondary .stat-number {
+    color: white;
+}
+.dark .stat-number {
+    color: var(--current-primary-light);
+}
+.stat-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+}
+.stat-card.primary .stat-label,
+.stat-card.secondary .stat-label {
+    color: rgba(255,255,255,0.9);
+}
+.dark .stat-label {
+    color: #9ca3af;
+}
+/* ==========================================================================
+   FILTERS
+   ========================================================================== */
+.filters-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+.dark .filters-card {
+    background: #1f2937;
+}
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+.filter-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #374151;
+}
+.dark .filter-group label {
+    color: #d1d5db;
+}
+.filter-select,
+.filter-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background: white;
+    font-size: 0.875rem;
+    transition: var(--transition-fast);
+}
+.filter-select:focus,
+.filter-input:focus {
+    outline: none;
+    border-color: var(--current-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+.dark .filter-select,
+.dark .filter-input {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f9fafb;
+}
+.filters-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+/* ==========================================================================
+   TABLES
+   ========================================================================== */
+.table-container {
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.dark .table-container {
+    background: #1f2937;
+}
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+.data-table th,
+.data-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: top;
+}
+.dark .data-table th,
+.dark .data-table td {
+    border-bottom-color: #374151;
+}
+.data-table th {
+    background: var(--current-gradient);
+    color: white;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.data-table tbody tr {
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+.data-table tbody tr:hover {
+    background: #f9fafb;
+}
+.dark .data-table tbody tr:hover {
+    background: #374151;
+}
+.data-table tbody tr.table-row-clickable {
+    position: relative;
+}
+.data-table tbody tr.table-row-clickable::after {
+    content: '';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid #9ca3af;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    opacity: 0;
+    transition: var(--transition-fast);
+}
+.data-table tbody tr.table-row-clickable:hover::after {
+    opacity: 1;
+}
+/* Comment Status Indicators */
+.comment-status-cell {
+    text-align: center;
+}
+.comment-indicators {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.comment-count-badge {
+    background: var(--current-primary);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    min-width: 1.5rem;
+    text-align: center;
+}
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.status-indicator.pending {
+    background: var(--status-pending);
+}
+.status-indicator.resolved {
+    background: var(--status-resolved);
+}
+.status-indicator.read {
+    background: var(--status-read);
+}
+.status-indicator.none {
+    background: #e5e7eb;
+}
+.quick-comment-btn {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: var(--transition-fast);
+}
+.quick-comment-btn:hover {
+    color: var(--current-primary);
+    background: #f3f4f6;
+}
+.dark .quick-comment-btn:hover {
+    background: #4b5563;
+}
+/* Score Badges */
+.score-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: white;
+    text-align: center;
+    min-width: 2rem;
+    display: inline-block;
+}
+.score-badge.score-A {
+    background: #10b981;
+}
+.score-badge.score-B {
+    background: #f59e0b;
+    color: #1f2937;
+}
+.score-badge.score-C {
+    background: #f97316;
+}
+.score-badge.score-D {
+    background: #ef4444;
+}
+.score-badge.score-NA {
+    background: #6b7280;
+}
+/* ==========================================================================
+   COMMENT MODAL
+   ========================================================================== */
+.comment-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+}
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 1rem;
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    animation: slideUp 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+.dark .modal-content {
+    background: #1f2937;
+}
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f9fafb;
+}
+.dark .modal-header {
+    background: #374151;
+    border-bottom-color: #4b5563;
+}
+.modal-title-section {
+    flex: 1;
+}
+.modal-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: #1f2937;
+}
+.dark .modal-header h3 {
+    color: #f9fafb;
+}
+.modal-status-badges {
+    display: flex;
+    gap: 0.5rem;
+}
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.status-badge.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+.status-badge.resolved {
+    background: #d1fae5;
+    color: #065f46;
+}
+.status-badge.read {
+    background: #e5e7eb;
+    color: #374151;
+}
+.status-badge.none {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #9ca3af;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    transition: var(--transition-fast);
+}
+.modal-close:hover {
+    color: #374151;
+    background: #f3f4f6;
+}
+.dark .modal-close:hover {
+    color: #f9fafb;
+    background: #4b5563;
+}
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+/* Field Content Section */
+.field-content-section {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+.dark .field-content-section {
+    background: #374151;
+    border-bottom-color: #4b5563;
+}
+.field-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+.dark .field-label {
+    color: #d1d5db;
+}
+.field-display {
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #1f2937;
+    min-height: 3rem;
+    max-height: 8rem;
+    overflow-y: auto;
+}
+.dark .field-display {
+    background: #1f2937;
+    border-color: #4b5563;
+    color: #f9fafb;
+}
+/* Conversation Section */
+.conversation-section {
+    flex: 1;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+.conversation-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.conversation-header h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #1f2937;
+}
+.dark .conversation-header h4 {
+    color: #f9fafb;
+}
+.conversation-stats {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+.conversation-history {
+    flex: 1;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+.dark .conversation-history {
+    background: #374151;
+}
+.no-comments {
+    text-align: center;
+    color: #9ca3af;
+    padding: 2rem 1rem;
+}
+.no-comments i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+/* Chat Bubbles */
+.chat-bubble {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+.chat-bubble.reviewer {
+    flex-direction: row-reverse;
+}
+.chat-bubble.auditor {
+    flex-direction: row;
+}
+.chat-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+.chat-bubble.reviewer .chat-avatar {
+    background: var(--reviewer-primary);
+    color: white;
+}
+.chat-bubble.auditor .chat-avatar {
+    background: var(--auditor-primary);
+    color: white;
+}
+.bubble-content {
+    max-width: 70%;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    position: relative;
+    word-wrap: break-word;
+}
+.chat-bubble.reviewer .bubble-content {
+    background: var(--reviewer-primary);
+    color: white;
+    border-bottom-right-radius: 0.25rem;
+}
+.chat-bubble.auditor .bubble-content {
+    background: var(--auditor-primary);
+    color: white;
+    border-bottom-left-radius: 0.25rem;
+}
+.bubble-text {
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+}
+.bubble-meta {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.chat-bubble.neo-update .bubble-content {
+    background: #f59e0b;
+    border-left: 4px solid #d97706;
+}
+.chat-bubble.neo-update .bubble-content::before {
+    content: "🔄 ";
+    font-weight: bold;
+}
+
+/* Edit/Delete bubble actions */
+.chat-bubble:hover .bubble-actions {
+    opacity: 1;
+}
+.bubble-actions {
+    position: absolute;
+    top: -0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.25rem;
+    background: rgba(0,0,0,0.3);
+    border-radius: 1rem;
+    padding: 0.25rem;
+    opacity: 0;
+    transition: var(--transition-fast);
+    z-index: 1;
+}
+.chat-bubble.reviewer .bubble-actions {
+    right: auto;
+    left: 0.5rem;
+}
+.bubble-actions button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+}
+.bubble-actions button:hover {
+    background: rgba(255,255,255,0.2);
+}
+.bubble-meta .bubble-edited {
+    font-style: italic;
+    opacity: 0.8;
+}
+
+
+/* Edit/Delete bubble actions */
+.chat-bubble:hover .bubble-actions {
+    opacity: 1;
+}
+.bubble-actions {
+    position: absolute;
+    top: -0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.25rem;
+    background: rgba(0,0,0,0.3);
+    border-radius: 1rem;
+    padding: 0.25rem;
+    opacity: 0;
+    transition: var(--transition-fast);
+    z-index: 1;
+}
+.chat-bubble.reviewer .bubble-actions {
+    right: auto;
+    left: 0.5rem;
+}
+.bubble-actions button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+}
+.bubble-actions button:hover {
+    background: rgba(255,255,255,0.2);
+}
+.bubble-meta .bubble-edited {
+    font-style: italic;
+    opacity: 0.8;
+}
+
+
+/* Edit/Delete bubble actions */
+.chat-bubble:hover .bubble-actions {
+    opacity: 1;
+}
+.bubble-actions {
+    position: absolute;
+    top: -0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.25rem;
+    background: rgba(0,0,0,0.3);
+    border-radius: 1rem;
+    padding: 0.25rem;
+    opacity: 0;
+    transition: var(--transition-fast);
+    z-index: 1;
+}
+.chat-bubble.reviewer .bubble-actions {
+    right: auto;
+    left: 0.5rem;
+}
+.bubble-actions button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+}
+.bubble-actions button:hover {
+    background: rgba(255,255,255,0.2);
+}
+.bubble-meta .bubble-edited {
+    font-style: italic;
+    opacity: 0.8;
+}
+
+
+/* Edit/Delete bubble actions */
+.chat-bubble:hover .bubble-actions {
+    opacity: 1;
+}
+.bubble-actions {
+    position: absolute;
+    top: -0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.25rem;
+    background: rgba(0,0,0,0.3);
+    border-radius: 1rem;
+    padding: 0.25rem;
+    opacity: 0;
+    transition: var(--transition-fast);
+    z-index: 1;
+}
+.chat-bubble.reviewer .bubble-actions {
+    right: auto;
+    left: 0.5rem;
+}
+.bubble-actions button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+}
+.bubble-actions button:hover {
+    background: rgba(255,255,255,0.2);
+}
+.bubble-meta .bubble-edited {
+    font-style: italic;
+    opacity: 0.8;
+}
+
+
+/* Edit/Delete bubble actions */
+.chat-bubble:hover .bubble-actions {
+    opacity: 1;
+}
+.bubble-actions {
+    position: absolute;
+    top: -0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.25rem;
+    background: rgba(0,0,0,0.3);
+    border-radius: 1rem;
+    padding: 0.25rem;
+    opacity: 0;
+    transition: var(--transition-fast);
+    z-index: 1;
+}
+.chat-bubble.reviewer .bubble-actions {
+    right: auto;
+    left: 0.5rem;
+}
+.bubble-actions button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+}
+.bubble-actions button:hover {
+    background: rgba(255,255,255,0.2);
+}
+.bubble-meta .bubble-edited {
+    font-style: italic;
+    opacity: 0.8;
+}
+
+
+/* Edit/Delete bubble actions */
+.chat-bubble:hover .bubble-actions {
+    opacity: 1;
+}
+.bubble-actions {
+    position: absolute;
+    top: -0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.25rem;
+    background: rgba(0,0,0,0.3);
+    border-radius: 1rem;
+    padding: 0.25rem;
+    opacity: 0;
+    transition: var(--transition-fast);
+    z-index: 1;
+}
+.chat-bubble.reviewer .bubble-actions {
+    right: auto;
+    left: 0.5rem;
+}
+.bubble-actions button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+}
+.bubble-actions button:hover {
+    background: rgba(255,255,255,0.2);
+}
+.bubble-meta .bubble-edited {
+    font-style: italic;
+    opacity: 0.8;
+}
+
+/* Comment Input Section */
+.comment-input-section {
+    padding: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    background: white;
+}
+.dark .comment-input-section {
+    background: #1f2937;
+    border-top-color: #4b5563;
+}
+.input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.input-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.input-header label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+}
+.dark .input-header label {
+    color: #d1d5db;
+}
+.input-tools {
+    display: flex;
+    gap: 0.5rem;
+}
+.tool-btn {
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    color: #6b7280;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-size: 0.875rem;
+}
+.tool-btn:hover {
+    background: #e5e7eb;
+    color: #374151;
+}
+.dark .tool-btn {
+    background: #4b5563;
+    border-color: #6b7280;
+    color: #d1d5db;
+}
+.dark .tool-btn:hover {
+    background: #6b7280;
+    color: #f9fafb;
+}
+.comment-textarea {
+    width: 100%;
+    min-height: 100px;
+    max-height: 200px;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    resize: vertical;
+    transition: var(--transition-fast);
+}
+.comment-textarea:focus {
+    outline: none;
+    border-color: var(--current-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+.dark .comment-textarea {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f9fafb;
+}
+.comment-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.action-left,
+.action-right {
+    display: flex;
+    gap: 0.5rem;
+}
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+}
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.btn-primary {
+    background: var(--current-primary);
+    color: white;
+}
+.btn-primary:hover:not(:disabled) {
+    background: var(--current-primary-dark);
+    transform: translateY(-1px);
+}
+.btn-secondary {
+    background: #6b7280;
+    color: white;
+}
+.btn-secondary:hover:not(:disabled) {
+    background: #4b5563;
+    transform: translateY(-1px);
+}
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+.btn-success:hover:not(:disabled) {
+    background: #059669;
+    transform: translateY(-1px);
+}
+.btn-warning {
+    background: var(--warning);
+    color: white;
+}
+.btn-warning:hover:not(:disabled) {
+    background: #d97706;
+    transform: translateY(-1px);
+}
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+.btn-danger:hover:not(:disabled) {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+/* ==========================================================================
+   PACKAGE MODAL
+   ========================================================================== */
+.package-modal .modal-content {
+    max-width: 600px;
+}
+.validation-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+}
+.validation-stats .stat {
+    text-align: center;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+    flex: 1;
+}
+.dark .validation-stats .stat {
+    background: #374151;
+}
+.validation-stats .number {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--current-primary);
+    margin-bottom: 0.25rem;
+}
+.validation-stats .label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+.dark .validation-stats .label {
+    color: #9ca3af;
+}
+.validation-message {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.validation-message.complete {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+.validation-message.incomplete {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+.dark .validation-message.complete {
+    background: #064e3b;
+    color: #a7f3d0;
+}
+.dark .validation-message.incomplete {
+    background: #451a03;
+    color: #fbbf24;
+}
+.package-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+/* ==========================================================================
+   NEO UPDATE MODAL
+   ========================================================================== */
+.neo-update-modal .modal-content {
+    max-width: 600px;
+}
+.neo-update-form {
+    padding: 1.5rem;
+}
+.form-group {
+    margin-bottom: 1.5rem;
+}
+.form-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+.dark .form-group label {
+    color: #d1d5db;
+}
+.form-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    resize: vertical;
+}
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--current-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+.dark .form-textarea {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f9fafb;
+}
+.form-file {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    background: white;
+}
+.dark .form-file {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f9fafb;
+}
+.form-group small {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+.dark .form-group small {
+    color: #9ca3af;
+}
+.neo-update-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+/* ==========================================================================
+   ALERTS
+   ========================================================================== */
+.alert {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid transparent;
+}
+.alert-success {
+    background: #d1fae5;
+    color: #065f46;
+    border-color: #a7f3d0;
+}
+.alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+.dark .alert-success {
+    background: #064e3b;
+    color: #a7f3d0;
+}
+.dark .alert-error {
+    background: #7f1d1d;
+    color: #fecaca;
+}
+/* Category headers */
+.category-header {
+    background: var(--current-gradient);
+    color: white;
+    padding: 0.75rem 1rem;
+    margin: 1.25rem 0 0.625rem 0;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+.hidden {
+    display: none !important;
+}
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+/* ==========================================================================
+   ANIMATIONS
+   ========================================================================== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        z-index: 40;
+        height: 100vh;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+        width: 16rem;
+    }
+    
+    .sidebar.sidebar-collapsed {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.sidebar-collapsed.active {
+        transform: translateX(0);
+        width: 4rem;
+    }
+    
+    .main-content,
+    .main-content-collapsed {
+        margin-left: 0 !important;
+    }
+    
+    .mobile-sidebar-toggle,
+    .mobile-toggle {
+        display: block;
+    }
+    
+    .header-content {
+        padding: 1rem;
+    }
+    
+    .header-title {
+        font-size: 1.25rem;
+    }
+    
+    .main-section {
+        padding: 1rem;
+    }
+    
+    .tab-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .tab-counters {
+        align-self: stretch;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    
+    .filters-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+    }
+    
+    .mode-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .mode-selection-card {
+        padding: 2rem;
+    }
+    
+    .data-table {
+        font-size: 0.75rem;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 0.75rem 0.5rem;
+    }
+}
+@media (max-width: 480px) {
+    .mode-selection-card {
+        padding: 1.5rem;
+    }
+    
+    .mode-header .mode-icon {
+        font-size: 2rem;
+    }
+    
+    .mode-header h2 {
+        font-size: 1.75rem;
+    }
+    
+    .mode-btn {
+        padding: 1.5rem;
+        min-height: 250px;
+    }
+    
+    .mode-btn-icon {
+        font-size: 2rem;
+    }
+    
+    .upload-zone {
+        padding: 2rem 1rem;
+    }
+    
+    .upload-icon {
+        font-size: 3rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .counter-badge {
+        padding: 0.5rem;
+        min-width: 60px;
+    }
+    
+    .counter-badge .count {
+        font-size: 1.25rem;
+    }
+    
+    .conversation-history {
+        max-height: 200px;
+    }
+    
+    .chat-bubble .bubble-content {
+        max-width: 85%;
+    }
+}
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    
+    <!-- Mode Selector Overlay (Initial) -->
+    <div id="modeSelectorOverlay" class="mode-selector-overlay">
+        <div class="mode-selection-card">
+            <div class="mode-header">
+                <i class="fas fa-shield-alt mode-icon"></i>
+                <h2>IFS Reviewer V2 - Mode Collaboratif</h2>
+                <p>Choisissez votre mode de travail</p>
+            </div>
+            
+            <div class="mode-options">
+                <button class="mode-btn reviewer-mode" onclick="selectMode('reviewer')">
+                    <div class="mode-btn-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="mode-btn-content">
+                        <h3>Mode Reviewer</h3>
+                        <p>Analyser et commenter les audits IFS</p>
+                        <ul class="mode-features">
+                            <li>📝 Créer des commentaires</li>
+                            <li>✅ Marquer comme résolu</li>
+                            <li>📦 Créer packages pour auditeur</li>
+                            <li>📊 Export rapports PDF</li>
+                        </ul>
+                    </div>
+                </button>
+                
+                <button class="mode-btn auditor-mode" onclick="selectMode('auditor')">
+                    <div class="mode-btn-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="mode-btn-content">
+                        <h3>Mode Auditeur</h3>
+                        <p>Répondre aux commentaires reviewer</p>
+                        <ul class="mode-features">
+                            <li>👀 Voir commentaires reviewer</li>
+                            <li>💬 Répondre aux commentaires</li>
+                            <li>🔄 Signaler mises à jour NEO</li>
+                            <li>📤 Envoyer réponses</li>
+                        </ul>
+                    </div>
+                </button>
+            </div>
+            
+            <div class="mode-footer">
+                <small>💡 Vous pourrez changer de mode à tout moment</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <div class="fixed bottom-4 right-4 z-50">
+        <button id="darkModeToggle" class="p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="mainSidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <i class="fas fa-shield-alt text-xl"></i>
+                <span class="font-bold text-lg sidebar-text">IFS Review Tool V2</span>
+            </div>
+            <button id="sidebarCollapse" class="sidebar-collapse-btn">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+        
+        <!-- Mode Switch Section -->
+        <div class="mode-switch-section">
+            <div class="mode-switch-container">
+                <div class="mode-switch-info">
+                    <span class="mode-label" id="currentModeLabel">Mode Reviewer</span>
+                    <small class="mode-description" id="currentModeDescription">Analyser et commenter</small>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="modeToggle">
+                    <span class="toggle-slider">
+                        <span class="toggle-icon reviewer"><i class="fas fa-search"></i></span>
+                        <span class="toggle-icon auditor"><i class="fas fa-user-tie"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="sidebar-content">
+            <div class="nav-section">
+                <h3 class="nav-section-title sidebar-text">Navigation</h3>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#profil-section" class="nav-link" data-tab-target="profil">
+                            <i class="fas fa-user-tie nav-icon"></i>
+                            <span class="sidebar-text">Profil Entreprise</span>
+                            <span class="comment-counter" id="profilCommentCounter">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#checklist-section" class="nav-link" data-tab-target="checklist">
+                            <i class="fas fa-list-check nav-icon"></i>
+                            <span class="sidebar-text">Checklist Complète</span>
+                            <span class="comment-counter" id="checklistCommentCounter">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#nonconformites-section" class="nav-link" data-tab-target="nonconformites">
+                            <i class="fas fa-exclamation-triangle nav-icon"></i>
+                            <span class="sidebar-text">Non-Conformités</span>
+                            <span class="comment-counter" id="ncCommentCounter">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#aide-section" class="nav-link" data-tab-target="aide">
+                            <i class="fas fa-question-circle nav-icon"></i>
+                            <span class="sidebar-text">Aide</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- File Actions -->
+            <div class="nav-section">
+                <h3 class="nav-section-title sidebar-text">Actions Fichier</h3>
+                <div class="action-buttons">
+                    <button id="newAuditBtn" class="action-btn">
+                        <i class="fas fa-file-medical"></i>
+                        <span class="sidebar-text">Nouveau Dossier</span>
+                    </button>
+                    
+                    <input type="file" id="fileInputInternal" accept=".ifs,.ifsr,.ifsp" style="display: none;">
+                    <button id="loadAuditBtn" class="action-btn">
+                        <i class="fas fa-upload"></i>
+                        <span class="sidebar-text">Charger Fichier</span>
+                    </button>
+                    
+                    <button id="saveAuditBtn" class="action-btn reviewer-only">
+                        <i class="fas fa-save"></i>
+                        <span class="sidebar-text">Sauvegarder IFSR</span>
+                    </button>
+                    
+                    <button id="saveAuditBtnAuditor" class="action-btn auditor-only">
+                        <i class="fas fa-save"></i>
+                        <span class="sidebar-text">Sauvegarder IFSR</span>
+                    </button>
+                    
+                    <button id="createPackageBtn" class="action-btn reviewer-only" onclick="showPackageModal(false)">
+                        <i class="fas fa-package"></i>
+                        <span class="sidebar-text">Créer Package pour Auditeur</span>
+                    </button>
+                    
+                    <button id="respondPackageBtn" class="action-btn auditor-only">
+                        <i class="fas fa-reply"></i>
+                        <span class="sidebar-text">Répondre et Créer Package</span>
+                    </button>
+                    
+                    <button id="neoUpdateBtn" class="action-btn auditor-only">
+                        <i class="fas fa-sync-alt"></i>
+                        <span class="sidebar-text">Maj NEO</span>
+                    </button>
+                    
+                    <button id="exportExcelBtn" class="action-btn">
+                        <i class="fas fa-file-excel"></i>
+                        <span class="sidebar-text">Export Excel</span>
+                    </button>
+                    
+                    <button id="exportPDFBtn" class="action-btn reviewer-only">
+                        <i class="fas fa-file-pdf"></i>
+                        <span class="sidebar-text">Export PDF</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Sidebar Toggle -->
+    <button id="mobileSidebarToggle" class="mobile-sidebar-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <button id="mobileSidebarToggleHeader" class="mobile-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="header-title">
+                        <span id="currentAuditName">Aucun audit chargé</span>
+                    </h1>
+                </div>
+                
+                <div class="header-right">
+                    <div id="sessionInfoTop" class="session-info">
+                        <span id="storageTypeTop">Mode: <strong id="headerMode">Reviewer</strong></span>
+                        <span class="separator">|</span>
+                        <span id="sessionIdTop">COID: ----</span>
+                        <span class="separator">|</span>
+                        <span id="packageVersionInfo">v1</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tab Content Area -->
+        <main class="main-section">
+            
+            <!-- Tab: Profil Entreprise -->
+            <div id="profil" class="tab-content active">
+                <div class="tab-header">
+                    <h2>Profil de l'entreprise auditée</h2>
+                    <div class="tab-counters">
+                        <div class="counter-badge pending">
+                            <span class="count" id="profilPendingCount">0</span>
+                            <span class="label">En attente</span>
+                        </div>
+                        <div class="counter-badge resolved">
+                            <span class="count" id="profilResolvedCount">0</span>
+                            <span class="label">Résolus</span>
+                        </div>
+                        <div class="counter-badge total">
+                            <span class="count" id="profilTotalCount">0</span>
+                            <span class="label">Total</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Upload Zone -->
+                <div id="uploadZone" class="upload-zone">
+                    <div class="upload-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <h3>Démarrer votre travail</h3>
+                    <div class="upload-options">
+                        <p><strong>Nouveau dossier :</strong> Glissez-déposez votre fichier <strong>.ifs</strong> (export NEO)</p>
+                        <p><strong>Reprendre travail :</strong> Glissez-déposez votre fichier <strong>.ifsr</strong> (travail sauvegardé)</p>
+                        <p><strong>Package collaboratif :</strong> Glissez-déposez votre fichier <strong>.ifsp</strong> (échange reviewer/auditeur)</p>
+                    </div>
+                    <p class="upload-hint">ou cliquez ici pour sélectionner un fichier</p>
+                    <input type="file" id="fileInput" accept=".ifs,.ifsr,.ifsp" style="display: none;">
+                </div>
+
+                <!-- Loading -->
+                <div id="loading" class="loading-section hidden">
+                    <div class="loading-spinner"></div>
+                    <p>Traitement et sauvegarde du fichier en cours...</p>
+                    <div class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div id="profilResults" class="results-section hidden">
+                    <div id="successAlert" class="alert alert-success">
+                    </div>
+                    
+                    <!-- Statistics Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalRequirements">0</div>
+                            <div class="stat-label">Exigences totales</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="conformCount">0</div>
+                            <div class="stat-label">Conformités (A)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="nonConformCount">0</div>
+                            <div class="stat-label">Non-Conformités</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="overallScore">0%</div>
+                            <div class="stat-label">Score global</div>
+                        </div>
+                        <div class="stat-card primary">
+                            <div class="stat-number" id="progressPercentage">0%</div>
+                            <div class="stat-label">Travail reviewer</div>
+                        </div>
+                        <div class="stat-card secondary">
+                            <div class="stat-number" id="commentsCount">0</div>
+                            <div class="stat-label">Commentaires</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Company Profile -->
+                    <div class="content-card">
+                        <h3>Informations de l'entreprise</h3>
+                        <div class="info-banner">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <strong>Mapping IFS automatique :</strong> Les UUID sont convertis vers les numéros d'exigences officiels IFS. 
+                                <strong>Mode collaboratif :</strong> Cliquez sur une ligne pour commenter.
+                            </div>
+                        </div>
+                        <div id="companyProfileTable"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Checklist Complète -->
+            <div id="checklist" class="tab-content">
+                <div class="tab-header">
+                    <h2>Checklist complète des exigences IFS</h2>
+                    <div class="tab-counters">
+                        <div class="counter-badge pending">
+                            <span class="count" id="checklistPendingCount">0</span>
+                            <span class="label">En attente</span>
+                        </div>
+                        <div class="counter-badge resolved">
+                            <span class="count" id="checklistResolvedCount">0</span>
+                            <span class="label">Résolus</span>
+                        </div>
+                        <div class="counter-badge total">
+                            <span class="count" id="checklistTotalCount">0</span>
+                            <span class="label">Total</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filters -->
+                <div class="filters-card">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label>Chapitre IFS</label>
+                            <select id="chapterFilter" class="filter-select">
+                                <option value="">Tous</option>
+                                <option value="1">1. Responsabilité de la direction</option>
+                                <option value="2">2. Système de management qualité/sécurité</option>
+                                <option value="3">3. Gestion des ressources</option>
+                                <option value="4">4. Processus de fabrication</option>
+                                <option value="5">5. Mesures, analyses et améliorations</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Score</label>
+                            <select id="scoreFilter" class="filter-select">
+                                <option value="">Tous</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="NA">NA</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Statut commentaires</label>
+                            <select id="commentStatusFilter" class="filter-select">
+                                <option value="">Tous</option>
+                                <option value="pending">En attente</option>
+                                <option value="resolved">Résolus</option>
+                                <option value="none">Sans commentaires</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Recherche</label>
+                            <input type="text" id="searchInput" placeholder="Mots-clés..." class="filter-input">
+                        </div>
+                    </div>
+                    
+                    <div class="filters-actions">
+                        <button onclick="showAll()" class="btn btn-secondary">Afficher Tout</button>
+                        <button onclick="showOnlyWithComments()" class="btn btn-primary">Avec commentaires</button>
+                    </div>
+                </div>
+                
+                <!-- Table -->
+                <div class="table-container">
+                    <table class="data-table" id="checklistTable">
+                        <thead>
+                            <tr>
+                                <th>N° Exigence</th>
+                                <th>Score</th>
+                                <th>Explication</th>
+                                <th>Explication détaillée</th>
+                                <th>Commentaires</th>
+                            </tr>
+                        </thead>
+                        <tbody id="checklistTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab: Non-Conformités -->
+            <div id="nonconformites" class="tab-content">
+                <div class="tab-header">
+                    <h2>Non-Conformités & Non-Applicables</h2>
+                    <div class="tab-counters">
+                        <div class="counter-badge pending">
+                            <span class="count" id="ncPendingCount">0</span>
+                            <span class="label">En attente</span>
+                        </div>
+                        <div class="counter-badge resolved">
+                            <span class="count" id="ncResolvedCount">0</span>
+                            <span class="label">Résolus</span>
+                        </div>
+                        <div class="counter-badge total">
+                            <span class="count" id="ncTotalCount">0</span>
+                            <span class="label">Total</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filters -->
+                <div class="filters-card">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label>Type</label>
+                            <select id="ncTypeFilter" class="filter-select">
+                                <option value="">Tous</option>
+                                <option value="B,C,D">NC seulement</option>
+                                <option value="NA">NA seulement</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Chapitre</label>
+                            <select id="ncChapterFilter" class="filter-select">
+                                <option value="">Tous</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Commentaires</label>
+                            <select id="correctionFilter" class="filter-select">
+                                <option value="">Tous</option>
+                                <option value="with">Avec commentaires</option>
+                                <option value="without">Sans commentaires</option>
+                                <option value="pending">En attente réponse</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Recherche</label>
+                            <input type="text" id="ncSearchInput" placeholder="Mots-clés..." class="filter-input">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Statistics -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalNC">0</div>
+                        <div class="stat-label">Total NC + NA</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-number" id="scoreB">0</div>
+                        <div class="stat-label">Score B</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="stat-number" id="scoreC">0</div>
+                        <div class="stat-label">Score C</div>
+                    </div>
+                    <div class="stat-card critical">
+                        <div class="stat-number" id="scoreD">0</div>
+                        <div class="stat-label">Score D</div>
+                    </div>
+                    <div class="stat-card neutral">
+                        <div class="stat-number" id="naCount">0</div>
+                        <div class="stat-label">Non-Applicables</div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-number" id="commentsNCCount">0</div>
+                        <div class="stat-label">Commentaires NC/NA</div>
+                    </div>
+                </div>
+                
+                <!-- Table -->
+                <div class="table-container">
+                    <table class="data-table" id="nonConformitiesTable">
+                        <thead>
+                            <tr>
+                                <th>N° Exigence</th>
+                                <th>Score</th>
+                                <th>Explication</th>
+                                <th>Explication détaillée</th>
+                                <th>Commentaires</th>
+                            </tr>
+                        </thead>
+                        <tbody id="nonConformitiesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab: Aide -->
+            <div id="aide" class="tab-content">
+                <div class="tab-header">
+                    <h2>Aide et Workflow</h2>
+                </div>
+                <div class="content-card">
+                    <h3>Bienvenue sur l'outil de revue collaborative IFS V2</h3>
+                    <p>Cet outil est conçu pour simplifier et structurer les échanges entre le <strong>Reviewer</strong> (qui relit et commente l'audit) et l'<strong>Auditeur</strong> (qui répond aux commentaires).</p>
+            
+                    <h4 class="mt-6 font-bold text-lg">Comprendre l'interface</h4>
+                    <ul class="list-disc list-inside ml-4 space-y-2">
+                        <li><strong>Modes de travail :</strong> L'application a deux modes, chacun avec un code couleur : <span class="font-bold text-blue-600">Reviewer (Bleu)</span> et <span class="font-bold text-green-600">Auditeur (Vert)</span>. Vous pouvez basculer entre les modes à tout moment avec l'interrupteur dans la barre latérale.</li>
+                        <li><strong>Navigation :</strong> Utilisez les onglets dans la barre latérale pour naviguer entre le <strong>Profil de l'entreprise</strong>, la <strong>Checklist complète</strong> et la liste des <strong>Non-Conformités</strong>.</li>
+                        <li><strong>Statut des commentaires :</strong> Un indicateur visuel vous montre l'état de chaque commentaire :
+                            <ul class="list-disc list-inside ml-6">
+                                <li><span class="inline-block w-3 h-3 rounded-full bg-yellow-500"></span> <strong>En attente :</strong> Un commentaire attend une réponse de votre part.</li>
+                                <li><span class="inline-block w-3 h-3 rounded-full bg-gray-400"></span> <strong>Lu :</strong> Vous avez envoyé un commentaire et attendez une réponse.</li>
+                                <li><span class="inline-block w-3 h-3 rounded-full bg-green-500"></span> <strong>Résolu :</strong> La discussion est terminée et clôturée par le reviewer.</li>
+                                <li><span class="inline-block w-3 h-3 rounded-full bg-gray-200"></span> <strong>Aucun :</strong> Pas de commentaire sur ce champ.</li>
+                            </ul>
+                        </li>
+                    </ul>
+            
+                    <h4 class="mt-6 font-bold text-lg">Les Types de Fichiers</h4>
+                    <ul class="list-disc list-inside ml-4 space-y-2">
+                        <li><code>.ifs</code> : Fichier d'audit brut, exporté depuis le logiciel NEO. C'est le point de départ du travail.</li>
+                        <li><code>.ifsr</code> : Fichier de travail sauvegardé (<strong>IFS R</strong>eviewer). Il contient l'audit et tous les commentaires. Sauvegardez votre travail à tout moment pour le reprendre plus tard.</li>
+                        <li><code>.ifsp</code> : "Package" d'échange (<strong>IFS P</strong>ackage). Ce fichier, plus léger, est utilisé pour envoyer les commentaires d'un utilisateur à l'autre.</li>
+                    </ul>
+            
+                    <h4 class="mt-6 font-bold text-lg">Workflow de Collaboration Détaillé</h4>
+                    <ol class="list-decimal list-inside space-y-4">
+                        <li>
+                            <strong>Étape 1 : Initialisation (Reviewer)</strong>
+                            <ul class="list-disc list-inside ml-6 space-y-1">
+                                <li>Le Reviewer choisit son mode et charge le fichier <code>.ifs</code> original.</li>
+                                <li>Il navigue dans les sections et <strong>clique sur les lignes</strong> pour ajouter des commentaires.</li>
+                                <li>Il peut sauvegarder sa session avec <button class="btn btn-secondary btn-sm"><i class="fas fa-save"></i> Sauvegarder IFSR</button>. Cela crée un fichier <code>.ifsr</code> sur son ordinateur.</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Étape 2 : Envoi à l'Auditeur (Reviewer)</strong>
+                            <ul class="list-disc list-inside ml-6 space-y-1">
+                                <li>Une fois sa relecture terminée, le Reviewer clique sur <button class="btn btn-primary btn-sm"><i class="fas fa-package"></i> Créer Package pour Auditeur</button>.</li>
+                                <li>Cela génère un fichier <code>.ifsp</code> à envoyer à l'Auditeur (par email, etc.).</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Étape 3 : Réponse (Auditeur)</strong>
+                            <ul class="list-disc list-inside ml-6 space-y-1">
+                                <li>L'Auditeur choisit son mode et charge le fichier <code>.ifsp</code> reçu.</li>
+                                <li>Il voit les commentaires du Reviewer (marqués "En attente") et y répond dans les mêmes fenêtres de dialogue.</li>
+                                <li>S'il modifie son rapport dans NEO, il peut le signaler via <button class="btn btn-warning btn-sm"><i class="fas fa-sync-alt"></i> Maj NEO</button>. Cela ajoute un commentaire spécial.</li>
+                                <li>L'Auditeur peut aussi sauvegarder son travail en cours (crée un <code>.ifsr</code>).</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Étape 4 : Retour au Reviewer (Auditeur)</strong>
+                            <ul class="list-disc list-inside ml-6 space-y-1">
+                                <li>Quand l'Auditeur a fini, il clique sur <button class="btn btn-primary btn-sm"><i class="fas fa-reply"></i> Répondre et Créer Package</button>.</li>
+                                <li>Un nouveau fichier <code>.ifsp</code> est créé, à renvoyer au Reviewer.</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Étape 5 : Finalisation (Reviewer)</strong>
+                            <ul class="list-disc list-inside ml-6 space-y-1">
+                                <li>Le Reviewer charge le nouveau <code>.ifsp</code>. Il voit les réponses de l'Auditeur.</li>
+                                <li>Si une discussion est terminée, le Reviewer peut la marquer comme <button class="btn btn-success btn-sm"><i class="fas fa-check"></i> Résolu</button>.</li>
+                                <li>Le cycle peut continuer si nécessaire. Une fois terminé, le Reviewer peut exporter le rapport final via <button class="btn btn-secondary btn-sm"><i class="fas fa-file-excel"></i> Export Excel</button>.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Comment Modal Popup -->
+    <div id="commentModal" class="comment-modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title-section">
+                    <h3 id="modalFieldName">Commentaires - Champ</h3>
+                    <div class="modal-status-badges">
+                        <span class="status-badge pending" id="modalStatusBadge">En attente</span>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeCommentModal()">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Field Content Display -->
+                <div class="field-content-section">
+                    <label class="field-label">Contenu du champ :</label>
+                    <div id="fieldDisplayContent" class="field-display"></div>
+                </div>
+                
+                <!-- Conversation History -->
+                <div class="conversation-section">
+                    <div class="conversation-header">
+                        <h4>Historique des échanges</h4>
+                        <div class="conversation-stats">
+                            <span id="conversationStats">0 message(s)</span>
+                        </div>
+                    </div>
+                    <div class="conversation-history" id="conversationHistory">
+                        <div class="no-comments">
+                            <i class="fas fa-comments"></i>
+                            <p>Aucun commentaire pour ce champ. Commencez la conversation !</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Input Section -->
+                <div class="comment-input-section">
+                    <div class="input-area">
+                        <div class="input-header">
+                            <label for="newCommentInput">
+                                <span class="reviewer-only">Nouveau commentaire reviewer :</span>
+                                <span class="auditor-only">Votre réponse :</span>
+                            </label>
+                            <div class="input-tools">
+                                <button class="tool-btn" onclick="insertTemplate('quality')" title="Template qualité">
+                                    <i class="fas fa-stamp"></i>
+                                </button>
+                                <button class="tool-btn" onclick="insertTemplate('correction')" title="Template correction">
+                                    <i class="fas fa-tools"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <textarea 
+                            id="newCommentInput" 
+                            placeholder="Tapez votre commentaire ici..."
+                            class="comment-textarea">
+                        </textarea>
+                        <div class="comment-actions">
+                            <div class="action-left">
+                                <button class="btn btn-secondary" onclick="clearCommentInput()">
+                                    <i class="fas fa-eraser"></i> Effacer
+                                </button>
+                                <span id="draftStatus" class="text-sm text-gray-500 self-center ml-4"></span>
+                            </div>
+                            <div class="action-right">
+                                <button class="btn btn-primary" onclick="saveComment()" id="saveCommentBtn">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span class="reviewer-only">Envoyer commentaire</span>
+                                    <span class="auditor-only">Envoyer réponse</span>
+                                </button>
+                                <button class="btn btn-success reviewer-only" onclick="markAsResolved()" id="resolveBtn" style="display:none;">
+                                    <i class="fas fa-check"></i> Marquer résolu
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Package Creation Modal -->
+    <div id="packageModal" class="package-modal comment-modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="packageModalTitle">Créer un package</h3>
+                <button class="modal-close" onclick="closePackageModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="package-validation">
+                    <div class="validation-stats">
+                        <div class="stat">
+                            <span class="number" id="packageCompletionRate">0%</span>
+                            <span class="label">Taux de complétion</span>
+                        </div>
+                        <div class="stat">
+                            <span class="number" id="packagePendingFields">0</span>
+                            <span class="label">Champs en attente</span>
+                        </div>
+                        <div class="stat">
+                            <span class="number" id="packageTotalComments">0</span>
+                            <span class="label">Total commentaires</span>
+                        </div>
+                    </div>
+                    <div class="validation-message" id="validationMessage"></div>
+                </div>
+                <div class="package-actions">
+                    <button class="btn btn-secondary" onclick="continueWorking()">Continuer le travail</button>
+                    <button class="btn btn-primary" onclick="createPackage()" id="createPackageConfirm">Créer le package</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Neo Update Modal -->
+    <div id="neoUpdateModal" class="neo-update-modal comment-modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🔄 Mise à jour du rapport NEO</h3>
+                <button class="modal-close" onclick="closeNeoUpdateModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="neo-update-form">
+                    <div class="form-group">
+                        <label for="neoUpdateDescription">Description des modifications :</label>
+                        <textarea id="neoUpdateDescription" 
+                                  placeholder="Décrivez les modifications apportées au rapport NEO..."
+                                  class="form-textarea"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="newNeoFile">Nouveau fichier NEO (optionnel) :</label>
+                        <input type="file" id="newNeoFile" accept=".ifs" class="form-file">
+                        <small>Vous pouvez joindre le nouveau fichier IFS modifié</small>
+                    </div>
+                    
+                    <div class="neo-update-actions">
+                        <button class="btn btn-secondary" onclick="cancelNeoUpdate()">Annuler</button>
+                        <button class="btn btn-primary" onclick="addNeoUpdateToPackage()">Ajouter à la réponse</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+/* ==========================================================================
+   IFS REVIEWER V2 - JAVASCRIPT CORE
+   ========================================================================== */
+// Variables globales
+let currentMode = 'reviewer';
+let auditData = null;
+let checklistData = [];
+let companyProfileData = {};
+let conversations = {};  // Nouveau: structure des conversations threadées
+let requirementNumberMapping = {};
+let currentSession = { id: null, name: '', created: null, lastModified: null, data: null };
+let packageVersion = 1;
+// Structure des conversations
+// conversations = {
+//   "field_id": {
+//     thread: [
+//       {
+//         id: "uuid",
+//         author: "reviewer" | "auditor", 
+//         content: "string",
+//         date: "ISO_DATE",
+//         status: "pending" | "read" | "responded" | "resolved",
+//         version: 1,
+//         isNeoUpdate: false
+//       }
+//     ],
+//     lastActivity: "ISO_DATE",
+//     status: "active" | "resolved",
+//     priority: "normal" | "high"
+//   }
+// }
+/* ==========================================================================
+   CLASSE PRINCIPALE IFS COLLABORATIVE TOOL
+   ========================================================================== */
+class IFSCollaborativeTool {
+    constructor() {
+        this.currentMode = localStorage.getItem('ifsMode') || 'reviewer';
+        this.currentFieldId = null;
+        this.isDragging = false;
+        this.draftSaveInterval = null; // For auto-save
+        this.init();
+    }
+    init() {
+        this.showModeSelector();
+        this.setupEventListeners();
+        this.setupDarkMode();
+        this.setupSidebar();
+        this.setupTabs();
+        this.setupFileHandling();
+    }
+    /* ==========================================================================
+       MODE SELECTION AND SWITCHING
+       ========================================================================== */
+    showModeSelector() {
+        const overlay = document.getElementById('modeSelectorOverlay');
+        const savedMode = localStorage.getItem('ifsMode');
+        
+        if (savedMode && (savedMode === 'reviewer' || savedMode === 'auditor')) {
+            // Mode déjà sélectionné, appliquer directement
+            this.selectMode(savedMode, false);
+            if (overlay) overlay.style.display = 'none';
+        } else {
+            // Afficher le sélecteur
+            if (overlay) overlay.style.display = 'flex';
+        }
+    }
+    selectMode(mode, showSelector = true) {
+        this.currentMode = mode;
+        currentMode = mode; // Synchroniser avec la variable globale
+        
+        // Masquer le sélecteur
+        if (showSelector) {
+            const overlay = document.getElementById('modeSelectorOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 300);
+            }
+        }
+        
+        this.applyModeTheme();
+        this.updateUIForMode();
+        this.updateModeIndicators();
+        
+        console.log(`Mode sélectionné: ${mode}`);
+    }
+    applyModeTheme() {
+        document.body.className = document.body.className.replace(/mode-\w+/g, '');
+        document.body.classList.add(`mode-${this.currentMode}`);
+    }
+    updateUIForMode() {
+        // Mettre à jour le toggle
+        const modeToggle = document.getElementById('modeToggle');
+        if (modeToggle) {
+            modeToggle.checked = this.currentMode === 'auditor';
+        }
+        
+        // Mettre à jour les labels
+        const modeLabel = document.getElementById('currentModeLabel');
+        const modeDescription = document.getElementById('currentModeDescription');
+        const headerMode = document.getElementById('headerMode');
+        
+        if (this.currentMode === 'reviewer') {
+            if (modeLabel) modeLabel.textContent = 'Mode Reviewer';
+            if (modeDescription) modeDescription.textContent = 'Analyser et commenter';
+            if (headerMode) headerMode.textContent = 'Reviewer';
+        } else {
+            if (modeLabel) modeLabel.textContent = 'Mode Auditeur';
+            if (modeDescription) modeDescription.textContent = 'Répondre aux commentaires';
+            if (headerMode) headerMode.textContent = 'Auditeur';
+        }
+        
+        // Afficher/masquer les éléments spécifiques au mode
+        this.toggleModeSpecificElements();
+    }
+    toggleModeSpecificElements() {
+        const reviewerElements = document.querySelectorAll('.reviewer-only');
+        const auditorElements = document.querySelectorAll('.auditor-only');
+        
+        reviewerElements.forEach(el => {
+            el.style.display = this.currentMode === 'reviewer' ? '' : 'none';
+        });
+        
+        auditorElements.forEach(el => {
+            el.style.display = this.currentMode === 'auditor' ? '' : 'none';
+        });
+    }
+    updateModeIndicators() {
+        // Mettre à jour les compteurs et indicateurs selon le mode
+        this.refreshAllCounters();
+    }
+    switchMode() {
+        const newMode = this.currentMode === 'reviewer' ? 'auditor' : 'reviewer';
+        this.selectMode(newMode, false);
+        
+        // Animation de transition
+        document.body.style.transition = 'all 0.3s ease';
+        setTimeout(() => {
+            document.body.style.transition = '';
+        }, 300);
+    }
+    /* ==========================================================================
+       EVENT LISTENERS SETUP
+       ========================================================================== */
+    setupEventListeners() {
+        // Mode selector buttons
+        window.selectMode = (mode) => this.selectMode(mode);
+        
+        // Mode toggle
+        const modeToggle = document.getElementById('modeToggle');
+        if (modeToggle) {
+            modeToggle.addEventListener('change', () => this.switchMode());
+        }
+        
+        // File actions
+        this.setupFileActionListeners();
+        
+        // Modal events
+        this.setupModalEvents();
+        
+        // Keyboard shortcuts
+        this.setupKeyboardShortcuts();
+    }
+    setupFileActionListeners() {
+        const newAuditBtn = document.getElementById('newAuditBtn');
+        const loadAuditBtn = document.getElementById('loadAuditBtn');
+        const saveAuditBtn = document.getElementById('saveAuditBtn');
+        const saveAuditBtnAuditor = document.getElementById('saveAuditBtnAuditor');
+        const createPackageBtn = document.getElementById('createPackageBtn');
+        const respondPackageBtn = document.getElementById('respondPackageBtn');
+        const neoUpdateBtn = document.getElementById('neoUpdateBtn');
+        const exportExcelBtn = document.getElementById('exportExcelBtn');
+        const exportPDFBtn = document.getElementById('exportPDFBtn');
+        
+        if (newAuditBtn) newAuditBtn.addEventListener('click', () => this.createNewSession());
+        if (loadAuditBtn) loadAuditBtn.addEventListener('click', () => this.loadFile());
+        if (saveAuditBtn) saveAuditBtn.addEventListener('click', () => this.saveWorkInProgress());
+        if (saveAuditBtnAuditor) saveAuditBtnAuditor.addEventListener('click', () => this.saveWorkInProgress());
+        if (createPackageBtn) createPackageBtn.addEventListener('click', () => this.showPackageModal());
+        if (respondPackageBtn) respondPackageBtn.addEventListener('click', () => {
+            this.saveWorkInProgress();
+            this.showPackageModal();
+        });
+        if (neoUpdateBtn) neoUpdateBtn.addEventListener('click', () => this.showNeoUpdateModal());
+        if (exportExcelBtn) exportExcelBtn.addEventListener('click', () => this.exportExcel());
+        if (exportPDFBtn) exportPDFBtn.addEventListener('click', () => this.exportPDF());
+    }
+    setupModalEvents() {
+        // Global modal event handlers
+        window.openCommentModal = (rowElement) => this.openCommentModal(rowElement);
+        window.closeCommentModal = () => this.closeCommentModal();
+        window.saveComment = () => this.saveComment();
+        window.markAsResolved = () => this.markAsResolved();
+        window.clearCommentInput = () => this.clearCommentInput();
+        
+        // Package modal
+        window.closePackageModal = () => this.closePackageModal();
+        window.createPackage = () => this.createPackage();
+        window.continueWorking = () => this.closePackageModal();
+        
+        // NEO update modal
+        window.closeNeoUpdateModal = () => this.closeNeoUpdateModal();
+        window.addNeoUpdateToPackage = () => this.addNeoUpdateToPackage();
+        window.cancelNeoUpdate = () => this.closeNeoUpdateModal();
+        
+        // Template functions
+        window.insertTemplate = (type) => this.insertTemplate(type);
+
+        // Edit/delete functions
+        window.editComment = (commentId) => this.editComment(commentId);
+        window.deleteComment = (commentId) => this.deleteComment(commentId);
+    }
+    setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + M pour changer de mode
+            if ((e.ctrlKey || e.metaKey) && e.key === 'm') {
+                e.preventDefault();
+                this.switchMode();
+            }
+            
+            // Escape pour fermer les modals
+            if (e.key === 'Escape') {
+                this.closeAllModals();
+            }
+            
+            // Ctrl/Cmd + S pour sauvegarder
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                if (this.currentMode === 'reviewer') {
+                    this.saveWorkInProgress();
+                }
+            }
+        });
+    }
+    /* ==========================================================================
+       SIDEBAR AND NAVIGATION
+       ========================================================================== */
+    setupSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarCollapse = document.getElementById('sidebarCollapse');
+        const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+        const mobileSidebarToggleHeader = document.getElementById('mobileSidebarToggleHeader');
+        const mainContent = document.querySelector('.main-content');
+        
+        if (sidebarCollapse) {
+            sidebarCollapse.addEventListener('click', () => {
+                sidebar?.classList.toggle('sidebar-collapsed');
+                mainContent?.classList.toggle('main-content-collapsed');
+            });
+        }
+        
+        const toggleMobileSidebar = () => {
+            sidebar?.classList.toggle('active');
+        };
+        
+        if (mobileSidebarToggle) {
+            mobileSidebarToggle.addEventListener('click', toggleMobileSidebar);
+        }
+        if (mobileSidebarToggleHeader) {
+            mobileSidebarToggleHeader.addEventListener('click', toggleMobileSidebar);
+        }
+    }
+    setupTabs() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        const tabContents = document.querySelectorAll('.tab-content');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetTabId = link.dataset.tabTarget;
+                
+                // Mettre à jour les nav links
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Mettre à jour les contenus
+                tabContents.forEach(content => content.classList.remove('active'));
+                const targetContent = document.getElementById(targetTabId);
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                    
+                    // Rafraîchir le contenu selon l'onglet
+                    this.refreshTabContent(targetTabId);
+                }
+                
+                // Fermer la sidebar mobile
+                const sidebar = document.querySelector('.sidebar');
+                if (sidebar?.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        });
+        
+        // Activer l'onglet par défaut
+        this.setDefaultTab();
+    }
+    setDefaultTab() {
+        const defaultLink = document.querySelector('.nav-link[data-tab-target="profil"]');
+        const defaultContent = document.getElementById('profil');
+        
+        if (defaultLink) defaultLink.classList.add('active');
+        if (defaultContent) defaultContent.classList.add('active');
+    }
+    refreshTabContent(tabId) {
+        switch(tabId) {
+            case 'profil':
+                this.renderCompanyProfile();
+                break;
+            case 'checklist':
+                this.renderChecklistTable();
+                break;
+            case 'nonconformites':
+                this.renderNonConformitiesTable();
+                break;
+        }
+        this.refreshCountersForTab(tabId);
+    }
+    /* ==========================================================================
+       DARK MODE
+       ========================================================================== */
+    setupDarkMode() {
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                const icon = darkModeToggle.querySelector('i');
+                icon.classList.toggle('fa-moon');
+                icon.classList.toggle('fa-sun');
+                localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+            });
+        }
+        
+        // Appliquer le mode sombre sauvegardé
+        if (localStorage.getItem('darkMode') === 'true' || 
+            (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            const icon = darkModeToggle?.querySelector('i');
+            if (icon) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            }
+        }
+    }
+    /* ==========================================================================
+       FILE HANDLING
+       ========================================================================== */
+    setupFileHandling() {
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileInputInternal = document.getElementById('fileInputInternal');
+        
+        // Setup upload zone
+        if (uploadZone && fileInput) {
+            uploadZone.addEventListener('click', () => fileInput.click());
+            
+            uploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadZone.classList.add('border-blue-500', 'bg-gray-100');
+            });
+            
+            uploadZone.addEventListener('dragleave', () => {
+                uploadZone.classList.remove('border-blue-500', 'bg-gray-100');
+            });
+            
+            uploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('border-blue-500', 'bg-gray-100');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    this.handleFileUpload({ target: { files: files } });
+                }
+            });
+            
+            fileInput.addEventListener('change', (e) => this.handleFileUpload(e));
+        }
+        
+        if (fileInputInternal) {
+            fileInputInternal.addEventListener('change', (e) => this.handleFileUpload(e));
+        }
+    }
+    loadFile() {
+        const fileInput = document.getElementById('fileInputInternal');
+        if (fileInput) fileInput.click();
+    }
+    handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const fileName = file.name.toLowerCase();
+        const isIFSFile = fileName.endsWith('.ifs');
+        const isIFSRFile = fileName.endsWith('.ifsr');
+        const isIFSPFile = fileName.endsWith('.ifsp');
+        if (!isIFSFile && !isIFSRFile && !isIFSPFile) {
+            this.showError('❌ Type de fichier non supporté !\n\n✅ Formats acceptés :\n• .ifs (nouveau dossier depuis NEO)\n• .ifsr (travail en cours sauvegardé)\n• .ifsp (package collaboratif)');
+            return;
+        }
+        
+        this.showLoading(true);
+        this.simulateProgress();
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const content = e.target.result;
+                const data = JSON.parse(content);
+                
+                if (isIFSFile) {
+                    this.processNewIFSFile(data);
+                } else if (isIFSRFile) {
+                    this.loadWorkInProgress(data);
+                } else if (isIFSPFile) {
+                    this.loadCollaborativePackage(data);
+                }
+            } catch (error) {
+                console.error('Error during file processing:', error);
+                this.showError(`Erreur lors du traitement du fichier : ${error.message}`);
+                this.showLoading(false);
+                this.resetToUploadState();
+            } finally {
+                event.target.value = null;
+            }
+        };
+        
+        reader.onerror = (error) => {
+            console.error('File reading error:', error);
+            this.showError('Erreur lors de la lecture du fichier');
+            this.showLoading(false);
+            this.resetToUploadState();
+            event.target.value = null;
+        };
+        
+        reader.readAsText(file);
+    }
+    /* ==========================================================================
+       DATA PROCESSING MODULES
+       ========================================================================== */
+    processNewIFSFile(data) {
+        console.log('🎯 PROCESSING NEW IFS FILE');
+        
+        auditData = data;
+        checklistData = [];
+        companyProfileData = {};
+        conversations = {};
+        requirementNumberMapping = {};
+        packageVersion = 1;
+        
+        currentSession = { 
+            id: `IFS-${Date.now()}`, 
+            name: 'Nouvel Audit', 
+            created: new Date(), 
+            lastModified: new Date(), 
+            data: auditData 
+        };
+        
+        if (!data?.data?.modules?.food_8) {
+            this.showError('Format de fichier IFS non valide.');
+            this.resetToUploadState();
+            return;
+        }
+        
+        const food8 = data.data.modules.food_8;
+        this.processAuditDataLogic(food8);
+    }
+    processAuditDataLogic(food8) {
+        // Traitement des statistiques globales
+        const matrixResult = food8.matrixResult;
+        const overallResult = food8.result.overall;
+        
+        let totalA = 0, totalB = 0, totalC = 0, totalD = 0, totalNA = 0;
+        matrixResult.forEach(item => {
+            if (item.type === 'scoreCount') {
+                switch(item.scoreId) {
+                    case 'A': totalA += item.count; break;
+                    case 'B': totalB += item.count; break;
+                    case 'C': totalC += item.count; break;
+                    case 'D': totalD += item.count; break;
+                    case 'NA': totalNA += item.count; break;
+                }
+            }
+        });
+        
+        const totalRequirements = totalA + totalB + totalC + totalD + totalNA;
+        
+        // Mettre à jour l'UI
+        this.updateElementText('totalRequirements', totalRequirements);
+        this.updateElementText('conformCount', totalA);
+        this.updateElementText('nonConformCount', totalB + totalC + totalD);
+        this.updateElementText('overallScore', overallResult.percent.toFixed(1) + '%');
+        
+        // Extraire les données
+        this.extractCompanyProfile(food8.questions);
+        this.processChecklistData(food8.checklists);
+        
+        // Mettre à jour les informations de session
+        const companyName = food8.questions.companyName?.answer || 'Société inconnue';
+        const coid = food8.questions.companyCoid?.answer || 'COID-XXXX';
+        
+        currentSession.id = `IFS-${coid}-${new Date().getTime()}`;
+        currentSession.name = `Audit ${companyName}`;
+        
+        this.updateCurrentAuditName(`IFS Reviewer V2 - ${companyName}`);
+        this.updateSessionInfo(coid);
+        
+        this.showSuccess(`✅ Nouveau dossier créé : ${companyName} (${totalRequirements} exigences)`);
+        this.finalizeDataLoad();
+    }
+    loadWorkInProgress(workData) {
+        console.log('📂 LOADING WORK IN PROGRESS');
+        
+        try {
+            if (!workData.auditData || !workData.version) {
+                throw new Error('Format de fichier IFSR invalide');
+            }
+            
+            // Restaurer les données
+            auditData = workData.auditData;
+            checklistData = workData.checklistData || [];
+            companyProfileData = workData.companyProfileData || {};
+            conversations = workData.conversations || {};
+            requirementNumberMapping = workData.requirementNumberMapping || {};
+            packageVersion = workData.packageVersion || 1;
+            
+            // Mettre à jour le mode si spécifié
+            if (workData.currentMode && workData.currentMode !== this.currentMode) {
+                this.selectMode(workData.currentMode, false);
+            }
+            
+            // Informations de session
+            const companyName = workData.companyName || 'Société inconnue';
+            const coid = workData.coid || 'COID-XXXX';
+            
+            currentSession = {
+                id: workData.sessionId || `IFS-Loaded-${Date.now()}`,
+                name: `Audit ${companyName} (rechargé)`,
+                created: workData.savedDate ? new Date(workData.savedDate) : new Date(),
+                lastModified: new Date(),
+                data: auditData
+            };
+            
+            this.updateCurrentAuditName(`IFS Reviewer V2 - ${companyName}`);
+            this.updateSessionInfo(coid);
+            
+            // Mettre à jour les statistiques
+            if (auditData?.data?.modules?.food_8?.result?.overall) {
+                const overallResult = auditData.data.modules.food_8.result.overall;
+                this.updateElementText('overallScore', overallResult.percent.toFixed(1) + '%');
+            }
+            
+            this.updateElementText('totalRequirements', checklistData.length);
+            this.updateElementText('conformCount', checklistData.filter(item => item.score === 'A').length);
+            this.updateElementText('nonConformCount', checklistData.filter(item => ['B', 'C', 'D'].includes(item.score)).length);
+            
+            const totalComments = this.getTotalCommentsCount();
+            this.showSuccess(`📂 Travail rechargé : ${companyName} (${totalComments} commentaires sauvegardés)`);
+            
+            this.finalizeDataLoad();
+            
+        } catch (error) {
+            console.error('Error loading work in progress:', error);
+            this.showError('Erreur lors du chargement : ' + error.message);
+            this.resetToUploadState();
+        }
+    }
+    loadCollaborativePackage(packageData) {
+        console.log('📦 LOADING COLLABORATIVE PACKAGE');
+        
+        try {
+            if (!packageData.version || !packageData.packageType) {
+                throw new Error('Format de package IFSP invalide');
+            }
+            
+            // Déterminer le mode approprié selon le type de package
+            const expectedMode = packageData.packageType === 'REVIEWER_TO_AUDITOR' ? 'auditor' : 'reviewer';
+            if (this.currentMode !== expectedMode) {
+                if (confirm(`Ce package est destiné au mode ${expectedMode === 'auditor' ? 'Auditeur' : 'Reviewer'}. Voulez-vous changer de mode ?`)) {
+                    this.selectMode(expectedMode, false);
+                }
+            }
+            
+            // Charger les données de base
+            auditData = packageData.auditData;
+            checklistData = packageData.checklistData || [];
+            companyProfileData = packageData.companyProfileData || {};
+            requirementNumberMapping = packageData.requirementNumberMapping || {};
+            
+            // Fusionner les conversations existantes avec les nouvelles
+            if (packageData.conversations) {
+                this.mergeConversations(packageData.conversations);
+            }
+            
+            // Informations de package
+            packageVersion = packageData.packageVersion || 1;
+            const companyName = packageData.companyName || 'Société inconnue';
+            const coid = packageData.coid || 'COID-XXXX';
+            
+            currentSession = {
+                id: `IFSP-${coid}-v${packageVersion}`,
+                name: `Package ${companyName} v${packageVersion}`,
+                created: new Date(packageData.createdDate),
+                lastModified: new Date(),
+                data: auditData
+            };
+            
+            this.updateCurrentAuditName(`IFS Reviewer V2 - ${companyName} (Package v${packageVersion})`);
+            this.updateSessionInfo(coid);
+            
+            // Mettre à jour les statistiques
+            this.updateElementText('totalRequirements', checklistData.length);
+            this.updateElementText('conformCount', checklistData.filter(item => item.score === 'A').length);
+            this.updateElementText('nonConformCount', checklistData.filter(item => ['B', 'C', 'D'].includes(item.score)).length);
+            
+            if (auditData?.data?.modules?.food_8?.result?.overall) {
+                const overallResult = auditData.data.modules.food_8.result.overall;
+                this.updateElementText('overallScore', overallResult.percent.toFixed(1) + '%');
+            }
+            
+            // Notifications pour nouveaux commentaires
+            const newComments = this.countNewComments(packageData);
+            this.showSuccess(`📦 Package collaboratif chargé : ${companyName} v${packageVersion} (${newComments} nouveaux commentaires)`);
+            
+            this.finalizeDataLoad();
+            
+        } catch (error) {
+            console.error('Error loading collaborative package:', error);
+            this.showError('Erreur lors du chargement du package : ' + error.message);
+            this.resetToUploadState();
+        }
+    }
+    mergeConversations(newConversations) {
+        for (const fieldId in newConversations) {
+            if (!conversations[fieldId]) {
+                conversations[fieldId] = newConversations[fieldId];
+            } else {
+                // Fusionner les threads en évitant les doublons
+                const existingIds = new Set(conversations[fieldId].thread.map(msg => msg.id));
+                const newMessages = newConversations[fieldId].thread.filter(msg => !existingIds.has(msg.id));
+                
+                conversations[fieldId].thread = [...conversations[fieldId].thread, ...newMessages];
+                conversations[fieldId].thread.sort((a, b) => new Date(a.date) - new Date(b.date));
+                conversations[fieldId].lastActivity = newConversations[fieldId].lastActivity;
+            }
+        }
+    }
+    countNewComments(packageData) {
+        let newCount = 0;
+        const otherMode = this.currentMode === 'reviewer' ? 'auditor' : 'reviewer';
+        
+        for (const fieldId in packageData.conversations) {
+            const conversation = packageData.conversations[fieldId];
+            conversation.thread.forEach(message => {
+                if (message.author === otherMode && message.status === 'pending') {
+                    newCount++;
+                }
+            });
+        }
+        return newCount;
+    }
+    finalizeDataLoad() {
+        this.showLoading(false);
+        this.showResults(true);
+        
+        setTimeout(() => {
+            this.renderCompanyProfile();
+            this.renderChecklistTable();
+            this.renderNonConformitiesTable();
+            this.refreshAllCounters();
+        }, 100);
+    }
+    /* ==========================================================================
+       CSV PROCESSING AND UUID MAPPING
+       ========================================================================== */
+    processChecklistData(checklists) {
+        if (!checklists?.checklistFood8?.resultScorings) {
+            checklistData = [];
+            requirementNumberMapping = {};
+            return;
+        }
+        
+        const resultScorings = checklists.checklistFood8.resultScorings;
+        console.log('🎯 MAPPING UUID → NUMÉROS IFS OFFICIELS');
+        console.log(`📊 ${Object.keys(resultScorings).length} UUIDs détectés`);
+        
+        // Charger le mapping UUID depuis le CSV GitHub
+        fetch('https://raw.githubusercontent.com/M00N69/Gemini-Knowledge/refs/heads/main/IFSV8listUUID.csv')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(csvText => {
+                console.log('✅ CSV chargé depuis GitHub');
+                
+                const uuidToInfo = this.validateAndProcessCSV(csvText);
+                const ifsUUIDs = Object.keys(resultScorings);
+                const matchedUUIDs = ifsUUIDs.filter(uuid => uuidToInfo[uuid]);
+                const unmatchedUUIDs = ifsUUIDs.filter(uuid => !uuidToInfo[uuid]);
+                
+                console.log(`✅ UUIDs MATCHÉS : ${matchedUUIDs.length}/${ifsUUIDs.length} (${((matchedUUIDs.length/ifsUUIDs.length)*100).toFixed(1)}%)`);
+                
+                if (unmatchedUUIDs.length > 0) {
+                    console.error(`❌ ${unmatchedUUIDs.length} UUID(s) non mappé(s)`);
+                    const errorMessage = `❌ MAPPING INCOMPLET : ${unmatchedUUIDs.length} exigence(s) non mappée(s) sur ${ifsUUIDs.length}`;
+                    this.showError(errorMessage);
+                    this.resetToUploadState();
+                    return;
+                }
+                
+                console.log(`🎯 MAPPING RÉUSSI À 100% : ${matchedUUIDs.length}/${ifsUUIDs.length} exigences`);
+                
+                // Traitement des données
+                const tempData = [];
+                for (const uuid in resultScorings) {
+                    const scoring = resultScorings[uuid];
+                    const mappedInfo = uuidToInfo[uuid];
+                    
+                    tempData.push({
+                        uuid,
+                        requirementNumber: mappedInfo.num,
+                        chapter: mappedInfo.chapitre,
+                        theme: mappedInfo.theme,
+                        sstheme: mappedInfo.sstheme,
+                        scoring
+                    });
+                }
+                
+                // Tri par chapitre puis par numéro d'exigence
+                tempData.sort((a, b) => {
+                    if (a.chapter !== b.chapter) return a.chapter - b.chapter;
+                    
+                    const aParts = a.requirementNumber.split('.').map(n => parseInt(n) || 0);
+                    const bParts = b.requirementNumber.split('.').map(n => parseInt(n) || 0);
+                    
+                    for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+                        const aVal = aParts[i] || 0;
+                        const bVal = bParts[i] || 0;
+                        if (aVal !== bVal) return aVal - bVal;
+                    }
+                    return 0;
+                });
+                
+                // Construction des données finales
+                checklistData = [];
+                tempData.forEach(item => {
+                    requirementNumberMapping[item.uuid] = item.requirementNumber;
+                    
+                    checklistData.push({
+                        uuid: item.uuid,
+                        requirementNumber: item.requirementNumber,
+                        chapter: item.chapter,
+                        theme: item.theme,
+                        sstheme: item.sstheme,
+                        score: item.scoring.score?.label || 'N/D',
+                        scoreValue: item.scoring.score?.value,
+                        explanation: item.scoring.answers?.explanationText || '',
+                        detailedExplanation: item.scoring.answers?.englishExplanationText || '',
+                        needsCorrection: item.scoring.isCorrectionRequired || false
+                    });
+                });
+                
+                console.log(`✅ ${checklistData.length} exigences traitées avec mapping UUID complet`);
+                
+            })
+            .catch(error => {
+                console.error('❌ ERREUR CRITIQUE lors du chargement du CSV de mapping:', error);
+                const errorMessage = `❌ ERREUR DE CHARGEMENT CSV\n\nImpossible de charger le CSV de mapping des exigences IFS.`;
+                this.showError(errorMessage);
+                this.resetToUploadState();
+            });
+    }
+    validateAndProcessCSV(csvText) {
+        const rows = this.parseCSVWithMultilineSupport(csvText);
+        
+        if (rows.length < 2) {
+            throw new Error('CSV doit contenir au moins un header et une ligne de données');
+        }
+        
+        const headers = rows[0].map(h => h.replace(/^["']|["']$/g, '').trim());
+        const requiredColumns = ['UUID', 'Num', 'Chapitre', 'Theme', 'SSTheme'];
+        const missingColumns = requiredColumns.filter(col => !headers.includes(col));
+        
+        if (missingColumns.length > 0) {
+            throw new Error(`Colonnes requises manquantes dans le CSV: ${missingColumns.join(', ')}`);
+        }
+        
+        const columnIndices = {
+            uuid: headers.indexOf('UUID'),
+            num: headers.indexOf('Num'),
+            chapitre: headers.indexOf('Chapitre'),
+            theme: headers.indexOf('Theme'),
+            sstheme: headers.indexOf('SSTheme')
+        };
+        
+        const validMappings = {};
+        
+        for (let i = 1; i < rows.length; i++) {
+            const cols = rows[i];
+            if (!cols || cols.length === 0 || cols.every(col => !col.trim())) continue;
+            
+            const uuid = cols[columnIndices.uuid]?.trim();
+            let num = cols[columnIndices.num]?.trim();
+            const chapitre = cols[columnIndices.chapitre]?.trim();
+            const theme = cols[columnIndices.theme]?.trim();
+            const sstheme = cols[columnIndices.sstheme]?.trim();
+            
+            if (!uuid || uuid.length < 10 || !num) continue;
+            
+            // Nettoyer le numéro d'exigence
+            num = num.replace(/[\r\n]/g, ' ')
+                    .replace(/\s*(KO|NEW|\*)\s*/gi, '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            
+            if (!num) continue;
+            
+            // Extraction du numéro de chapitre
+            let chapitreNum;
+            if (chapitre && chapitre.includes('-')) {
+                chapitreNum = parseInt(chapitre.split('-')[0]);
+            } else {
+                chapitreNum = parseInt(chapitre);
+            }
+            
+            if (isNaN(chapitreNum) || chapitreNum < 1 || chapitreNum > 5) continue;
+            if (validMappings[uuid]) continue;
+            
+            validMappings[uuid] = {
+                num: num,
+                chapitre: chapitreNum,
+                theme: theme || 'N/A',
+                sstheme: sstheme || 'N/A'
+            };
+        }
+        
+        return validMappings;
+    }
+    parseCSVWithMultilineSupport(csvText) {
+        const lines = csvText.split('\n');
+        const result = [];
+        let currentRow = [];
+        let currentField = '';
+        let inQuotes = false;
+        let i = 0;
+        
+        while (i < lines.length) {
+            const line = lines[i];
+            let j = 0;
+            
+            while (j < line.length) {
+                const char = line[j];
+                const nextChar = line[j + 1];
+                
+                if (char === '"') {
+                    if (inQuotes && nextChar === '"') {
+                        currentField += '"';
+                        j += 2;
+                        continue;
+                    }
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    currentRow.push(currentField.trim());
+                    currentField = '';
+                } else {
+                    currentField += char;
+                }
+                j++;
+            }
+            
+            if (inQuotes) {
+                currentField += '\n';
+            } else {
+                currentRow.push(currentField.trim());
+                result.push(currentRow);
+                currentRow = [];
+                currentField = '';
+            }
+            i++;
+        }
+        
+        if (currentRow.length > 0 || currentField) {
+            currentRow.push(currentField.trim());
+            result.push(currentRow);
+        }
+        
+        return result;
+    }
+    /* ==========================================================================
+       COMPANY PROFILE PROCESSING
+       ========================================================================== */
+    extractCompanyProfile(questions) {
+        if (!questions) {
+            companyProfileData = {};
+            return;
+        }
+        
+        companyProfileData = {
+            'Nom du site à auditer': questions.companyName?.answer || '',
+            'N° COID du portail': questions.companyCoid?.answer || '',
+            'Code GLN': questions.companyGln?.[0]?.rootQuestions?.companyGlnNumber?.answer || '',
+            'Rue': questions.companyStreetNo?.answer || '',
+            'Code postal': questions.companyZip?.answer || '',
+            'Nom de la ville': questions.companyCity?.answer || '',
+            'Pays': questions.companyCountry?.answer || '',
+            'Téléphone': questions.companyTelephone?.answer || '',
+            'Email': questions.companyEmail?.answer || '',
+            'Latitude': questions.companyGpsLatitude?.answer || '',
+            'Longitude': questions.companyGpsLongitude?.answer || '',
+            'Nom du siège social': questions.headquartersName?.answer || '',
+            'Rue (siège social)': questions.headquartersStreetNo?.answer || '',
+            'Nom de la ville (siège social)': questions.headquartersCity?.answer || '',
+            'Code postal (siège social)': questions.headquartersZip?.answer || '',
+            'Pays (siège social)': questions.headquartersCountry?.answer || '',
+            'Téléphone (siège social)': questions.headquartersTelephone?.answer || '',
+            'Surface couverte de l\'entreprise (m²)': questions.productionAreaSize?.answer || '',
+            'Nombre de bâtiments': questions.numberOfBuildings?.answer || '',
+            'Nombre de lignes de production': questions.numberOfProductionLines?.answer || '',
+            'Nombre d\'étages': questions.numberOfFloors?.answer || '',
+            'Nombre maximum d\'employés dans l\'année, au pic de production': questions.numberOfEmployeesForTimeCalculation?.answer || '',
+            'Commentaires employés': questions.numberOfEmployeesDescription?.answer || '',
+            'Structures décentralisées': questions.companyStructureDecentralisedDescription?.answer || '',
+            'Fonctions centralisées': questions.companyStructureMultiLocationProductionDescription?.answer || '',
+            'Langue parlée et écrite sur le site': questions.workingLanguage?.answer || '',
+            'Langue du système qualité': questions.qmsLanguage?.answer?.[0] || '',
+            'Audit scope EN': questions.scopeCertificateScopeDescription_en?.answer || '',
+            'Périmètre de l\'audit FR': questions.scopeAuditScopeDescription?.answer || '',
+            'Process et activités': questions.scopeProductGroupsDescription?.answer || '',
+            'Activité saisonnière ? (O/N)': questions.seasonalProduction?.answer || '',
+            'Une partie du procédé de fabrication est-elle sous traitée? (OUI/NON)': questions.partlyOutsourcedProcesses?.answer || '',
+            'Si oui lister les procédés sous-traités': questions.partlyOutsourcedProcessesDescription?.answer || '',
+            'Avez-vous des produits totalement sous-traités? (OUI/NON)': questions.fullyOutsourcedProducts?.answer || '',
+            'Si oui, lister les produits totalement sous-traités': questions.fullyOutsourcedProductsDescription?.answer || '',
+            'Avez-vous des produits de négoce? (OUI/NON)': questions.tradedProductsBrokerActivity?.answer || '',
+            'Si oui, lister les produits de négoce': questions.tradedProductsBrokerActivityDescription?.answer || '',
+            'Produits à exclure du champ d\'audit (OUI/NON)': questions.exclusions?.answer || '',
+            'Préciser les produits à exclure': questions.exclusionsDescription?.answer || ''
+        };
+    }
+    /* ==========================================================================
+       RENDERING METHODS
+       ========================================================================== */
+    renderCompanyProfile() {
+        const container = document.getElementById('companyProfileTable');
+        if (!container) return;
+        
+        if (!companyProfileData || Object.keys(companyProfileData).length === 0) {
+            container.innerHTML = '<p class="text-center p-10 text-gray-500">Aucune donnée de profil. Chargez un fichier.</p>';
+            return;
+        }
+        
+        const categories = {
+            'Informations générales': ['Nom du site à auditer', 'N° COID du portail', 'Code GLN'],
+            'Adresse du site': ['Rue', 'Code postal', 'Nom de la ville', 'Pays', 'Téléphone', 'Email', 'Latitude', 'Longitude'],
+            'Siège social': ['Nom du siège social', 'Rue (siège social)', 'Nom de la ville (siège social)', 'Code postal (siège social)', 'Pays (siège social)', 'Téléphone (siège social)'],
+            'Informations techniques': ['Surface couverte de l\'entreprise (m²)', 'Nombre de bâtiments', 'Nombre de lignes de production', 'Nombre d\'étages', 'Nombre maximum d\'employés dans l\'année, au pic de production', 'Commentaires employés'],
+            'Structure organisationnelle': ['Structures décentralisées', 'Fonctions centralisées'],
+            'Langues': ['Langue parlée et écrite sur le site', 'Langue du système qualité'],
+            'Périmètres d\'audit': ['Audit scope EN', 'Périmètre de l\'audit FR', 'Process et activités'],
+            'Activités spécifiques': ['Activité saisonnière ? (O/N)', 'Une partie du procédé de fabrication est-elle sous traitée? (OUI/NON)', 'Si oui lister les procédés sous-traités', 'Avez-vous des produits totalement sous-traités? (OUI/NON)', 'Si oui, lister les produits totalement sous-traités', 'Avez-vous des produits de négoce? (OUI/NON)', 'Si oui, lister les produits de négoce'],
+            'Exclusions': ['Produits à exclure du champ d\'audit (OUI/NON)', 'Préciser les produits à exclure']
+        };
+        
+        let html = '';
+        Object.entries(categories).forEach(([categoryName, fields]) => {
+            html += `<div class="category-header">${categoryName}</div>
+                     <div class="table-container">
+                        <table class="data-table">
+                            <thead><tr><th>Information</th><th>Valeur</th><th>Commentaires</th></tr></thead>
+                            <tbody>`;
+            
+            fields.forEach(field => {
+                if (companyProfileData.hasOwnProperty(field)) {
+                    const value = companyProfileData[field];
+                    const fieldId = `profile-${this.sanitizeFieldId(field)}`;
+                    const conversation = conversations[fieldId];
+                    const commentStatus = this.getConversationStatus(conversation);
+                    const commentCount = conversation?.thread?.length || 0;
+                    
+                    const isLongText = ['Périmètre de l\'audit FR', 'Audit scope EN', 'Process et activités'].includes(field);
+                    const displayValue = isLongText && value && value.length > 100 ? 
+                        `<div class="field-display">${value || 'N/A'}</div>` : 
+                        `<span>${value || 'N/A'}</span>`;
+                    
+                    html += `<tr class="table-row-clickable" data-field-id="${fieldId}" onclick="ifsTool.openCommentModal(this)">
+                                <td class="font-medium">${field}</td>
+                                <td>${displayValue}</td>
+                                <td class="comment-status-cell">
+                                    <div class="comment-indicators">
+                                        ${commentCount > 0 ? `<span class="comment-count-badge">${commentCount}</span>` : ''}
+                                        <span class="status-indicator ${commentStatus}"></span>
+                                        <button class="quick-comment-btn" onclick="event.stopPropagation(); ifsTool.openCommentModal(this.closest('tr'))">
+                                            <i class="fas fa-comment"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>`;
+                }
+            });
+            html += `</tbody></table></div>`;
+        });
+        
+        container.innerHTML = html;
+    }
+    renderChecklistTable() {
+        const tbody = document.getElementById('checklistTableBody');
+        if (!tbody) return;
+        
+        if (!checklistData || checklistData.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center p-10">Aucune donnée de checklist.</td></tr>';
+            return;
+        }
+        
+        let html = '';
+        checklistData.forEach(item => {
+            const fieldId = `req-${item.uuid}`;
+            const conversation = conversations[fieldId];
+            const commentStatus = this.getConversationStatus(conversation);
+            const commentCount = conversation?.thread?.length || 0;
+            
+            html += `<tr class="table-row-clickable" data-field-id="${fieldId}" data-chapter="${item.chapter}" data-score="${item.score}" data-comment-status="${commentStatus}" onclick="ifsTool.openCommentModal(this)">
+                        <td class="font-medium">${item.requirementNumber}</td>
+                        <td><span class="score-badge score-${item.score}">${item.score}</span></td>
+                        <td class="max-w-xs">${item.explanation || ''}</td>
+                        <td class="max-w-xs">${item.detailedExplanation || ''}</td>
+                        <td class="comment-status-cell">
+                            <div class="comment-indicators">
+                                ${commentCount > 0 ? `<span class="comment-count-badge">${commentCount}</span>` : ''}
+                                <span class="status-indicator ${commentStatus}"></span>
+                                <button class="quick-comment-btn" onclick="event.stopPropagation(); ifsTool.openCommentModal(this.closest('tr'))">
+                                    <i class="fas fa-comment"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+        });
+        
+        tbody.innerHTML = html;
+        this.setupTableFilters();
+    }
+    renderNonConformitiesTable() {
+        const tbody = document.getElementById('nonConformitiesTableBody');
+        if (!tbody) return;
+        
+        if (!checklistData || checklistData.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center p-10">Aucune donnée de NC/NA.</td></tr>';
+            return;
+        }
+        
+        const nonConformItems = checklistData.filter(item => ['B', 'C', 'D', 'NA'].includes(item.score));
+        
+        if (nonConformItems.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center p-10 text-green-500">🎉 Aucune NC/NA trouvée !</td></tr>';
+            return;
+        }
+        
+        let html = '';
+        nonConformItems.forEach(item => {
+            const fieldId = `nc-${item.uuid}`;
+            const conversation = conversations[fieldId];
+            const commentStatus = this.getConversationStatus(conversation);
+            const commentCount = conversation?.thread?.length || 0;
+            
+            html += `<tr class="table-row-clickable" data-field-id="${fieldId}" data-chapter="${item.chapter}" data-score="${item.score}" data-comment-status="${commentStatus}" onclick="ifsTool.openCommentModal(this)">
+                        <td class="font-medium">${item.requirementNumber}</td>
+                        <td><span class="score-badge score-${item.score}">${item.score}</span></td>
+                        <td class="whitespace-pre-wrap max-w-xs">${item.explanation || '-'}</td>
+                        <td class="whitespace-pre-wrap max-w-xs">${item.detailedExplanation || '-'}</td>
+                        <td class="comment-status-cell">
+                            <div class="comment-indicators">
+                                ${commentCount > 0 ? `<span class="comment-count-badge">${commentCount}</span>` : ''}
+                                <span class="status-indicator ${commentStatus}"></span>
+                                <button class="quick-comment-btn" onclick="event.stopPropagation(); ifsTool.openCommentModal(this.closest('tr'))">
+                                    <i class="fas fa-comment"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+        });
+        
+        tbody.innerHTML = html;
+        this.updateNonConformitiesStats();
+    }
+    /* ==========================================================================
+       COMMENT MODAL SYSTEM
+       ========================================================================== */
+    openCommentModal(rowElement) {
+        if (!rowElement) return;
+        
+        const fieldId = rowElement.dataset.fieldId;
+        if (!fieldId) return;
+        
+        this.currentFieldId = fieldId;
+        
+        // Obtenir les informations du champ
+        const fieldInfo = this.getFieldInfo(fieldId);
+        
+        // Remplir le modal
+        document.getElementById('modalFieldName').textContent = `Commentaires - ${fieldInfo.name}`;
+        document.getElementById('fieldDisplayContent').innerHTML = fieldInfo.content;
+        
+        // Charger l'historique des conversations
+        this.loadConversationHistory(fieldId);
+        
+        // Configurer les actions selon le mode
+        this.setupModalForCurrentMode(fieldId);
+
+        // Gérer le brouillon
+        this.setupDraftAutoSave(fieldId);
+        
+        // Afficher le modal
+        document.getElementById('commentModal').classList.remove('hidden');
+        
+        // Focus sur le textarea
+        setTimeout(() => {
+            const textarea = document.getElementById('newCommentInput');
+            if (textarea) textarea.focus();
+        }, 100);
+    }
+
+    setupDraftAutoSave(fieldId) {
+        const textarea = document.getElementById('newCommentInput');
+        const draftStatus = document.getElementById('draftStatus');
+        const draftKey = `draft_${fieldId}`;
+
+        // 1. Restore draft
+        const savedDraft = localStorage.getItem(draftKey);
+        if (savedDraft) {
+            textarea.value = savedDraft;
+            draftStatus.textContent = 'Brouillon restauré.';
+        } else {
+            draftStatus.textContent = '';
+        }
+
+        // 2. Auto-save
+        if (this.draftSaveInterval) {
+            clearInterval(this.draftSaveInterval);
+        }
+
+        this.draftSaveInterval = setInterval(() => {
+            const content = textarea.value;
+            if (content.trim().length > 0) {
+                localStorage.setItem(draftKey, content);
+                const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                draftStatus.textContent = `Brouillon sauvegardé à ${time}`;
+            } else {
+                // If textarea is cleared, remove draft
+                localStorage.removeItem(draftKey);
+                draftStatus.textContent = '';
+            }
+        }, 30000); // 30 seconds
+    }
+    closeCommentModal() {
+        document.getElementById('commentModal').classList.add('hidden');
+        this.currentFieldId = null;
+        
+        // Arrêter l'auto-sauvegarde du brouillon
+        if (this.draftSaveInterval) {
+            clearInterval(this.draftSaveInterval);
+            this.draftSaveInterval = null;
+        }
+        const draftStatus = document.getElementById('draftStatus');
+        if(draftStatus) draftStatus.textContent = '';
+
+        this.clearCommentInput();
+    }
+    getFieldInfo(fieldId) {
+        if (fieldId.startsWith('profile-')) {
+            const fieldName = this.unsanitizeFieldId(fieldId.replace('profile-', ''));
+            return {
+                name: fieldName,
+                content: companyProfileData[fieldName] || 'N/A',
+                type: 'profile'
+            };
+        } else if (fieldId.startsWith('req-') || fieldId.startsWith('nc-')) {
+            const uuid = fieldId.replace(/^(req-|nc-)/, '');
+            const item = checklistData.find(r => r.uuid === uuid);
+            if (item) {
+                return {
+                    name: `Exigence ${item.requirementNumber}`,
+                    content: `<strong>Score:</strong> ${item.score}<br><strong>Explication:</strong> ${item.explanation || 'N/A'}<br><strong>Détail:</strong> ${item.detailedExplanation || 'N/A'}`,
+                    type: 'requirement'
+                };
+            }
+        }
+        
+        return {
+            name: 'Champ inconnu',
+            content: 'Contenu non disponible',
+            type: 'unknown'
+        };
+    }
+    loadConversationHistory(fieldId) {
+        const historyContainer = document.getElementById('conversationHistory');
+        const conversation = conversations[fieldId];
+        
+        if (!conversation || !conversation.thread || conversation.thread.length === 0) {
+            historyContainer.innerHTML = `
+                <div class="no-comments">
+                    <i class="fas fa-comments"></i>
+                    <p>Aucun commentaire pour ce champ. Commencez la conversation !</p>
+                </div>
+            `;
+            document.getElementById('conversationStats').textContent = '0 message(s)';
+            return;
+        }
+        
+        let html = '';
+        conversation.thread.forEach(comment => {
+            html += this.createChatBubble(comment);
+        });
+        
+        historyContainer.innerHTML = html;
+        historyContainer.scrollTop = historyContainer.scrollHeight;
+        
+        document.getElementById('conversationStats').textContent = `${conversation.thread.length} message(s)`;
+        
+        // Mettre à jour le statut du modal
+        const status = this.getConversationStatus(conversation);
+        document.getElementById('modalStatusBadge').textContent = this.getStatusLabel(status);
+        document.getElementById('modalStatusBadge').className = `status-badge ${status}`;
+    }
+    createChatBubble(comment) {
+        const isNeoUpdate = comment.isNeoUpdate ? 'neo-update' : '';
+        const bubbleClass = `chat-bubble ${comment.author} ${isNeoUpdate}`;
+        const avatarText = comment.author === 'reviewer' ? 'R' : 'A';
+        const canEdit = comment.author === this.currentMode && this.isWithin5Minutes(comment.date);
+
+        const editDeleteButtons = canEdit ? `
+            <div class="bubble-actions">
+                <button onclick="window.editComment('${comment.id}')" class="edit-btn">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="window.deleteComment('${comment.id}')" class="delete-btn">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        ` : '';
+
+        const editedBadge = comment.isEdited ? `<span class="bubble-edited">(modifié)</span>` : '';
+
+        return `
+            <div class="${bubbleClass}">
+                <div class="chat-avatar">${avatarText}</div>
+                <div class="bubble-content ${comment.author}">
+                    ${editDeleteButtons}
+                    <div class="bubble-text">${this.formatCommentContent(comment.content)}</div>
+                    <div class="bubble-meta">
+                        ${formatDate(comment.date)}
+                        ${editedBadge}
+                        <span class="status-badge ${comment.status}">${this.getStatusLabel(comment.status)}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    formatCommentContent(content) {
+        if (!content) return '';
+        
+        // Convertir les URLs en liens
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        content = content.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+        
+        // Convertir les retours à la ligne
+        content = content.replace(/\n/g, '<br>');
+        
+        return content;
+    }
+    setupModalForCurrentMode(fieldId) {
+        const conversation = conversations[fieldId];
+        const hasMessages = conversation && conversation.thread && conversation.thread.length > 0;
+        const lastMessage = hasMessages ? conversation.thread[conversation.thread.length - 1] : null;
+        const canResolve = this.currentMode === 'reviewer' && hasMessages && lastMessage?.author === 'auditor';
+        
+        // Bouton résolu
+        const resolveBtn = document.getElementById('resolveBtn');
+        if (resolveBtn) {
+            resolveBtn.style.display = canResolve ? 'block' : 'none';
+        }
+        
+        // Placeholder du textarea
+        const textarea = document.getElementById('newCommentInput');
+        if (textarea) {
+            textarea.placeholder = this.currentMode === 'reviewer' ? 
+                'Tapez votre commentaire reviewer...' : 
+                'Tapez votre réponse...';
+        }
+    }
+    saveComment() {
+        const textarea = document.getElementById('newCommentInput');
+        const content = textarea.value.trim();
+        
+        if (!content) {
+            this.showError('Veuillez saisir un commentaire');
+            return;
+        }
+        
+        if (!this.currentFieldId) {
+            this.showError('Erreur: aucun champ sélectionné');
+            return;
+        }
+        
+        // Créer le nouveau message
+        const newComment = {
+            id: generateUUID(),
+            author: this.currentMode,
+            content: content,
+            date: new Date().toISOString(),
+            status: 'pending',
+            version: packageVersion
+        };
+        
+        // Ajouter à la conversation
+        this.addCommentToConversation(this.currentFieldId, newComment);
+        
+        // Nettoyer le brouillon après envoi
+        const draftKey = `draft_${this.currentFieldId}`;
+        localStorage.removeItem(draftKey);
+        const draftStatus = document.getElementById('draftStatus');
+        if (draftStatus) draftStatus.textContent = '';
+
+        // Rafraîchir l'affichage
+        this.loadConversationHistory(this.currentFieldId);
+        this.clearCommentInput();
+        this.refreshAllCounters();
+        
+        this.showSuccess('💬 Commentaire ajouté');
+    }
+    addCommentToConversation(fieldId, comment) {
+        if (!conversations[fieldId]) {
+            conversations[fieldId] = {
+                thread: [],
+                lastActivity: new Date().toISOString(),
+                status: 'active',
+                priority: 'normal'
+            };
+        }
+        
+        conversations[fieldId].thread.push(comment);
+        conversations[fieldId].lastActivity = comment.date;
+        
+        // Marquer les messages précédents comme lus
+        conversations[fieldId].thread.forEach((msg, index) => {
+            if (index < conversations[fieldId].thread.length - 1 && msg.status === 'pending') {
+                msg.status = 'read';
+            }
+        });
+    }
+    markAsResolved() {
+        if (!this.currentFieldId) return;
+        
+        const conversation = conversations[this.currentFieldId];
+        if (!conversation) return;
+        
+        conversation.status = 'resolved';
+        conversation.thread.forEach(msg => {
+            if (msg.status === 'pending') {
+                msg.status = 'resolved';
+            }
+        });
+        
+        this.loadConversationHistory(this.currentFieldId);
+        this.refreshAllCounters();
+        this.showSuccess('✅ Marqué comme résolu');
+    }
+    clearCommentInput() {
+        const textarea = document.getElementById('newCommentInput');
+        if (textarea) {
+            textarea.value = '';
+        }
+    }
+    insertTemplate(type) {
+        const textarea = document.getElementById('newCommentInput');
+        if (!textarea) return;
+        
+        let template = '';
+        switch (type) {
+            case 'quality':
+                template = '🔍 Point qualité à vérifier :\n- \n\nRecommandation :\n- ';
+                break;
+            case 'correction':
+                template = '⚠️ Correction requise :\n- \n\nActions attendues :\n- ';
+                break;
+        }
+        
+        textarea.value = template;
+        textarea.focus();
+    }
+
+    isWithin5Minutes(commentDate) {
+        const now = new Date();
+        const commentTime = new Date(commentDate);
+        const diffMinutes = (now - commentTime) / (1000 * 60);
+        return diffMinutes <= 5;
+    }
+
+    editComment(commentId) {
+        if (!this.currentFieldId) return;
+        const conversation = conversations[this.currentFieldId];
+        if (!conversation) return;
+
+        const commentIndex = conversation.thread.findIndex(c => c.id === commentId);
+        if (commentIndex === -1) return;
+
+        const comment = conversation.thread[commentIndex];
+
+        const newContent = prompt("Modifier le commentaire :", comment.content);
+
+        if (newContent && newContent.trim() !== '' && newContent.trim() !== comment.content) {
+            comment.content = newContent.trim();
+            comment.isEdited = true;
+            comment.editedDate = new Date().toISOString();
+            
+            this.loadConversationHistory(this.currentFieldId);
+            this.showSuccess('Commentaire modifié.');
+        }
+    }
+
+    deleteComment(commentId) {
+        if (!this.currentFieldId) return;
+        if (!confirm("Êtes-vous sûr de vouloir supprimer ce message ? Cette action est irréversible.")) {
+            return;
+        }
+
+        const conversation = conversations[this.currentFieldId];
+        if (!conversation) return;
+
+        const commentIndex = conversation.thread.findIndex(c => c.id === commentId);
+        if (commentIndex === -1) return;
+
+        const comment = conversation.thread[commentIndex];
+        comment.content = '[Message supprimé par l\'auteur]';
+        comment.isDeleted = true;
+        comment.isEdited = false; // A deleted message is not "edited"
+
+        this.loadConversationHistory(this.currentFieldId);
+        this.showSuccess('Commentaire supprimé.');
+    }
+
+    isWithin5Minutes(commentDate) {
+        const now = new Date();
+        const commentTime = new Date(commentDate);
+        const diffMinutes = (now - commentTime) / (1000 * 60);
+        return diffMinutes <= 5;
+    }
+
+    editComment(commentId) {
+        if (!this.currentFieldId) return;
+        const conversation = conversations[this.currentFieldId];
+        if (!conversation) return;
+
+        const commentIndex = conversation.thread.findIndex(c => c.id === commentId);
+        if (commentIndex === -1) return;
+
+        const comment = conversation.thread[commentIndex];
+
+        const newContent = prompt("Modifier le commentaire :", comment.content);
+
+        if (newContent && newContent.trim() !== '' && newContent.trim() !== comment.content) {
+            comment.content = newContent.trim();
+            comment.isEdited = true;
+            comment.editedDate = new Date().toISOString();
+            
+            this.loadConversationHistory(this.currentFieldId);
+            this.showSuccess('Commentaire modifié.');
+        }
+    }
+
+    deleteComment(commentId) {
+        if (!this.currentFieldId) return;
+        if (!confirm("Êtes-vous sûr de vouloir supprimer ce message ? Cette action est irréversible.")) {
+            return;
+        }
+
+        const conversation = conversations[this.currentFieldId];
+        if (!conversation) return;
+
+        const commentIndex = conversation.thread.findIndex(c => c.id === commentId);
+        if (commentIndex === -1) return;
+
+        const comment = conversation.thread[commentIndex];
+        comment.content = '[Message supprimé par l\'auteur]';
+        comment.isDeleted = true;
+        comment.isEdited = false; // A deleted message is not "edited"
+
+        this.loadConversationHistory(this.currentFieldId);
+        this.showSuccess('Commentaire supprimé.');
+    }
+
+    isWithin5Minutes(commentDate) {
+        const now = new Date();
+        const commentTime = new Date(commentDate);
+        const diffMinutes = (now - commentTime) / (1000 * 60);
+        return diffMinutes <= 5;
+    }
+
+    editComment(commentId) {
+        if (!this.currentFieldId) return;
+        const conversation = conversations[this.currentFieldId];
+        if (!conversation) return;
+
+        const commentIndex = conversation.thread.findIndex(c => c.id === commentId);
+        if (commentIndex === -1) return;
+
+        const comment = conversation.thread[commentIndex];
+
+        const newContent = prompt("Modifier le commentaire :", comment.content);
+
+        if (newContent && newContent.trim() !== '' && newContent.trim() !== comment.content) {
+            comment.content = newContent.trim();
+            comment.isEdited = true;
+            comment.editedDate = new Date().toISOString();
+            
+            this.loadConversationHistory(this.currentFieldId);
+            this.showSuccess('Commentaire modifié.');
+        }
+    }
+
+    deleteComment(commentId) {
+        if (!this.currentFieldId) return;
+        if (!confirm("Êtes-vous sûr de vouloir supprimer ce message ? Cette action est irréversible.")) {
+            return;
+        }
+
+        const conversation = conversations[this.currentFieldId];
+        if (!conversation) return;
+
+        const commentIndex = conversation.thread.findIndex(c => c.id === commentId);
+        if (commentIndex === -1) return;
+
+        const comment = conversation.thread[commentIndex];
+        comment.content = '[Message supprimé par l\'auteur]';
+        comment.isDeleted = true;
+        comment.isEdited = false; // A deleted message is not "edited"
+
+        this.loadConversationHistory(this.currentFieldId);
+        this.showSuccess('Commentaire supprimé.');
+    }
+
+    isWithin5Minutes(commentDate) {
+        const now = new Date();
+        const commentTime = new Date(commentDate);
+        const diffMinutes = (now - commentTime) / (1000 * 60);
+        return diffMinutes <= 5;
+    }
+
+    editComment(commentId) {
+        if (!this.currentFieldId) return;
+        const conversation = conversations[this.currentFieldId];
+        if (!conversation) return;
+
+        const commentIndex = conversation.thread.findIndex(c => c.id === commentId);
+        if (commentIndex === -1) return;
+
+        const comment = conversation.thread[commentIndex];
+
+        const newContent = prompt("Modifier le commentaire :", comment.content);
+
+        if (newContent && newContent.trim() !== '' && newContent.trim() !== comment.content) {
+            comment.content = newContent.trim();
+            comment.isEdited = true;
+            comment.editedDate = new Date().toISOString();
+            
+            this.loadConversationHistory(this.currentFieldId);
+            this.showSuccess('Commentaire modifié.');
+        }
+    }
+
+    deleteComment(commentId) {
+        if (!this.currentFieldId) return;
+        if (!confirm("Êtes-vous sûr de vouloir supprimer ce message ? Cette action est irréversible.")) {
+            return;
+        }
+
+        const conversation = conversations[this.currentFieldId];
+        if (!conversation) return;
+
+        const commentIndex = conversation.thread.findIndex(c => c.id === commentId);
+        if (commentIndex === -1) return;
+
+        const comment = conversation.thread[commentIndex];
+        comment.content = '[Message supprimé par l\'auteur]';
+        comment.isDeleted = true;
+        comment.isEdited = false; // A deleted message is not "edited"
+
+        this.loadConversationHistory(this.currentFieldId);
+        this.showSuccess('Commentaire supprimé.');
+    }
+
+    isWithin5Minutes(commentDate) {
+        const now = new Date();
+        const commentTime = new Date(commentDate);
+        const diffMinutes = (now - commentTime) / (1000 * 60);
+        return diffMinutes <= 5;
+    }
+
+    editComment(commentId) {
+        if (!this.currentFieldId) return;
+        const conversation = conversations[this.currentFieldId];
+        if (!conversation) return;
+
+        const commentIndex = conversation.thread.findIndex(c => c.id === commentId);
+        if (commentIndex === -1) return;
+
+        const comment = conversation.thread[commentIndex];
+
+        const newContent = prompt("Modifier le commentaire :", comment.content);
+
+        if (newContent && newContent.trim() !== '' && newContent.trim() !== comment.content) {
+            comment.content = newContent.trim();
+            comment.isEdited = true;
+            comment.editedDate = new Date().toISOString();
+            
+            this.loadConversationHistory(this.currentFieldId);
+            this.showSuccess('Commentaire modifié.');
+        }
+    }
+
+    deleteComment(commentId) {
+        if (!this.currentFieldId) return;
+        if (!confirm("Êtes-vous sûr de vouloir supprimer ce message ? Cette action est irréversible.")) {
+            return;
+        }
+
+        const conversation = conversations[this.currentFieldId];
+        if (!conversation) return;
+
+        const commentIndex = conversation.thread.findIndex(c => c.id === commentId);
+        if (commentIndex === -1) return;
+
+        const comment = conversation.thread[commentIndex];
+        comment.content = '[Message supprimé par l\'auteur]';
+        comment.isDeleted = true;
+        comment.isEdited = false; // A deleted message is not "edited"
+
+        this.loadConversationHistory(this.currentFieldId);
+        this.showSuccess('Commentaire supprimé.');
+    }
+    /* ==========================================================================
+       PACKAGE MANAGEMENT
+       ========================================================================== */
+    showPackageModal() {
+        const validation = this.validatePackageCompletion();
+        
+        // Remplir les statistiques
+        document.getElementById('packageCompletionRate').textContent = validation.completionRate + '%';
+        document.getElementById('packagePendingFields').textContent = validation.pendingFields;
+        document.getElementById('packageTotalComments').textContent = validation.totalComments;
+        
+        // Message de validation
+        const messageElement = document.getElementById('validationMessage');
+        const createBtn = document.getElementById('createPackageConfirm');
+        
+        if (validation.isComplete) {
+            messageElement.textContent = '✅ Tous les commentaires ont reçu une réponse. Le package peut être créé.';
+            messageElement.className = 'validation-message complete';
+            createBtn.disabled = false;
+        } else {
+            messageElement.textContent = `⚠️ ${validation.pendingFields} champ(s) en attente de réponse. Vous pouvez créer un package partiel.`;
+            messageElement.className = 'validation-message incomplete';
+            createBtn.disabled = false;
+        }
+        
+        // Titre du modal selon le mode
+        const title = this.currentMode === 'reviewer' ? 'Créer un package pour auditeur' : 'Créer une réponse pour reviewer';
+        document.getElementById('packageModalTitle').textContent = title;
+        
+        document.getElementById('packageModal').classList.remove('hidden');
+    }
+    closePackageModal() {
+        document.getElementById('packageModal').classList.add('hidden');
+    }
+    validatePackageCompletion() {
+        const allFieldsWithComments = Object.keys(conversations);
+        const totalComments = allFieldsWithComments.length;
+        
+        let respondedFields = 0;
+        let pendingFields = 0;
+        
+        allFieldsWithComments.forEach(fieldId => {
+            const conversation = conversations[fieldId];
+            if (!conversation || !conversation.thread.length) return;
+            
+            const lastComment = conversation.thread[conversation.thread.length - 1];
+            const otherMode = this.currentMode === 'reviewer' ? 'auditor' : 'reviewer';
+            
+            if (lastComment.author === otherMode) {
+                respondedFields++;
+            } else {
+                pendingFields++;
+            }
+        });
+        
+        const completionRate = totalComments > 0 ? Math.round((respondedFields / totalComments) * 100) : 100;
+        
+        return {
+            isComplete: completionRate === 100,
+            completionRate,
+            totalComments,
+            respondedFields,
+            pendingFields
+        };
+    }
+    createPackage() {
+        try {
+            const companyName = companyProfileData['Nom du site à auditer'] || 'Société inconnue';
+            const coid = companyProfileData['N° COID du portail'] || 'COID-XXXX';
+            
+            const packageType = this.currentMode === 'reviewer' ? 'REVIEWER_TO_AUDITOR' : 'AUDITOR_TO_REVIEWER';
+            packageVersion++;
+            
+            const packageData = {
+                version: '2.0',
+                packageType: packageType,
+                packageVersion: packageVersion,
+                createdBy: this.currentMode,
+                createdDate: new Date().toISOString(),
+                companyName,
+                coid,
+                
+                // Données de base
+                auditData,
+                checklistData,
+                companyProfileData,
+                requirementNumberMapping,
+                
+                // Conversations
+                conversations,
+                
+                // Métadonnées
+                metadata: {
+                    totalFields: Object.keys(conversations).length,
+                    totalComments: this.getTotalCommentsCount(),
+                    lastExchangeDate: new Date().toISOString()
+                }
+            };
+            
+            const filename = `PACKAGE_${packageType}_${coid}_${this.sanitizeFileName(companyName)}_v${packageVersion}_${this.getDateStamp()}.ifsp`;
+            this.downloadFile(packageData, filename);
+            
+            this.showSuccess(`📦 Package créé : ${filename}`);
+            this.closePackageModal();
+            
+        } catch (error) {
+            console.error('Error creating package:', error);
+            this.showError('❌ Erreur création package : ' + error.message);
+        }
+    }
+    /* ==========================================================================
+       NEO UPDATE MODAL
+       ========================================================================== */
+    showNeoUpdateModal() {
+        document.getElementById('neoUpdateModal').classList.remove('hidden');
+    }
+    closeNeoUpdateModal() {
+        document.getElementById('neoUpdateModal').classList.add('hidden');
+        document.getElementById('neoUpdateDescription').value = '';
+        document.getElementById('newNeoFile').value = '';
+    }
+    addNeoUpdateToPackage() {
+        const description = document.getElementById('neoUpdateDescription').value.trim();
+        
+        if (!description) {
+            this.showError('Veuillez décrire les modifications apportées');
+            return;
+        }
+        
+        // Créer un commentaire spécial NEO update
+        const neoUpdateComment = {
+            id: generateUUID(),
+            author: 'auditor',
+            content: `🔄 MISE À JOUR NEO: ${description}`,
+            date: new Date().toISOString(),
+            status: 'pending',
+            isNeoUpdate: true,
+            version: packageVersion
+        };
+        
+        // L'ajouter à un champ spécial ou au profil principal
+        const profileFieldId = 'profile-nom-du-site-à-auditer';
+        this.addCommentToConversation(profileFieldId, neoUpdateComment);
+        
+        this.showSuccess('🔄 Mise à jour NEO ajoutée au package');
+        this.closeNeoUpdateModal();
+        this.refreshAllCounters();
+    }
+    /* ==========================================================================
+       SESSION MANAGEMENT
+       ========================================================================== */
+    createNewSession() {
+        if (auditData && !confirm("⚠️ Créer un nouveau dossier ? Le travail non sauvegardé sera perdu.")) {
+            return;
+        }
+        
+        // Reset all data
+        auditData = null;
+        checklistData = [];
+        companyProfileData = {};
+        conversations = {};
+        requirementNumberMapping = {};
+        packageVersion = 1;
+        
+        currentSession = { 
+            id: null, 
+            name: 'Nouveau Dossier', 
+            created: new Date(), 
+            lastModified: new Date(), 
+            data: null 
+        };
+        
+        this.resetToUploadState();
+        this.resetUI();
+        this.switchTab('profil');
+        
+        this.showSuccess('✅ Nouveau dossier prêt. Chargez un fichier .ifs, .ifsr ou .ifsp.');
+    }
+    saveWorkInProgress() {
+        if (!auditData) {
+            this.showError('❌ Aucune donnée à sauvegarder. Chargez un fichier .ifs d\'abord.');
+            return;
+        }
+        
+        try {
+            const companyName = companyProfileData['Nom du site à auditer'] || 'Société inconnue';
+            const coid = companyProfileData['N° COID du portail'] || 'COID-XXXX';
+            
+            const workPackage = {
+                version: '2.0',
+                packageType: 'WORK_IN_PROGRESS',
+                savedDate: new Date().toISOString(),
+                companyName,
+                coid,
+                currentMode: this.currentMode,
+                
+                // Data
+                auditData,
+                checklistData,
+                companyProfileData,
+                conversations,
+                requirementNumberMapping,
+                
+                // Stats
+                stats: {
+                    totalComments: this.getTotalCommentsCount(),
+                    totalRequirements: checklistData.length,
+                    progressPercentage: this.calculateProgressPercentage()
+                }
+            };
+            
+            this.downloadFile(workPackage, `TRAVAIL_${coid}_${this.sanitizeFileName(companyName)}_${this.getDateStamp()}.ifsr`);
+            this.showSuccess(`✅ Travail sauvegardé`);
+            
+        } catch (error) {
+            console.error('Error saving work:', error);
+            this.showError('❌ Erreur sauvegarde : ' + error.message);
+        }
+    }
+    /* ==========================================================================
+       UTILITY FUNCTIONS
+       ========================================================================== */
+    showLoading(show = true) {
+        const loading = document.getElementById('loading');
+        const uploadZone = document.getElementById('uploadZone');
+        const results = document.getElementById('profilResults');
+        
+        if (show) {
+            loading?.classList.remove('hidden');
+            uploadZone?.classList.add('hidden');
+            results?.classList.add('hidden');
+        } else {
+            loading?.classList.add('hidden');
+        }
+    }
+    simulateProgress() {
+        let progress = 0;
+        const progressFill = document.getElementById('progressFill');
+        
+        if (!progressFill) {
+            setTimeout(() => this.showLoading(false), 1000);
+            return;
+        }
+        
+        const interval = setInterval(() => {
+            progress += Math.random() * 15;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                setTimeout(() => {
+                    progressFill.style.width = '0%';
+                    this.showLoading(false);
+                    this.showResults(true);
+                }, 500);
+            }
+            progressFill.style.width = progress + '%';
+        }, 200);
+    }
+    showResults(show = true) {
+        const results = document.getElementById('profilResults');
+        if (results) {
+            if (show) {
+                results.classList.remove('hidden');
+            } else {
+                results.classList.add('hidden');
+            }
+        }
+    }
+    resetToUploadState() {
+        this.showLoading(false);
+        this.showResults(false);
+        
+        const uploadZone = document.getElementById('uploadZone');
+        uploadZone?.classList.remove('hidden');
+        
+        this.updateCurrentAuditName("Aucun audit chargé");
+        this.updateSessionInfo("----");
+    }
+    resetUI() {
+        // Reset counters
+        ['totalRequirements', 'conformCount', 'nonConformCount', 'overallScore', 'progressPercentage', 'commentsCount']
+            .forEach(id => this.updateElementText(id, id.includes('Percentage') || id.includes('Score') ? '0%' : '0'));
+        
+        // Reset tables
+        this.renderCompanyProfile();
+        this.renderChecklistTable();
+        this.renderNonConformitiesTable();
+        
+        // Reset alerts
+        const alert = document.getElementById('successAlert');
+        if (alert) {
+            alert.textContent = '';
+            alert.classList.add('hidden');
+        }
+    }
+    updateElementText(id, value) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = value;
+        }
+    }
+    updateCurrentAuditName(name) {
+        const element = document.getElementById('currentAuditName');
+        if (element) {
+            element.textContent = name;
+        }
+    }
+    updateSessionInfo(coid) {
+        const element = document.getElementById('sessionIdTop');
+        if (element) {
+            element.textContent = `COID: ${coid}`;
+        }
+        
+        const versionElement = document.getElementById('packageVersionInfo');
+        if (versionElement) {
+            versionElement.textContent = `v${packageVersion}`;
+        }
+    }
+    showSuccess(message) {
+        const alert = document.getElementById('successAlert');
+        if (alert) {
+            alert.textContent = message;
+            alert.className = 'alert alert-success';
+            alert.classList.remove('hidden');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                alert.classList.add('hidden');
+            }, 5000);
+        }
+    }
+    showError(message) {
+        console.error('App Error:', message);
+        const alert = document.getElementById('successAlert');
+        if (alert) {
+            alert.textContent = `❌ ${message}`;
+            alert.className = 'alert alert-error';
+            alert.classList.remove('hidden');
+            
+            alert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+            alert(message);
+        }
+    }
+    sanitizeFileName(name) {
+        return name.replace(/[^a-zA-Z0-9]/g, '_');
+    }
+    getDateStamp() {
+        return new Date().toISOString().split('T')[0].replace(/-/g, '');
+    }
+    downloadFile(data, filename) {
+        const dataStr = JSON.stringify(data, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+    closeAllModals() {
+        const modals = document.querySelectorAll('.comment-modal, .package-modal, .neo-update-modal');
+        modals.forEach(modal => {
+            modal.classList.add('hidden');
+        });
+    }
+    switchTab(tabId) {
+        const tabContents = document.querySelectorAll('.tab-content');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        // Désactiver tous les onglets
+        tabContents.forEach(content => content.classList.remove('active'));
+        navLinks.forEach(link => link.classList.remove('active'));
+        
+        // Activer l'onglet ciblé
+        const targetContent = document.getElementById(tabId);
+        const targetLink = document.querySelector(`[data-tab-target="${tabId}"]`);
+        
+        if (targetContent) targetContent.classList.add('active');
+        if (targetLink) targetLink.classList.add('active');
+        
+        // Rafraîchir le contenu
+        this.refreshTabContent(tabId);
+    }
+    /* ==========================================================================
+       UTILITY METHODS
+       ========================================================================== */
+    sanitizeFieldId(fieldName) {
+        return fieldName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '').toLowerCase();
+    }
+    unsanitizeFieldId(fieldId) {
+        // Reverse mapping - approximatif, pour l'affichage
+        const mapping = {
+            'nom-du-site-à-auditer': 'Nom du site à auditer',
+            'n-coid-du-portail': 'N° COID du portail',
+            // Ajouter d'autres mappings si nécessaire
+        };
+        return mapping[fieldId] || fieldId.replace(/-/g, ' ');
+    }
+    getConversationStatus(conversation) {
+        if (!conversation || !conversation.thread || conversation.thread.length === 0) {
+            return 'none';
+        }
+        
+        if (conversation.status === 'resolved') {
+            return 'resolved';
+        }
+        
+        const lastMessage = conversation.thread[conversation.thread.length - 1];
+        const otherMode = this.currentMode === 'reviewer' ? 'auditor' : 'reviewer';
+        
+        if (lastMessage.author === otherMode && lastMessage.status === 'pending') {
+            return 'pending';
+        }
+        
+        return 'read';
+    }
+    getStatusLabel(status) {
+        const labels = {
+            'pending': 'En attente',
+            'read': 'Lu',
+            'resolved': 'Résolu',
+            'none': 'Aucun'
+        };
+        return labels[status] || status;
+    }
+    /* ==========================================================================
+       COUNTERS AND STATISTICS
+       ========================================================================== */
+    refreshAllCounters() {
+        this.refreshCountersForTab('profil');
+        this.refreshCountersForTab('checklist');
+        this.refreshCountersForTab('nonconformites');
+        this.updateProgressStats();
+    }
+    refreshCountersForTab(tabId) {
+        let pending = 0, resolved = 0, total = 0;
+        
+        Object.values(conversations).forEach(conversation => {
+            if (!conversation || !conversation.thread || conversation.thread.length === 0) return;
+            
+            const fieldId = Object.keys(conversations).find(key => conversations[key] === conversation);
+            const isTabRelevant = this.isFieldRelevantForTab(fieldId, tabId);
+            
+            if (!isTabRelevant) return;
+            
+            total++;
+            const status = this.getConversationStatus(conversation);
+            
+            if (status === 'resolved') {
+                resolved++;
+            } else if (status === 'pending') {
+                pending++;
+            }
+        });
+        
+        // Mettre à jour les compteurs de l'onglet
+        this.updateElementText(`${tabId}PendingCount`, pending);
+        this.updateElementText(`${tabId}ResolvedCount`, resolved);
+        this.updateElementText(`${tabId}TotalCount`, total);
+        
+        // Mettre à jour les compteurs de la sidebar
+        this.updateElementText(`${tabId}CommentCounter`, total > 0 ? total : '');
+    }
+    isFieldRelevantForTab(fieldId, tabId) {
+        switch (tabId) {
+            case 'profil':
+                return fieldId.startsWith('profile-');
+            case 'checklist':
+                return fieldId.startsWith('req-');
+            case 'nonconformites':
+                return fieldId.startsWith('nc-');
+            default:
+                return false;
+        }
+    }
+    updateProgressStats() {
+        const totalComments = this.getTotalCommentsCount();
+        this.updateElementText('commentsCount', totalComments);
+        
+        const progressPercentage = this.calculateProgressPercentage();
+        this.updateElementText('progressPercentage', progressPercentage + '%');
+    }
+    updateNonConformitiesStats() {
+        if (!checklistData) return;
+        
+        const ncNaItems = checklistData.filter(i => ['B', 'C', 'D', 'NA'].includes(i.score));
+        
+        this.updateElementText('totalNC', ncNaItems.length);
+        this.updateElementText('scoreB', checklistData.filter(i => i.score === 'B').length);
+        this.updateElementText('scoreC', checklistData.filter(i => i.score === 'C').length);
+        this.updateElementText('scoreD', checklistData.filter(i => i.score === 'D').length);
+        this.updateElementText('naCount', checklistData.filter(i => i.score === 'NA').length);
+        
+        // Compter les commentaires NC/NA
+        const ncComments = ncNaItems.filter(item => {
+            const fieldId = `nc-${item.uuid}`;
+            return conversations[fieldId]?.thread?.length > 0;
+        }).length;
+        
+        this.updateElementText('commentsNCCount', ncComments);
+    }
+    getTotalCommentsCount() {
+        return Object.keys(conversations).filter(key => 
+            conversations[key]?.thread?.length > 0
+        ).length;
+    }
+    calculateProgressPercentage() {
+        // Calcul basique, à affiner dans les modules
+        const totalFields = Object.keys(companyProfileData).length + checklistData.length;
+        const fieldsWithComments = this.getTotalCommentsCount();
+        return totalFields > 0 ? Math.round((fieldsWithComments / totalFields) * 100) : 0;
+    }
+    /* ==========================================================================
+       TABLE FILTERS
+       ========================================================================== */
+    setupTableFilters() {
+        // Filtres checklist
+        ['chapterFilter', 'scoreFilter', 'commentStatusFilter', 'searchInput'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                const eventType = id === 'searchInput' ? 'keyup' : 'change';
+                element.removeEventListener(eventType, this.filterChecklist);
+                element.addEventListener(eventType, () => this.filterChecklist());
+            }
+        });
+        
+        // Filtres NC
+        ['ncTypeFilter', 'ncChapterFilter', 'correctionFilter', 'ncSearchInput'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                const eventType = id === 'ncSearchInput' ? 'keyup' : 'change';
+                element.removeEventListener(eventType, this.filterNonConformities);
+                element.addEventListener(eventType, () => this.filterNonConformities());
+            }
+        });
+        
+        // Fonctions globales pour la compatibilité
+        window.showAll = () => this.showAll();
+        window.showOnlyWithComments = () => this.showOnlyWithComments();
+    }
+    filterChecklist() {
+        const chapter = document.getElementById('chapterFilter')?.value;
+        const score = document.getElementById('scoreFilter')?.value;
+        const commentStatus = document.getElementById('commentStatusFilter')?.value;
+        const search = document.getElementById('searchInput')?.value.toLowerCase();
+        
+        const rows = document.querySelectorAll('#checklistTableBody tr');
+        
+        rows.forEach(row => {
+            if (row.cells.length <= 1) return; // Skip empty/message rows
+            
+            let show = true;
+            
+            if (chapter && row.dataset.chapter !== chapter) show = false;
+            if (score && row.dataset.score !== score) show = false;
+            if (commentStatus && commentStatus !== '' && row.dataset.commentStatus !== commentStatus) show = false;
+            if (search && !row.textContent.toLowerCase().includes(search)) show = false;
+            
+            row.style.display = show ? '' : 'none';
+        });
+    }
+    filterNonConformities() {
+        const type = document.getElementById('ncTypeFilter')?.value;
+        const chapter = document.getElementById('ncChapterFilter')?.value;
+        const correction = document.getElementById('correctionFilter')?.value;
+        const search = document.getElementById('ncSearchInput')?.value.toLowerCase();
+        
+        const rows = document.querySelectorAll('#nonConformitiesTableBody tr');
+        
+        rows.forEach(row => {
+            if (row.cells.length <= 1) return; // Skip empty/message rows
+            
+            let show = true;
+            
+            if (type) {
+                const scores = type.split(',');
+                if (!scores.includes(row.dataset.score)) show = false;
+            }
+            if (chapter && row.dataset.chapter !== chapter) show = false;
+            if (correction) {
+                const hasComments = row.dataset.commentStatus !== 'none';
+                if (correction === 'with' && !hasComments) show = false;
+                if (correction === 'without' && hasComments) show = false;
+                if (correction === 'pending' && row.dataset.commentStatus !== 'pending') show = false;
+            }
+            if (search && !row.textContent.toLowerCase().includes(search)) show = false;
+            
+            row.style.display = show ? '' : 'none';
+        });
+    }
+    showAll() {
+        // Reset des filtres
+        const filters = ['chapterFilter', 'scoreFilter', 'commentStatusFilter', 'searchInput'];
+        filters.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.value = '';
+            }
+        });
+        
+        this.filterChecklist();
+    }
+    showOnlyWithComments() {
+        document.getElementById('commentStatusFilter').value = 'pending';
+        this.filterChecklist();
+    }
+    /* ==========================================================================
+       EXPORT FUNCTIONS
+       ========================================================================== */
+    exportExcel() {
+        if (!auditData) {
+            this.showError('Aucune donnée à exporter.');
+            return;
+        }
+        
+        try {
+            const wb = XLSX.utils.book_new();
+            
+            // Sheet 1: Résumé
+            this.addSummarySheet(wb);
+            
+            // Sheet 2: Profil entreprise
+            this.addProfileSheet(wb);
+            
+            // Sheet 3: Non-conformités
+            this.addNCSheet(wb);
+            
+            // Sheet 4: Checklist complète
+            this.addChecklistSheet(wb);
+            
+            // Sheet 5: Commentaires
+            this.addCommentsSheet(wb);
+            
+            const companyName = companyProfileData['Nom du site à auditer'] || 'audit';
+            const coid = companyProfileData['N° COID du portail'] || 'COID';
+            const filename = `RAPPORT_IFS_${coid}_${this.sanitizeFileName(companyName)}_${this.getDateStamp()}.xlsx`;
+            
+            XLSX.writeFile(wb, filename);
+            this.showSuccess(`📊 Rapport Excel généré : ${filename}`);
+            
+        } catch (error) {
+            console.error('Error exporting Excel:', error);
+            this.showError('❌ Erreur export Excel : ' + error.message);
+        }
+    }
+    addSummarySheet(wb) {
+        const summary = [
+            ['Information Clé', 'Valeur'],
+            ['Entreprise', companyProfileData['Nom du site à auditer'] || 'N/A'],
+            ['COID', companyProfileData['N° COID du portail'] || 'N/A'],
+            ['Score global IFS', document.getElementById('overallScore')?.textContent || '0%'],
+            ['Total exigences', checklistData.length],
+            ['Conformités (A)', checklistData.filter(i => i.score === 'A').length],
+            ['Score B', checklistData.filter(i => i.score === 'B').length],
+            ['Score C', checklistData.filter(i => i.score === 'C').length],
+            ['Score D', checklistData.filter(i => i.score === 'D').length],
+            ['Total commentaires', this.getTotalCommentsCount()],
+            ['Mode de travail', this.currentMode],
+            ['Version package', packageVersion]
+        ];
+        
+        const ws = XLSX.utils.aoa_to_sheet(summary);
+        ws['!cols'] = [{ width: 30 }, { width: 30 }];
+        XLSX.utils.book_append_sheet(wb, ws, "RÉSUMÉ");
+    }
+    addProfileSheet(wb) {
+        const profileData = [['Champ', 'Valeur', 'Commentaires']];
+        
+        Object.entries(companyProfileData).forEach(([field, value]) => {
+            const fieldId = `profile-${this.sanitizeFieldId(field)}`;
+            const comments = this.getCommentsText(fieldId);
+            profileData.push([field, value || 'N/A', comments]);
+        });
+        
+        const ws = XLSX.utils.aoa_to_sheet(profileData);
+        ws['!cols'] = [{ width: 40 }, { width: 40 }, { width: 60 }];
+        XLSX.utils.book_append_sheet(wb, ws, "PROFIL ENTREPRISE");
+    }
+    addNCSheet(wb) {
+        const ncData = [['N° Exigence', 'Score', 'Explication', 'Détail', 'Commentaires']];
+        
+        checklistData
+            .filter(item => ['B', 'C', 'D', 'NA'].includes(item.score))
+            .forEach(item => {
+                const fieldId = `nc-${item.uuid}`;
+                const comments = this.getCommentsText(fieldId);
+                ncData.push([
+                    item.requirementNumber,
+                    item.score,
+                    item.explanation || '-',
+                    item.detailedExplanation || '-',
+                    comments
+                ]);
+            });
+        
+        const ws = XLSX.utils.aoa_to_sheet(ncData);
+        ws['!cols'] = [{ width: 15 }, { width: 15 }, { width: 45 }, { width: 45 }, { width: 60 }];
+        XLSX.utils.book_append_sheet(wb, ws, "NON-CONFORMITÉS");
+    }
+    addChecklistSheet(wb) {
+        const checklistSheetData = [['N° Exigence', 'Chapitre', 'Score', 'Explication', 'Détail', 'Commentaires']];
+        
+        checklistData.forEach(item => {
+            const fieldId = `req-${item.uuid}`;
+            const comments = this.getCommentsText(fieldId);
+            checklistSheetData.push([
+                item.requirementNumber,
+                item.chapter,
+                item.score,
+                item.explanation || '-',
+                item.detailedExplanation || '-',
+                comments
+            ]);
+        });
+        
+        const ws = XLSX.utils.aoa_to_sheet(checklistSheetData);
+        ws['!cols'] = [{ width: 15 }, { width: 10 }, { width: 15 }, { width: 40 }, { width: 40 }, { width: 60 }];
+        XLSX.utils.book_append_sheet(wb, ws, "CHECKLIST COMPLÈTE");
+    }
+    addCommentsSheet(wb) {
+        const commentsData = [['Champ', 'Auteur', 'Date', 'Contenu', 'Statut']];
+        
+        Object.entries(conversations).forEach(([fieldId, conversation]) => {
+            const fieldName = this.getFieldInfo(fieldId).name;
+            conversation.thread.forEach(comment => {
+                commentsData.push([
+                    fieldName,
+                    comment.author,
+                    formatDate(comment.date),
+                    comment.content,
+                    this.getStatusLabel(comment.status)
+                ]);
+            });
+        });
+        
+        const ws = XLSX.utils.aoa_to_sheet(commentsData);
+        ws['!cols'] = [{ width: 30 }, { width: 15 }, { width: 20 }, { width: 60 }, { width: 15 }];
+        XLSX.utils.book_append_sheet(wb, ws, "COMMENTAIRES");
+    }
+    getCommentsText(fieldId) {
+        const conversation = conversations[fieldId];
+        if (!conversation || !conversation.thread.length) return '-';
+        
+        return conversation.thread.map(comment => 
+            `[${comment.author}] ${comment.content}`
+        ).join(' | ');
+    }
+    exportPDF() {
+        if (!auditData) {
+            this.showError('Aucune donnée à exporter en PDF.');
+            return;
+        }
+        
+        try {
+            this.showError('🚧 Export PDF en cours de développement. Utilisez l\'export Excel pour le moment.');
+            
+            // TODO: Implémenter l'export PDF avec jsPDF
+            // const { jsPDF } = window.jspdf;
+            // const doc = new jsPDF();
+            // ... logique d'export PDF
+            
+        } catch (error) {
+            console.error('Error exporting PDF:', error);
+            this.showError('❌ Erreur export PDF : ' + error.message);
+        }
+    }
+}
+/* ==========================================================================
+   UTILITY FUNCTIONS
+   ========================================================================== */
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+function formatDate(date) {
+    return new Date(date).toLocaleString('fr-FR');
+}
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+/* ==========================================================================
+   GLOBAL FUNCTIONS FOR BACKWARD COMPATIBILITY
+   ========================================================================== */
+// These functions will be overridden by the modules
+function showAll() {
+    console.log('Show all function called');
+}
+function showOnlyWithComments() {
+    console.log('Show only with comments function called');
+}
+/* ==========================================================================
+   INITIALIZATION
+   ========================================================================== */
+let ifsTool;
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 IFS Reviewer V2 - Initializing Collaborative Tool');
+    
+    // Initialize the main application
+    ifsTool = new IFSCollaborativeTool();
+    
+    console.log('✅ IFS Reviewer V2 initialized successfully');
+});
+// Override des fonctions globales
+window.showAll = function() {
+    if (ifsTool) ifsTool.showAll();
+};
+window.showOnlyWithComments = function() {
+    if (ifsTool) ifsTool.showOnlyWithComments();
+};
+console.log('🧩 IFS Reviewer V2 - Application complète chargée');
+    </script>
+
+</body>
+</html>
