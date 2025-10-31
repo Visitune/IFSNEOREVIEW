@@ -11,6 +11,8 @@ class UIManager {
         this.currentFieldId = null;
         this.draftSaveInterval = null;
         this.pendingModeChange = null; // Pour stocker le mode vers lequel on veut basculer
+        console.log('UIManager Constructor: Initial currentMode from state:', this.state.get().currentMode);
+        console.log('UIManager Constructor: Initial ifsMode from localStorage:', localStorage.getItem('ifsMode'));
     }
 
     onStateChange(newState) {
@@ -39,6 +41,7 @@ class UIManager {
     }
 
     initUI() {
+        console.log('initUI: Initializing UI components.');
         // showModeSelector() is removed as per user request
         this.setupEventListeners();
         this.setupDarkMode();
@@ -46,6 +49,7 @@ class UIManager {
         this.setupTabs();
         this.setupFileUIEventListeners();
         this.setupAccordionEventListeners(); // Ajout de l'écouteur d'événements pour les accordéons
+        console.log('initUI: Current mode from state:', this.state.get().currentMode);
     }
 
     setupEventListeners() {
@@ -191,6 +195,7 @@ class UIManager {
     }
 
     selectMode(mode, showSelector = true) {
+        console.log(`selectMode: Attempting to set mode to ${mode}`);
         this.state.setState({ currentMode: mode });
         localStorage.setItem('ifsMode', mode);
         
@@ -208,7 +213,7 @@ class UIManager {
         this.updateUIForMode();
         this.dataProcessor.refreshAllCounters(); // Call dataProcessor for indicators
         
-        console.log(`Mode sélectionné: ${mode}`);
+        console.log(`selectMode: Mode sélectionné: ${mode}`);
     }
 
     applyModeTheme() {
@@ -218,8 +223,11 @@ class UIManager {
 
     updateUIForMode() {
         const modeToggle = document.getElementById('modeToggle');
+        const currentModeInState = this.state.get().currentMode;
+        console.log(`updateUIForMode: currentModeInState=${currentModeInState}, modeToggle.checked before update=${modeToggle?.checked}`);
         if (modeToggle) {
-            modeToggle.checked = this.state.get().currentMode === 'auditor';
+            modeToggle.checked = currentModeInState === 'auditor';
+            console.log(`updateUIForMode: modeToggle.checked after update=${modeToggle.checked}`);
         }
         
         const modeLabel = document.getElementById('currentModeLabel');
@@ -256,6 +264,7 @@ class UIManager {
         const currentMode = this.state.get().currentMode;
         const targetMode = currentMode === 'reviewer' ? 'auditor' : 'reviewer';
         this.pendingModeChange = targetMode; // Stocke le mode vers lequel on veut basculer
+        console.log(`handleModeToggleChange: currentMode=${currentMode}, targetMode=${targetMode}, pendingModeChange=${this.pendingModeChange}`);
         this.showAccessCodeModal();
     }
 
@@ -288,6 +297,8 @@ class UIManager {
         const error = document.getElementById('accessCodeError');
         const enteredCode = input?.value;
         
+        console.log(`verifyAccessCode: enteredCode=${enteredCode}, pendingModeChange=${this.pendingModeChange}`);
+
         if (!enteredCode) {
             if (error) error.textContent = 'Veuillez entrer un code.';
             if (error) error.classList.remove('hidden');
