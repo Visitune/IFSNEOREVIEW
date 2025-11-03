@@ -4,12 +4,66 @@ Outil d'assistance pour les auditeurs et reviewers travaillant sur les référen
 
 L'application permet de charger des fichiers d'audit, de naviguer dans les exigences, d'ajouter des commentaires et de suivre le statut de chaque point.
 
-## Comment utiliser
+## Guide d'utilisation détaillé
 
-1.  Ouvrez le fichier `index.html` dans votre navigateur web.
-2.  Chargez un fichier d'audit (`.ifsr`) ou un package de revue (`.ifsp`) via la zone d'upload.
-3.  Naviguez entre les onglets "Profil", "Checklist" et "Non-conformités" pour analyser les données.
-4.  Cliquez sur une ligne pour ouvrir la fenêtre de commentaires et échanger entre le mode "Reviewer" et "Auditeur".
+Ce guide vous accompagnera à travers les fonctionnalités clés de l'application.
+
+### 1. Démarrage de l'application
+
+1.  **Ouvrez le fichier `index.html`** dans votre navigateur web préféré (Chrome, Firefox, Edge, etc.). L'application se chargera automatiquement.
+
+### 2. Chargement des données d'audit
+
+1.  **Chargez un fichier d'audit :**
+    *   Cliquez sur la zone d'upload au centre de l'écran ou sur le bouton "Charger un audit" dans la barre latérale.
+    *   Sélectionnez un fichier d'audit au format `.ifsr` (fichier de revue IFS) ou un package de revue au format `.ifsp` (package de réponse auditeur).
+    *   Les données seront chargées et affichées dans les différents onglets.
+
+### 3. Navigation et analyse
+
+1.  **Onglets principaux :**
+    *   **"Profil" :** Affiche les informations générales de l'entreprise auditée et un résumé de l'audit.
+    *   **"Checklist" :** Présente la liste complète des exigences IFS. Vous pouvez filtrer les exigences (toutes, avec commentaires uniquement) et interagir avec chaque ligne.
+    *   **"Non-conformités" :** Liste toutes les non-conformités identifiées, avec leur statut.
+2.  **Interagir avec les exigences :**
+    *   Cliquez sur n'importe quelle ligne dans l'onglet "Checklist" ou "Non-conformités" pour ouvrir la **modale de commentaires**.
+
+### 4. Gestion des modes (Reviewer / Auditeur)
+
+L'application dispose de deux modes d'accès, chacun nécessitant un code spécifique pour basculer :
+
+*   **Mode Reviewer :** Permet d'analyser les exigences, d'ajouter des commentaires initiaux et de marquer les conversations comme résolues.
+*   **Mode Auditeur :** Permet de répondre aux commentaires du reviewer et de fournir des informations complémentaires.
+
+Pour basculer entre les modes :
+
+1.  **Cliquez sur le toggle** "Mode Reviewer / Mode Auditeur" situé dans la barre latérale.
+2.  Une modale de saisie de code apparaîtra.
+3.  **Entrez le code d'accès correspondant au mode souhaité :**
+    *   **Code Reviewer :** `CDOECO2025`
+    *   **Code Auditeur :** `moldu2025`
+4.  Cliquez sur "Valider" ou appuyez sur Entrée. Si le code est correct, l'interface se mettra à jour pour le mode sélectionné.
+5.  Vous pouvez utiliser le bouton "Afficher/Masquer" (icône œil) pour voir ou masquer le code que vous saisissez.
+
+### 5. Utilisation de la modale de commentaires
+
+Lorsque vous ouvrez la modale de commentaires :
+
+1.  **Historique de conversation :** Visualisez tous les échanges précédents pour le champ sélectionné.
+2.  **Ajouter un commentaire :** Saisissez votre texte dans la zone de saisie.
+    *   **Templates :** Utilisez les boutons de template ("Point Qualité", "Correction Requise") pour insérer des structures de commentaires prédéfinies.
+    *   **Sauvegarde automatique :** Vos brouillons sont sauvegardés automatiquement.
+3.  **Actions spécifiques au mode :**
+    *   **En mode Reviewer :** Vous pouvez marquer une conversation comme "Résolue" si l'auditeur a répondu de manière satisfaisante.
+    *   **Édition/Suppression :** Vous pouvez éditer ou supprimer vos propres commentaires dans les 5 minutes suivant leur publication.
+
+### 6. Sauvegarde et Exportation
+
+1.  **Sauvegarder le travail en cours :** Cliquez sur "Sauvegarder l'audit" pour enregistrer votre session actuelle.
+2.  **Créer un package :**
+    *   **Reviewer :** Crée un package `.ifsp` à envoyer à l'auditeur pour qu'il réponde aux commentaires.
+    *   **Auditeur :** Crée un package `.ifsp` de réponse à renvoyer au reviewer.
+3.  **Exporter :** Exportez les données de l'audit au format Excel ou PDF.
 
 ## Contribuer et faire des retours
 
