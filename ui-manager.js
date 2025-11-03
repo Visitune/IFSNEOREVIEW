@@ -42,7 +42,6 @@ class UIManager {
 
     initUI() {
         console.log('initUI: Initializing UI components.');
-        // showModeSelector() is removed as per user request
         this.setupEventListeners();
         this.setupDarkMode();
         this.setupSidebar();
@@ -50,6 +49,13 @@ class UIManager {
         this.setupFileUIEventListeners();
         this.setupAccordionEventListeners(); // Ajout de l'écouteur d'événements pour les accordéons
         console.log('initUI: Current mode from state:', this.state.get().currentMode);
+        this.showInitialModeSelection(); // Appelle la modale de sélection de mode au démarrage
+    }
+
+    showInitialModeSelection() {
+        // Cache le contenu principal de l'application jusqu'à ce que le mode soit sélectionné
+        document.getElementById('mainAppContent').classList.add('hidden');
+        this.showAccessCodeModal(true); // Passe un flag pour indiquer que c'est l'appel initial
     }
 
     setupEventListeners() {
@@ -268,10 +274,22 @@ class UIManager {
         this.showAccessCodeModal();
     }
 
-    showAccessCodeModal() {
+    showAccessCodeModal(isInitialCall = false) {
         const modal = document.getElementById('accessCodeModal');
         const input = document.getElementById('accessCodeInput');
         const error = document.getElementById('accessCodeError');
+        const modeSelectionContainer = document.getElementById('initialModeSelection');
+        const modalTitle = document.getElementById('accessCodeModalTitle');
+
+        if (isInitialCall) {
+            if (modeSelectionContainer) modeSelectionContainer.classList.remove('hidden');
+            if (modalTitle) modalTitle.textContent = 'Sélectionnez votre mode et entrez le code';
+            // Réinitialise pendingModeChange pour que l'utilisateur choisisse
+            this.pendingModeChange = null; 
+        } else {
+            if (modeSelectionContainer) modeSelectionContainer.classList.add('hidden');
+            if (modalTitle) modalTitle.textContent = 'Entrez le code d\'accès';
+        }
         
         if (modal) modal.classList.remove('hidden');
         if (input) {
@@ -290,6 +308,8 @@ class UIManager {
         if (modeToggle) {
             modeToggle.checked = this.state.get().currentMode === 'auditor';
         }
+        // Affiche le contenu principal de l'application après la fermeture de la modale
+        document.getElementById('mainAppContent').classList.remove('hidden');
     }
 
     verifyAccessCode() {
@@ -306,9 +326,27 @@ class UIManager {
         }
 
         let codeCorrect = false;
-        if (this.pendingModeChange === 'reviewer' && enteredCode === UIManager.REVIEWER_CODE) {
+        let targetMode = this.pendingModeChange;
+
+        // Si pendingModeChange n'est pas défini (appel initial), récupère le mode sélectionné par l'utilisateur
+        if (!targetMode) {
+            const reviewerRadio = document.getElementById('modeSelectReviewer');
+            const auditorRadio = document.getElementById('modeSelectAuditor');
+            if (reviewerRadio?.checked) {
+                targetMode = 'reviewer';
+            } else if (auditorRadio?.checked) {
+                targetMode = 'auditor';
+            } else {
+                if (error) error.textContent = 'Veuillez sélectionner un mode.';
+                if (error) error.classList.remove('hidden');
+                return;
+            }
+            this.pendingModeChange = targetMode; // Définit le mode en attente pour la vérification
+        }
+
+        if (targetMode === 'reviewer' && enteredCode === UIManager.REVIEWER_CODE) {
             codeCorrect = true;
-        } else if (this.pendingModeChange === 'auditor' && enteredCode === UIManager.AUDITOR_CODE) {
+        } else if (targetMode === 'auditor' && enteredCode === UIManager.AUDITOR_CODE) {
             codeCorrect = true;
         }
 
