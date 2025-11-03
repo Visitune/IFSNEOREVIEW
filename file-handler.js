@@ -110,11 +110,13 @@ class FileHandler {
                 throw new Error('Format de fichier IFSR invalide');
             }
             
+            const conversations = this.migrateConversationKeys(workData.conversations || {});
+
             this.state.setState({
                 auditData: workData.auditData,
                 checklistData: workData.checklistData || [],
                 companyProfileData: workData.companyProfileData || {},
-                conversations: workData.conversations || {},
+                conversations: conversations,
                 requirementNumberMapping: workData.requirementNumberMapping || {},
                 packageVersion: workData.packageVersion || 1,
             });
@@ -160,6 +162,25 @@ class FileHandler {
         }
     }
 
+    migrateConversationKeys(conversations) {
+        const newConversations = { ...conversations };
+        let keysChanged = false;
+        for (const key in newConversations) {
+            if (key.startsWith('nc-')) {
+                const newKey = key.replace('nc-', 'req-');
+                if (!newConversations[newKey]) { // Avoid overwriting if a req- key already exists
+                    newConversations[newKey] = newConversations[key];
+                    delete newConversations[key];
+                    keysChanged = true;
+                }
+            }
+        }
+        if (keysChanged) {
+            console.log('Migrated old conversation keys to new format.');
+        }
+        return newConversations;
+    }
+
     loadCollaborativePackage(packageData) {
         console.log('📦 LOADING COLLABORATIVE PACKAGE');
         
@@ -183,7 +204,8 @@ class FileHandler {
             });
             
             if (packageData.conversations) {
-                this.mergeConversations(packageData.conversations);
+                const migratedConversations = this.migrateConversationKeys(packageData.conversations);
+                this.mergeConversations(migratedConversations);
             }
             
             this.state.setState({
