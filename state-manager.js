@@ -13,6 +13,29 @@ class State {
             currentSession: { id: null, name: '', created: null, lastModified: null, data: null },
             packageVersion: 1,
             hasUnsavedChanges: false,
+            activeFilters: {
+                profil: {
+                    status: '',
+                    search: ''
+                },
+                checklist: {
+                    chapter: '',
+                    score: '',
+                    status: '',
+                    search: '',
+                    simpleFilter: null // Values: 'NC', 'NA', 'HAS_COMMENT'
+                },
+                nonconformites: {
+                    type: '',
+                    chapter: '',
+                    correction: '',
+                    correction: '',
+                    search: ''
+                },
+                auditorTasks: {
+                    filter: 'pending' // pending, resolved, all
+                }
+            }
         };
         this.subscribers = [];
         this.subscribe = this.subscribe.bind(this); // Explicitly bind subscribe
@@ -23,8 +46,48 @@ class State {
     }
 
     setState(newState) {
-        this.state = { ...this.state, ...newState };
+        this.state = { ...this.state, ...newState, hasUnsavedChanges: true };
         this.notifySubscribers();
+    }
+
+    setChecklistSimpleFilter(filterType) {
+        const currentFilters = this.state.activeFilters;
+        const newChecklistFilters = { ...currentFilters.checklist, simpleFilter: filterType === 'ALL' ? null : filterType };
+        this.setState({ activeFilters: { ...currentFilters, checklist: newChecklistFilters } });
+    }
+
+    getFilteredChecklistData() {
+        const { checklistData, conversations, activeFilters } = this.state;
+        const filter = activeFilters.checklist.simpleFilter;
+
+        if (!filter) {
+            return checklistData;
+        }
+
+        return checklistData.filter(item => {
+            switch (filter) {
+                case 'NC':
+                    // Non-conformities are scores B, C, D
+                    return ['B', 'C', 'D'].includes(item.score);
+                case 'NA':
+                    return item.score === 'NA';
+                case 'HAS_COMMENT':
+                    const cklId = `ckl-${item.uuid}`;
+                    const paId = `pa-${item.uuid}`;
+                    const oldId = `req-${item.uuid}`;
+                    const cklConv = conversations[cklId];
+                    const paConv = conversations[paId];
+                    const oldConv = conversations[oldId];
+
+                    const hasCkl = cklConv && cklConv.thread && cklConv.thread.length > 0;
+                    const hasPa = paConv && paConv.thread && paConv.thread.length > 0;
+                    const hasOld = oldConv && oldConv.thread && oldConv.thread.length > 0;
+
+                    return hasCkl || hasPa || hasOld;
+                default:
+                    return true;
+            }
+        });
     }
 
     subscribe(callback) {

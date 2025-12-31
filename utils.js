@@ -21,3 +21,15 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
+
+function sanitizeFieldId(fieldName) {
+    return fieldName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '').toLowerCase();
+}
+
+function unsanitizeFieldId(fieldId) {
+    const mapping = {
+        'nom-du-site-à-auditer': 'Nom du site à auditer',
+        'n-coid-du-portail': 'N° COID du portail',
+    };
+    return mapping[fieldId] || fieldId.replace(/-/g, ' ');
+}

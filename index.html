@@ -1,62 +1,79 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IFS Reviewer - Mode Collaboratif</title>
-    
+
     <!-- External Libraries -->
-    <script src="https://cdn.tailwindcss.com"></script> 
+    <!-- External Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    
+
+<body class="">
+
     <div id="mainAppContent" class="hidden">
         <!-- Dark Mode Toggle -->
-        <div class="fixed bottom-4 right-4 z-50">
-            <button id="darkModeToggle" class="p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition">
-                <i class="fas fa-moon"></i>
-            </button>
-        </div>
+        <button id="darkModeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
 
         <!-- Sidebar -->
         <div class="sidebar" id="mainSidebar">
             <div class="sidebar-header">
                 <div class="sidebar-brand">
                     <i class="fas fa-shield-alt text-xl"></i>
-                                            <span class="font-bold text-lg sidebar-text">IFS Review Tool</span>            </div>
+                    <span class="font-bold text-lg sidebar-text">IFS Review Tool</span>
+                </div>
                 <button id="sidebarCollapse" class="sidebar-collapse-btn">
                     <i class="fas fa-chevron-left"></i>
                 </button>
             </div>
-            
+
+            <!-- Mode Switch Section -->
             <!-- Mode Switch Section -->
             <div class="mode-switch-section">
-                <div class="mode-switch-container">
-                    <div class="mode-switch-info">
-                        <span class="mode-label" id="currentModeLabel">Mode Reviewer</span>
-                        <small class="mode-description" id="currentModeDescription">Analyser et commenter</small>
-                    </div>
-                    <label class="toggle-switch">
+                <div class="mode-switch-card">
+                    <span class="mode-switch-title">Mode Actuel</span>
+                    <label class="modern-toggle-container">
                         <input type="checkbox" id="modeToggle">
-                        <span class="toggle-slider">
-                            <span class="toggle-icon reviewer"><i class="fas fa-search"></i></span>
-                            <span class="toggle-icon auditor"><i class="fas fa-user-tie"></i></span>
-                        </span>
+                        <div class="modern-toggle-track">
+                            <div class="toggle-option option-reviewer">
+                                <i class="fas fa-search"></i>
+                                <span>Reviewer</span>
+                            </div>
+                            <div class="toggle-option option-auditor">
+                                <i class="fas fa-user-tie"></i>
+                                <span>Auditeur</span>
+                            </div>
+                            <div class="sliding-indicator"></div>
+                        </div>
                     </label>
+                    <p class="mode-status-text" id="currentModeDescription">Analyser et commenter</p>
                 </div>
             </div>
-            
+
             <!-- Navigation -->
             <div class="sidebar-content">
                 <div class="nav-section">
                     <h3 class="nav-section-title sidebar-text">Navigation</h3>
                     <ul class="nav-menu">
+                        <!-- Onglet Spécial Auditeur : Tâches à faire -->
+                        <li class="nav-item auditor-only">
+                            <a href="#auditor-tasks-section" class="nav-link" data-tab-target="auditor-tasks">
+                                <i class="fas fa-tasks nav-icon"></i>
+                                <span class="sidebar-text">Questions à traiter</span>
+                                <span class="comment-counter" id="auditorTodoCounter">0</span>
+                            </a>
+                        </li>
+
                         <li class="nav-item">
                             <a href="#profil-section" class="nav-link" data-tab-target="profil">
                                 <i class="fas fa-user-tie nav-icon"></i>
@@ -64,18 +81,36 @@
                                 <span class="comment-counter" id="profilCommentCounter">0</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+
+                        <!-- Onglets masqués pour l'auditeur -->
+                        <li class="nav-item reviewer-only">
                             <a href="#checklist-section" class="nav-link" data-tab-target="checklist">
                                 <i class="fas fa-list-check nav-icon"></i>
                                 <span class="sidebar-text">Checklist Complète</span>
                                 <span class="comment-counter" id="checklistCommentCounter">0</span>
                             </a>
                         </li>
+
+                        <li class="nav-item reviewer-only">
+                            <a href="#dossier-section" class="nav-link" data-tab-target="dossier">
+                                <i class="fas fa-folder-open nav-icon"></i>
+                                <span class="sidebar-text">Revue du Dossier</span>
+                                <span class="comment-counter" id="dossierCommentCounter">0</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item reviewer-only">
+                            <a href="#decision-section" class="nav-link" data-tab-target="decision">
+                                <i class="fas fa-gavel nav-icon"></i>
+                                <span class="sidebar-text">Décision Certification</span>
+                            </a>
+                        </li>
+
+
                         <li class="nav-item">
-                            <a href="#nonconformites-section" class="nav-link" data-tab-target="nonconformites">
-                                <i class="fas fa-exclamation-triangle nav-icon"></i>
-                                <span class="sidebar-text">Non-Conformités</span>
-                                <span class="comment-counter" id="ncCommentCounter">0</span>
+                            <a href="#" class="nav-link" onclick="startOnboardingTutorial()">
+                                <i class="fas fa-magic nav-icon"></i>
+                                <span class="sidebar-text">Tutoriel</span>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -86,55 +121,78 @@
                         </li>
                     </ul>
                 </div>
-                
+
                 <!-- File Actions -->
                 <div class="nav-section">
                     <h3 class="nav-section-title sidebar-text">Actions Fichier</h3>
                     <div class="action-buttons">
-                        <button id="newAuditBtn" class="action-btn">
+                        <button id="newAuditBtn" class="action-btn reviewer-only">
                             <i class="fas fa-file-medical"></i>
                             <span class="sidebar-text">Nouveau Dossier</span>
                         </button>
-                        
-                        <input type="file" id="fileInputInternal" accept=".ifs,.ifsr,.ifsp" style="display: none;">
+
+                        <input type="file" id="fileInputInternal" accept=".ifs,.ifsr,.ifsp,.xlsx,.xls"
+                            style="display: none;">
+                        <input type="file" id="importExcelInput" accept=".xlsx,.xls" style="display: none;">
+
+                        <button id="importExcelBtn" class="action-btn reviewer-only">
+                            <i class="fas fa-file-import"></i>
+                            <span class="sidebar-text">Importer Excel P.A.</span>
+                        </button>
+
                         <button id="loadAuditBtn" class="action-btn">
                             <i class="fas fa-upload"></i>
                             <span class="sidebar-text">Charger Fichier</span>
                         </button>
-                        
+
                         <button id="saveAuditBtn" class="action-btn reviewer-only">
                             <i class="fas fa-save"></i>
                             <span class="sidebar-text">Sauvegarder IFSR</span>
                         </button>
-                        
+
                         <button id="saveAuditBtnAuditor" class="action-btn auditor-only">
                             <i class="fas fa-save"></i>
                             <span class="sidebar-text">Sauvegarder IFSR</span>
                         </button>
-                        
-                        <button id="createPackageBtn" class="action-btn reviewer-only" onclick="showPackageModal(false)">
+
+                        <button id="createPackageBtn" class="action-btn reviewer-only"
+                            onclick="showPackageModal(false)">
                             <i class="fas fa-package"></i>
                             <span class="sidebar-text">Créer Package pour Auditeur</span>
                         </button>
-                        
+
                         <button id="respondPackageBtn" class="action-btn auditor-only">
                             <i class="fas fa-reply"></i>
                             <span class="sidebar-text">Répondre et Créer Package</span>
                         </button>
-                        
+
                         <button id="neoUpdateBtn" class="action-btn auditor-only">
                             <i class="fas fa-sync-alt"></i>
                             <span class="sidebar-text">Maj NEO</span>
                         </button>
-                        
+
+                        <button id="importActionPlanBtn" class="action-btn"
+                            onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-file-import"></i>
+                            <span class="sidebar-text">Plan d'Actions (XLSX)</span>
+                        </button>
+
                         <button id="exportExcelBtn" class="action-btn">
                             <i class="fas fa-file-excel"></i>
                             <span class="sidebar-text">Export Excel</span>
                         </button>
-                        
+
                         <button id="exportPDFBtn" class="action-btn reviewer-only">
                             <i class="fas fa-file-pdf"></i>
                             <span class="sidebar-text">Export PDF</span>
+                        </button>
+
+                        <!-- Reset App Button -->
+                        <button id="resetAppBtn" class="action-btn"
+                            style="margin-top: auto; border-top: 1px solid var(--border-primary); border-radius: 0; color: var(--color-danger);"
+                            onclick="openResetModal()">
+                            <i class="fas fa-trash-alt"></i>
+                            <span class="sidebar-text">Réinitialiser l'app</span>
                         </button>
                     </div>
                 </div>
@@ -159,13 +217,36 @@
                             <span id="currentAuditName">Aucun audit chargé</span>
                         </h1>
                     </div>
-                    
+
                     <div class="header-right">
+                        <!-- Legend -->
+                        <div class="status-legend"
+                            style="display: flex; gap: 1rem; margin-right: 2rem; align-items: center; font-size: 0.75rem; color: var(--text-secondary); border-right: 1px solid var(--border-primary); padding-right: 1.5rem;">
+                            <div title="Action requise de ma part"
+                                style="display: flex; align-items: center; gap: 0.35rem;">
+                                <span class="status-indicator pending"></span>
+                                <span>À traiter</span>
+                            </div>
+                            <div title="J'attends une réponse"
+                                style="display: flex; align-items: center; gap: 0.35rem;">
+                                <span class="status-indicator waiting"></span>
+                                <span>En attente</span>
+                            </div>
+                            <div title="Point clôturé" style="display: flex; align-items: center; gap: 0.35rem;">
+                                <span class="status-indicator resolved"></span>
+                                <span>Résolu</span>
+                            </div>
+                            <div title="Déjà lu / traité" style="display: flex; align-items: center; gap: 0.35rem;">
+                                <span class="status-indicator read"></span>
+                                <span>Lu</span>
+                            </div>
+                        </div>
                         <div id="sessionInfoTop" class="session-info">
                             <span id="storageTypeTop">Mode: <strong id="headerMode">Reviewer</strong></span>
                             <span class="separator">|</span>
                             <span id="sessionIdTop">COID: ----</span>
-                            <span id="unsavedChangesWarning" class="text-yellow-500 font-bold ml-4 hidden"><i class="fas fa-exclamation-triangle"></i> Modifs non enregistrées</span>
+                            <span id="unsavedChangesWarning" class="text-yellow-500 font-bold ml-4 hidden"><i
+                                    class="fas fa-exclamation-triangle"></i> Modifs non enregistrées</span>
                             <span class="separator">|</span>
                             <span id="packageVersionInfo">v1</span>
                         </div>
@@ -175,7 +256,91 @@
 
             <!-- Tab Content Area -->
             <main class="main-section">
-                
+
+                <!-- Tab: Tableau de bord Auditeur (Liste des tâches) -->
+                <div id="auditor-tasks" class="tab-content auditor-only">
+                    <div class="tab-header">
+                        <h2>Questions du Reviewer à traiter</h2>
+                        <div class="tab-counters">
+                            <div class="counter-badge pending">
+                                <span class="count" id="auditorPendingTotal">0</span>
+                                <span class="label">Restant à faire</span>
+                            </div>
+                            <div class="counter-badge resolved">
+                                <span class="count" id="auditorResolvedTotal">0</span>
+                                <span class="label">Répondu / Résolu</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filters for Auditor Tasks -->
+                    <div class="filters-card mb-4"
+                        style="background: var(--bg-secondary); padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-secondary); margin-bottom: 1rem;">
+                        <div class="filters-actions" style="display: flex; gap: 0.5rem;">
+                            <button id="auditor-filter-pending" class="btn btn-primary btn-sm"
+                                onclick="setAuditorTaskFilter('pending')">
+                                <i class="fas fa-clock"></i> À traiter
+                            </button>
+                            <button id="auditor-filter-resolved" class="btn btn-secondary btn-sm"
+                                onclick="setAuditorTaskFilter('resolved')">
+                                <i class="fas fa-check-circle"></i> Répondu / Résolu
+                            </button>
+                            <button id="auditor-filter-all" class="btn btn-secondary btn-sm"
+                                onclick="setAuditorTaskFilter('all')">
+                                <i class="fas fa-list"></i> Tout
+                            </button>
+                            <button class="btn btn-secondary btn-sm" style="margin-left: auto;"
+                                onclick="printShortActionPlan()">
+                                <i class="fas fa-list-ul"></i> Liste Simple
+                            </button>
+                            <button id="exportPAQuestionsBtn" class="btn btn-primary btn-sm"
+                                onclick="printActionPlan()">
+                                <i class="fas fa-print"></i> Fiche P.A.
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="exportActionPlanForSite()">
+                                <i class="fas fa-file-excel"></i> Excel
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="info-banner">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <strong>Mode Simplifié :</strong> Ci-dessous se trouvent uniquement les points sur
+                                lesquels le Reviewer vous a posé une question ou demandé une précision. Cliquez sur une
+                                ligne pour répondre.
+                            </div>
+                        </div>
+
+                        <div id="auditorTasksContainer" class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Source</th>
+                                        <th>Sujet / Exigence</th>
+                                        <th>Dernier message du Reviewer</th>
+                                        <th>Statut</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="auditorTasksBody">
+                                    <!-- Rempli par JS -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="auditorEmptyState" class="hidden text-center p-10">
+                            <div class="text-green-500 text-5xl mb-4"><i class="fas fa-check-circle"></i></div>
+                            <h3 class="text-xl font-bold text-gray-700 dark:text-gray-200">Tout est à jour !</h3>
+                            <p class="text-gray-500 mt-2">Vous avez répondu à toutes les questions du reviewer.</p>
+                            <button onclick="showPackageModal()" class="btn btn-primary mt-6">
+                                <i class="fas fa-reply"></i> Renvoyer le package au Reviewer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Tab: Profil Entreprise -->
                 <div id="profil" class="tab-content active">
                     <div class="tab-header">
@@ -203,7 +368,8 @@
                                 <label>Statut commentaires</label>
                                 <select id="profileCommentStatusFilter" class="filter-select">
                                     <option value="">Tous</option>
-                                    <option value="pending">En attente</option>
+                                    <option value="pending">À traiter (Inbound)</option>
+                                    <option value="waiting">En attente (Outbound)</option>
                                     <option value="read">Lu</option>
                                     <option value="resolved">Résolus</option>
                                     <option value="with_comments">Avec commentaires</option>
@@ -212,7 +378,8 @@
                             </div>
                             <div class="filter-group">
                                 <label>Recherche</label>
-                                <input type="text" id="profileSearchInput" placeholder="Mots-clés..." class="filter-input">
+                                <input type="text" id="profileSearchInput" placeholder="Mots-clés..."
+                                    class="filter-input">
                             </div>
                         </div>
                         <div class="filters-actions">
@@ -220,7 +387,7 @@
                             <button onclick="showOnlyWithComments()" class="btn btn-primary">Avec commentaires</button>
                         </div>
                     </div>
-                    
+
                     <!-- Upload Zone -->
                     <div id="uploadZone" class="upload-zone">
                         <div class="upload-icon">
@@ -228,12 +395,28 @@
                         </div>
                         <h3>Démarrer votre travail</h3>
                         <div class="upload-options">
-                            <p><strong>Nouveau dossier :</strong> Glissez-déposez votre fichier <strong>.ifs</strong> (export NEO)</p>
-                            <p><strong>Reprendre travail :</strong> Glissez-déposez votre fichier <strong>.ifsr</strong> (travail sauvegardé)</p>
-                            <p><strong>Package collaboratif :</strong> Glissez-déposez votre fichier <strong>.ifsp</strong> (échange reviewer/auditeur)</p>
+                            <div class="reviewer-only">
+                                <p><strong>Nouveau dossier :</strong> Glissez-déposez votre fichier
+                                    <strong>.ifs</strong> (export NEO)
+                                </p>
+                                <p><strong>Reprendre travail :</strong> Glissez-déposez votre fichier
+                                    <strong>.ifsr</strong> (travail sauvegardé)
+                                </p>
+                                <p><strong>Package collaboratif :</strong> Glissez-déposez votre fichier
+                                    <strong>.ifsp</strong> (échange reviewer/auditeur)
+                                </p>
+                                <p><strong>Plan d'Actions :</strong> Glissez-déposez votre fichier
+                                    <strong>.xlsx</strong> (après chargement du dossier)
+                                </p>
+                            </div>
+                            <div class="auditor-only">
+                                <p><strong>Charger un package :</strong> Glissez-déposez le fichier
+                                    <strong>.ifsp</strong> reçu du reviewer.
+                                </p>
+                            </div>
                         </div>
                         <p class="upload-hint">ou cliquez ici pour sélectionner un fichier</p>
-                        <input type="file" id="fileInput" accept=".ifs,.ifsr,.ifsp" style="display: none;">
+                        <input type="file" id="fileInput" accept=".ifs,.ifsr,.ifsp,.xlsx,.xls" style="display: none;">
                     </div>
 
                     <!-- Loading -->
@@ -249,7 +432,7 @@
                     <div id="profilResults" class="results-section hidden">
                         <div id="successAlert" class="alert alert-success">
                         </div>
-                        
+
                         <!-- Statistics Cards -->
                         <div class="stats-grid">
                             <div class="stat-card">
@@ -277,14 +460,15 @@
                                 <div class="stat-label">Commentaires</div>
                             </div>
                         </div>
-                        
+
                         <!-- Company Profile -->
                         <div class="content-card">
                             <h3>Informations de l'entreprise</h3>
                             <div class="info-banner">
                                 <i class="fas fa-info-circle"></i>
                                 <div>
-                                    <strong>Mapping IFS automatique :</strong> Les UUID sont convertis vers les numéros d'exigences officiels IFS. 
+                                    <strong>Mapping IFS automatique :</strong> Les UUID sont convertis vers les numéros
+                                    d'exigences officiels IFS.
                                     <strong>Mode collaboratif :</strong> Cliquez sur une ligne pour commenter.
                                 </div>
                             </div>
@@ -312,68 +496,24 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Filters -->
-                    <div class="filters-card">
-                        <div class="filters-grid">
-                            <div class="filter-group">
-                                <label>Chapitre IFS</label>
-                                <select id="chapterFilter" class="filter-select">
-                                    <option value="">Tous</option>
-                                    <option value="1">1. Responsabilité de la direction</option>
-                                    <option value="2">2. Système de management qualité/sécurité</option>
-                                    <option value="3">3. Gestion des ressources</option>
-                                    <option value="4">4. Processus de fabrication</option>
-                                    <option value="5">5. Mesures, analyses et améliorations</option>
-                                </select>
-                            </div>
-                            
-                            <div class="filter-group">
-                                <label>Score</label>
-                                <select id="scoreFilter" class="filter-select">
-                                    <option value="">Tous</option>
-                                    <option value="A">A</option>
-                                    <option value="B">B</option>
-                                    <option value="C">C</option>
-                                    <option value="D">D</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </div>
-                            
-                            <div class="filter-group">
-                                <label>Statut commentaires</label>
-                                <select id="commentStatusFilter" class="filter-select">
-                                    <option value="">Tous</option>
-                                    <option value="with_comments">Avec commentaires</option>
-                                    <option value="pending">En attente</option>
-                                    <option value="read">Lu</option>
-                                    <option value="resolved">Résolus</option>
-                                    <option value="none">Sans commentaires</option>
-                                </select>
-                            </div>
-                            
-                            <div class="filter-group">
-                                <label>Recherche</label>
-                                <input type="text" id="searchInput" placeholder="Mots-clés..." class="filter-input">
-                            </div>
-                        </div>
-                        
-                        <div class="filters-actions">
-                            <button onclick="showAll()" class="btn btn-secondary">Afficher Tout</button>
-                            <button onclick="showOnlyWithComments()" class="btn btn-primary">Avec commentaires</button>
-                        </div>
+
+                    <div class="filters-actions">
+                        <button id="filter-nc" class="btn btn-danger">Non-conformités</button>
+                        <button id="filter-na" class="btn btn-warning">NA</button>
+                        <button id="filter-comments-only" class="btn btn-primary">Avec commentaires</button>
+                        <button id="filter-all" class="btn btn-secondary">Afficher Tout</button>
                     </div>
-                    
                     <!-- Table -->
                     <div class="table-container">
-                        <table class="data-table" id="checklistTable">
+                        <table class="data-table" id="checklistTable" style="table-layout: fixed; width: 100%;">
                             <thead>
                                 <tr>
-                                    <th>N° Exigence</th>
-                                    <th>Score</th>
-                                    <th>Explication</th>
-                                    <th>Explication détaillée</th>
-                                    <th>Commentaires</th>
+                                    <th style="width: 8%;">N° Exigence</th>
+                                    <th style="width: 7%;">Score</th>
+                                    <th style="width: 30%;">Explication</th>
+                                    <th style="width: 30%;">Explication détaillée</th>
+                                    <th style="width: 12%;">Revue : CONSTAT</th>
+                                    <th style="width: 13%;">Revue : PLAN D'ACTIONS</th>
                                 </tr>
                             </thead>
                             <tbody id="checklistTableBody"></tbody>
@@ -381,236 +521,198 @@
                     </div>
                 </div>
 
-                <!-- Tab: Non-Conformités -->
-                <div id="nonconformites" class="tab-content">
+
+
+                <!-- Tab: Revue du Dossier -->
+                <div id="dossier" class="tab-content">
                     <div class="tab-header">
-                        <h2>Non-Conformités & Non-Applicables</h2>
+                        <h2>📁 Revue du Dossier</h2>
                         <div class="tab-counters">
                             <div class="counter-badge pending">
-                                <span class="count" id="nonconformitesPendingCount">0</span>
-                                <span class="label">En attente</span>
-                            </div>
-                            <div class="counter-badge resolved">
-                                <span class="count" id="nonconformitesResolvedCount">0</span>
-                                <span class="label">Résolus</span>
+                                <span class="count" id="dossierPendingCount">0</span>
+                                <span class="label">À traiter</span>
                             </div>
                             <div class="counter-badge total">
-                                <span class="count" id="nonconformitesTotalCount">0</span>
-                                <span class="label">Total</span>
+                                <span class="count" id="dossierTotalCount">0</span>
+                                <span class="label">Total points</span>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Filters -->
-                    <div class="filters-card">
-                        <div class="filters-grid">
-                            <div class="filter-group">
-                                <label>Type</label>
-                                <select id="ncTypeFilter" class="filter-select">
-                                    <option value="">Tous</option>
-                                    <option value="B,C,D">NC seulement</option>
-                                    <option value="NA">NA seulement</option>
-                                    <option value="B">B</option>
-                                    <option value="C">C</option>
-                                    <option value="D">D</option>
-                                </select>
-                            </div>
-                            
-                            <div class="filter-group">
-                                <label>Chapitre</label>
-                                <select id="ncChapterFilter" class="filter-select">
-                                    <option value="">Tous</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                </select>
-                            </div>
-                            
-                            <div class="filter-group">
-                                <label>Commentaires</label>
-                                <select id="correctionFilter" class="filter-select">
-                                    <option value="">Tous</option>
-                                    <option value="with">Avec commentaires</option>
-                                    <option value="without">Sans commentaires</option>
-                                    <option value="pending">En attente réponse</option>
-                                    <option value="read">Lu</option>
-                                </select>
-                            </div>
-                            
-                            <div class="filter-group">
-                                <label>Recherche</label>
-                                <input type="text" id="ncSearchInput" placeholder="Mots-clés..." class="filter-input">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Statistics -->
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-number" id="totalNC">0</div>
-                            <div class="stat-label">Total NC + NA</div>
-                        </div>
-                        <div class="stat-card warning">
-                            <div class="stat-number" id="scoreB">0</div>
-                            <div class="stat-label">Score B</div>
-                        </div>
-                        <div class="stat-card danger">
-                            <div class="stat-number" id="scoreC">0</div>
-                            <div class="stat-label">Score C</div>
-                        </div>
-                        <div class="stat-card critical">
-                            <div class="stat-number" id="scoreD">0</div>
-                            <div class="stat-label">Score D</div>
-                        </div>
-                        <div class="stat-card neutral">
-                            <div class="stat-number" id="naCount">0</div>
-                            <div class="stat-label">Non-Applicables</div>
-                        </div>
-                        <div class="stat-card info">
-                            <div class="stat-number" id="commentsNCCount">0</div>
-                            <div class="stat-label">Commentaires NC/NA</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Table -->
-                    <div class="table-container">
-                        <table class="data-table" id="nonConformitiesTable">
-                            <thead>
-                                <tr>
-                                    <th>N° Exigence</th>
-                                    <th>Score</th>
-                                    <th>Explication</th>
-                                    <th>Explication détaillée</th>
-                                    <th>Commentaires</th>
-                                </tr>
-                            </thead>
-                            <tbody id="nonConformitiesTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Tab: Aide -->
-                <div id="aide" class="tab-content">
-                    <div class="tab-header">
-                        <h2>Aide et Workflow</h2>
                     </div>
                     <div class="content-card">
-                        <h3>Guide d'Utilisation - IFS Reviewer</h3>
-                        <p>Cet outil est conçu pour simplifier et structurer les échanges entre le <strong>Reviewer</strong> (qui relit et commente l'audit) et l'<strong>Auditeur</strong> (qui répond aux commentaires).</p>
-                
-                        <div class="accordion-item">
-                            <div class="accordion-header">
-                                <h4>1. Les Rôles (Modes de travail)</h4>
-                                <i class="fas fa-chevron-down accordion-icon"></i>
-                            </div>
-                            <div class="accordion-content">
-                                <p>L'application dispose de deux modes distincts, accessibles via l'interrupteur dans la barre latérale :</p>
-                                <ul class="list-disc list-inside ml-4 space-y-2">
-                                    <li><strong class="text-blue-600">Mode Reviewer :</strong> Rôle principal d'analyse. Le reviewer charge l'audit initial, commente les différents points, et suit les réponses de l'auditeur. C'est lui qui clôture les discussions en les marquant comme "Résolues".</li>
-                                    <li><strong class="text-green-600">Mode Auditeur :</strong> Rôle de réponse. L'auditeur charge les "packages" envoyés par le reviewer, répond aux commentaires, et peut signaler des modifications effectuées dans le rapport NEO.</li>
-                                </ul>
-                            </div>
-                        </div>
+                        <p class="text-secondary mb-4">Utilisez cette section pour poser des questions sur les documents
+                            annexes (Plan d'audit, Mandat, etc.).</p>
+                        <div id="dossierTableContainer"></div>
+                    </div>
+                </div>
 
-                        <div class="accordion-item">
-                            <div class="accordion-header">
-                                <h4>2. Les Types de Fichiers</h4>
-                                <i class="fas fa-chevron-down accordion-icon"></i>
+                <!-- Tab: Décision Certification -->
+                <div id="decision" class="tab-content">
+                    <div class="tab-header">
+                        <h2>⚖️ Décision de Certification</h2>
+                    </div>
+                    <div class="content-card">
+                        <div class="decision-form" style="max-width: 600px; margin: 0 auto; padding: 2rem;">
+                            <div class="form-group mb-4">
+                                <label class="form-label"
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Date de la
+                                    décision</label>
+                                <input type="date" id="decisionDate" class="form-input"
+                                    onchange="updateCertificationDecision()">
                             </div>
-                            <div class="accordion-content">
-                                <p>L'outil utilise trois formats de fichiers pour gérer le flux de travail :</p>
-                                <ul class="list-disc list-inside ml-4 space-y-2">
-                                    <li><code>.ifs</code> : Fichier d'audit brut, exporté depuis le logiciel NEO. C'est le point de départ de tout nouveau travail.</li>
-                                    <li><code>.ifsr</code> : Fichier de travail sauvegardé (<strong>IFS R</strong>eviewer). Il s'agit d'une sauvegarde complète de votre session (audit + tous les commentaires). Utilisez-le pour mettre votre travail de côté et le reprendre plus tard.</li>
-                                    <li><code>.ifsp</code> : "Package" d'échange (<strong>IFS P</strong>ackage). Ce fichier, plus léger, ne contient que les commentaires et les informations nécessaires à l'échange. C'est le fichier à envoyer entre le reviewer et l'auditeur.</li>
-                                </ul>
+                            <div class="form-group mb-4">
+                                <label class="form-label"
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Personne en charge
+                                    de la décision</label>
+                                <input type="text" id="decisionMaker" class="form-input" placeholder="Nom du décideur"
+                                    oninput="updateCertificationDecision()">
                             </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <div class="accordion-header">
-                                <h4>3. Guide Pas-à-Pas du Workflow de Collaboration</h4>
-                                <i class="fas fa-chevron-down accordion-icon"></i>
+                            <div class="form-group mb-4">
+                                <label class="form-label"
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Résultat de la
+                                    certification</label>
+                                <select id="certificationResult" class="form-input"
+                                    onchange="updateCertificationDecision()">
+                                    <option value="">-- Sélectionner un résultat --</option>
+                                    <option value="base">Niveau de base</option>
+                                    <option value="higher">Niveau supérieur</option>
+                                    <option value="fail">Échec</option>
+                                    <option value="pending">En attente</option>
+                                </select>
                             </div>
-                            <div class="accordion-content">
-                                <ol class="list-decimal list-inside space-y-4">
-                                    <li>
-                                        <strong>Étape 1 : Démarrage (Reviewer)</strong>
-                                        <ul class="list-disc list-inside ml-6 space-y-1">
-                                            <li>Assurez-vous d'être en <strong>Mode Reviewer</strong>.</li>
-                                            <li>Cliquez sur <button class="btn btn-secondary btn-sm"><i class="fas fa-file-medical"></i> Nouveau Dossier</button> ou chargez directement un fichier <code>.ifs</code> via la zone de glisser-déposer.</li>
-                                            <li>L'application traite le fichier, mappe les exigences et affiche le profil de l'entreprise.</li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <strong>Étape 2 : Analyse et Commentaires (Reviewer)</strong>
-                                        <ul class="list-disc list-inside ml-6 space-y-1">
-                                            <li>Naviguez dans les onglets "Profil", "Checklist" et "Non-Conformités".</li>
-                                            <li><strong>Cliquez sur n'importe quelle ligne</strong> d'un tableau pour ouvrir la fenêtre de commentaires.</li>
-                                            <li>Rédigez vos questions ou remarques et cliquez sur "Envoyer commentaire".</li>
-                                            <li>À tout moment, sauvegardez votre progression avec <button class="btn btn-secondary btn-sm"><i class="fas fa-save"></i> Sauvegarder IFSR</button>.</li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <strong>Étape 3 : Envoi à l'Auditeur (Reviewer)</strong>
-                                        <ul class="list-disc list-inside ml-6 space-y-1">
-                                            <li>Une fois votre relecture terminée, cliquez sur <button class="btn btn-primary btn-sm"><i class="fas fa-package"></i> Créer Package pour Auditeur</button>.</li>
-                                            <li>Un fichier <code>.ifsp</code> est généré et téléchargé. Envoyez ce fichier à l'auditeur (par e-mail, etc.).</li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <strong>Étape 4 : Réponse aux Commentaires (Auditeur)</strong>
-                                        <ul class="list-disc list-inside ml-6 space-y-1">
-                                            <li>Passez en <strong>Mode Auditeur</strong>.</li>
-                                            <li>Chargez le fichier <code>.ifsp</code> reçu.</li>
-                                            <li>Les commentaires du reviewer apparaissent avec le statut "En attente". Cliquez sur les lignes concernées pour répondre.</li>
-                                            <li>Si vous avez modifié le rapport dans NEO, vous pouvez le signaler en cliquant sur <button class="btn btn-warning btn-sm"><i class="fas fa-sync-alt"></i> Maj NEO</button>. Cela ajoutera un commentaire spécial pour en informer le reviewer.</li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <strong>Étape 5 : Retour au Reviewer (Auditeur)</strong>
-                                        <ul class="list-disc list-inside ml-6 space-y-1">
-                                            <li>Une fois que vous avez répondu à tous les commentaires, cliquez sur <button class="btn btn-primary btn-sm"><i class="fas fa-reply"></i> Répondre et Créer Package</button>.</li>
-                                            <li>Un nouveau fichier <code>.ifsp</code> est généré. Renvoyez-le au reviewer.</li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <strong>Étape 6 : Finalisation (Reviewer)</strong>
-                                        <ul class="list-disc list-inside ml-6 space-y-1">
-                                            <li>Assurez-vous d'être en <strong>Mode Reviewer</strong> et chargez le nouveau <code>.ifsp</code>.</li>
-                                            <li>Examinez les réponses de l'auditeur. Si une discussion est terminée, ouvrez la fenêtre de dialogue et cliquez sur <button class="btn btn-success btn-sm"><i class="fas fa-check"></i> Marquer résolu</button>.</li>
-                                            <li>Le cycle peut continuer si de nouvelles questions émergent.</li>
-                                            <li>Une fois le travail terminé, vous pouvez exporter un rapport complet avec <button class="btn btn-secondary btn-sm"><i class="fas fa-file-excel"></i> Export Excel</button>.</li>
-                                        </ul>
-                                    </li>
-                                </ol>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <div class="accordion-header">
-                                <h4>4. Fonctionnalités Détaillées</h4>
-                                <i class="fas fa-chevron-down accordion-icon"></i>
-                            </div>
-                            <div class="accordion-content">
-                                <ul class="list-disc list-inside ml-4 space-y-2">
-                                    <li><strong>Statut des Commentaires :</strong> Un indicateur visuel vous montre l'état de chaque discussion :
-                                        <ul class="list-disc list-inside ml-6">
-                                            <li><span class="inline-block w-3 h-3 rounded-full bg-yellow-500 align-middle"></span> <strong>En attente :</strong> Un commentaire attend une réponse de votre part.</li>
-                                            <li><span class="inline-block w-3 h-3 rounded-full bg-gray-400 align-middle"></span> <strong>Lu :</strong> Vous avez envoyé un commentaire et attendez une réponse.</li>
-                                            <li><span class="inline-block w-3 h-3 rounded-full bg-green-500 align-middle"></span> <strong>Résolu :</strong> La discussion est terminée et clôturée par le reviewer.</li>
-                                            <li><span class="inline-block w-3 h-3 rounded-full bg-gray-200 align-middle"></span> <strong>Aucun :</strong> Pas de commentaire sur ce champ.</li>
-                                        </ul>
-                                    </li>
-                                    <li><strong>Filtres et Recherche :</strong> Dans les onglets "Checklist" et "Non-Conformités", utilisez les filtres pour affiner les résultats par chapitre, score, ou statut des commentaires. La barre de recherche permet de trouver du texte dans n'importe quelle colonne.</li>
-                                    <li><strong>Export Excel :</strong> Le fichier Excel généré contient plusieurs onglets pour une analyse complète : un résumé, le profil de l'entreprise, la liste des non-conformités, la checklist complète et un historique de tous les commentaires.</li>
-                                </ul>
+                            <div class="form-group">
+                                <label class="form-label"
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Commentaire /
+                                    Synthèse Reviewer</label>
+                                <textarea id="decisionComment" class="form-input" rows="5"
+                                    placeholder="Synthèse globale du reviewer..."
+                                    oninput="updateCertificationDecision()"
+                                    style="resize: vertical; min-height: 120px;"></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
+                <!-- Tab: Aide (Documentation Premium) -->
+                <div id="aide" class="tab-content">
+                    <div class="tab-header">
+                        <h2>📚 Guide d'Utilisation & Support</h2>
+                    </div>
+
+                    <div class="aide-layout">
+                        <!-- Intro Hero -->
+                        <div class="content-card hero-card">
+                            <div class="hero-content">
+                                <h3>Bienvenue dans l'interface collaborative IFS</h3>
+                                <p>Optimisez vos revues de rapports IFS Food V8 grâce à notre flux de travail
+                                    synchronisé entre Reviewer et Auditeur.</p>
+                                <div class="info-badges">
+                                    <span class="badge"><i class="fas fa-check-circle"></i> V8 Ready</span>
+                                    <span class="badge"><i class="fas fa-lock"></i> Sécurisé</span>
+                                    <span class="badge"><i class="fas fa-bolt"></i> Temps Réel</span>
+                                </div>
+                            </div>
+                            <div class="hero-image">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                        </div>
+
+                        <!-- Feature Grid -->
+                        <div class="feature-grid">
+                            <div class="content-card feature-card">
+                                <div class="feature-icon"><i class="fas fa-file-import"></i></div>
+                                <h4>Plan d'Actions Excel</h4>
+                                <p>Importez vos fichiers <code>.xlsx</code> pour peupler automatiquement les réponses et
+                                    gagner un temps précieux.</p>
+                            </div>
+                            <div class="content-card feature-card">
+                                <div class="feature-icon"><i class="fas fa-images"></i></div>
+                                <h4>Preuves Visuelles</h4>
+                                <p>Collez (Ctrl+V) directement vos captures d'écran dans les commentaires pour illustrer
+                                    les écarts.</p>
+                            </div>
+                            <div class="content-card feature-card">
+                                <div class="feature-icon"><i class="fas fa-history"></i></div>
+                                <h4>Sauvegarde Auto</h4>
+                                <p>Votre progression est sécurisée localement toutes les 30 secondes. Jamais aucune
+                                    perte de données.</p>
+                            </div>
+                        </div>
+
+                        <!-- Workflow Roadmap -->
+                        <div class="content-card">
+                            <h3><i class="fas fa-map-signs"></i> Le Workflow de Collaboration</h3>
+                            <div class="roadmap">
+                                <div class="roadmap-item">
+                                    <div class="roadmap-dot">1</div>
+                                    <div class="roadmap-content">
+                                        <h5>Analyse & Annotation (Reviewer)</h5>
+                                        <p>Chargez le <code>.ifs</code>. Commentez les exigences dans "Checklist" ou
+                                            "Profil".</p>
+                                    </div>
+                                </div>
+                                <div class="roadmap-item">
+                                    <div class="roadmap-dot">2</div>
+                                    <div class="roadmap-content">
+                                        <h5>Envoi du Package (Reviewer)</h5>
+                                        <p>Générez un <code>.ifsp</code> et transmettez-le à l'auditeur.</p>
+                                    </div>
+                                </div>
+                                <div class="roadmap-item">
+                                    <div class="roadmap-dot">3</div>
+                                    <div class="roadmap-content">
+                                        <h5>Réponse & Correction (Auditeur)</h5>
+                                        <p>L'auditeur répond aux points ouverts dans l'onglet "Tâches".</p>
+                                    </div>
+                                </div>
+                                <div class="roadmap-item">
+                                    <div class="roadmap-dot">4</div>
+                                    <div class="roadmap-content">
+                                        <h5>Validation Finale (Reviewer)</h5>
+                                        <p>Le reviewer valide (Résolu) ou relance jusqu'à clôture complète.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- File Reference -->
+                        <div class="content-card">
+                            <h3><i class="fas fa-file-code"></i> Guide des formats de fichiers</h3>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Format</th>
+                                            <th>Description & Usage</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="file-badge ifs">.ifs</span></td>
+                                            <td>Fichier JSON brut exporté de NEO. Source de l'audit.</td>
+                                            <td>Import Initial</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="file-badge ifsp">.ifsp</span></td>
+                                            <td>Package d'échange compressé (Reviewer ↔ Auditeur).</td>
+                                            <td>Transfert</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="file-badge ifsr">.ifsr</span></td>
+                                            <td>Sauvegarde complète de session de travail.</td>
+                                            <td>Continuité</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="file-badge xlsx">.xlsx</span></td>
+                                            <td>Plan d'actions Excel ou export final des écarts.</td>
+                                            <td>Rapport / Import PA</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
             </main>
         </div>
     </div>
@@ -628,14 +730,14 @@
                 </div>
                 <button class="modal-close" onclick="closeCommentModal()">&times;</button>
             </div>
-            
+
             <div class="modal-body">
                 <!-- Field Content Display -->
                 <div class="field-content-section">
                     <label class="field-label">Contenu du champ :</label>
                     <div id="fieldDisplayContent" class="field-display"></div>
                 </div>
-                
+
                 <!-- Conversation History -->
                 <div class="conversation-section">
                     <div class="conversation-header">
@@ -667,7 +769,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Input Section -->
                 <div class="comment-input-section">
                     <div class="input-area">
@@ -677,17 +779,21 @@
                                 <span class="auditor-only">Votre réponse :</span>
                             </label>
                             <div class="input-tools">
+                                <button class="tool-btn" onclick="triggerImageUpload()" title="Insérer une image">
+                                    <i class="fas fa-image"></i>
+                                </button>
+                                <input type="file" id="commentImageInput" accept="image/*" style="display: none;"
+                                    onchange="handleImageUpload(this)">
                                 <button class="tool-btn" onclick="insertTemplate('quality')" title="Template qualité">
                                     <i class="fas fa-stamp"></i>
                                 </button>
-                                <button class="tool-btn" onclick="insertTemplate('correction')" title="Template correction">
+                                <button class="tool-btn" onclick="insertTemplate('correction')"
+                                    title="Template correction">
                                     <i class="fas fa-tools"></i>
                                 </button>
                             </div>
                         </div>
-                        <textarea 
-                            id="newCommentInput" 
-                            placeholder="Tapez votre commentaire ici..."
+                        <textarea id="newCommentInput" placeholder="Tapez votre commentaire ici..."
                             class="comment-textarea">
                         </textarea>
                         <div class="comment-actions">
@@ -698,12 +804,19 @@
                                 <span id="draftStatus" class="text-sm text-gray-500 self-center ml-4"></span>
                             </div>
                             <div class="action-right">
+                                <label
+                                    class="auditor-only flex items-center mr-4 text-sm font-bold text-green-600 dark:text-green-400 cursor-pointer select-none">
+                                    <input type="checkbox" id="neoCorrectionCheckbox"
+                                        class="w-4 h-4 text-green-600 rounded mr-2 focus:ring-green-500 border-gray-300">
+                                    Correction faite sur NEO
+                                </label>
                                 <button class="btn btn-primary" onclick="saveComment()" id="saveCommentBtn">
                                     <i class="fas fa-paper-plane"></i>
                                     <span class="reviewer-only">Envoyer commentaire</span>
                                     <span class="auditor-only">Envoyer réponse</span>
                                 </button>
-                                <button class="btn btn-success reviewer-only" onclick="markAsResolved()" id="resolveBtn" style="display:none;">
+                                <button class="btn btn-success reviewer-only" onclick="markAsResolved()" id="resolveBtn"
+                                    style="display:none;">
                                     <i class="fas fa-check"></i> Marquer résolu
                                 </button>
                             </div>
@@ -731,7 +844,7 @@
                         </div>
                         <div class="stat">
                             <span class="number" id="packagePendingFields">0</span>
-                            <span class="label">Champs en attente</span>
+                            <span class="label">Questions sans réponse</span>
                         </div>
                         <div class="stat">
                             <span class="number" id="packageTotalComments">0</span>
@@ -742,7 +855,8 @@
                 </div>
                 <div class="package-actions">
                     <button class="btn btn-secondary" onclick="continueWorking()">Continuer le travail</button>
-                    <button class="btn btn-primary" onclick="createPackage()" id="createPackageConfirm">Créer le package</button>
+                    <button class="btn btn-primary" onclick="createPackage()" id="createPackageConfirm">Créer le
+                        package</button>
                 </div>
             </div>
         </div>
@@ -760,23 +874,146 @@
                 <div class="neo-update-form">
                     <div class="form-group">
                         <label for="neoUpdateDescription">Description des modifications :</label>
-                        <textarea id="neoUpdateDescription" 
-                                  placeholder="Décrivez les modifications apportées au rapport NEO..."
-                                  class="form-textarea"></textarea>
+                        <textarea id="neoUpdateDescription"
+                            placeholder="Décrivez les modifications apportées au rapport NEO..."
+                            class="form-textarea"></textarea>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="newNeoFile">Nouveau fichier NEO (optionnel) :</label>
                         <input type="file" id="newNeoFile" accept=".ifs" class="form-file">
                         <small>Vous pouvez joindre le nouveau fichier IFS modifié</small>
                     </div>
-                    
+
                     <div class="neo-update-actions">
                         <button class="btn btn-secondary" onclick="cancelNeoUpdate()">Annuler</button>
-                        <button class="btn btn-primary" onclick="addNeoUpdateToPackage()">Ajouter à la réponse</button>
+                        <button class="btn btn-primary" onclick="addNeoUpdateToPackage()">Ajouter à la
+                            réponse</button>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+
+    <div id="accessCodeModal" class="comment-modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content"
+            style="max-width: 420px; border-radius: 1.5rem; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+            <div class="modal-header" style="justify-content: center; padding-bottom: 0.5rem; border: none;">
+                <h3 id="accessCodeModalTitle"
+                    style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary); text-align: center;">
+                    Changer
+                    de mode</h3>
+                <button class="modal-close" onclick="closeAccessCodeModal()"
+                    style="position: absolute; right: 1.5rem; top: 1.5rem;">&times;</button>
+            </div>
+
+            <div class="modal-body" style="padding-top: 0.5rem;">
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem;">
+                    Veuillez confirmer votre identité pour continuer.
+                </p>
+
+                <div class="neo-update-form">
+                    <!-- Mode Selection -->
+                    <div id="initialModeSelection" class="form-group mb-4 hidden"
+                        style="text-align: center; margin-bottom: 1.5rem;">
+                        <div style="display: flex; gap: 1rem; justify-content: center;">
+                            <label
+                                style="display: flex; align-items: center; cursor: pointer; padding: 0.5rem 1rem; background: var(--bg-tertiary); border-radius: 999px;">
+                                <input type="radio" name="initialMode" id="modeSelectReviewer" value="reviewer"
+                                    style="margin-right: 0.5rem;">
+                                <span>Reviewer</span>
+                            </label>
+                            <label
+                                style="display: flex; align-items: center; cursor: pointer; padding: 0.5rem 1rem; background: var(--bg-tertiary); border-radius: 999px;">
+                                <input type="radio" name="initialMode" id="modeSelectAuditor" value="auditor"
+                                    style="margin-right: 0.5rem;">
+                                <span>Auditeur</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="position: relative; margin-bottom: 1.5rem;">
+                        <input type="password" id="accessCodeInput"
+                            style="width: 100%; padding: 1rem 1.25rem; border-radius: 1rem; border: 2px solid var(--border-secondary); font-size: 1.1rem; text-align: center; transition: all 0.2s; outline: none; background: var(--bg-secondary); color: var(--text-primary);"
+                            placeholder="Code d'accès" onfocus="this.style.borderColor='var(--color-theme-500)';"
+                            onblur="this.style.borderColor='var(--border-secondary)';">
+                        <button type="button" id="toggleAccessCodeVisibility"
+                            style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 0.5rem;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+
+                    <small id="accessCodeError" class="hidden"
+                        style="display: block; color: var(--color-danger); text-align: center; margin-bottom: 1.5rem; font-weight: 500;">
+                        <i class="fas fa-exclamation-circle margin-right: 0.5rem;"></i> Code incorrect
+                    </small>
+
+                    <div class="neo-update-actions" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <button class="btn btn-secondary" onclick="closeAccessCodeModal()"
+                            style="display: flex; justify-content: center; width: 100%; padding: 1rem;">
+                            Annuler
+                        </button>
+                        <button class="btn btn-primary" onclick="verifyAccessCode()"
+                            style="display: flex; justify-content: center; width: 100%; padding: 1rem; background-color: #2563eb; color: white; border: none; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.5);">
+                            Valider
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Reset Confirmation Modal -->
+    <div id="resetModal" class="comment-modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content" style="max-width: 450px; border: 2px solid var(--color-danger);">
+            <div class="modal-header" style="background-color: #fef2f2; border-bottom-color: #fee2e2;">
+                <h3 style="color: var(--color-danger);"><i class="fas fa-exclamation-triangle"></i> Zone de Danger</h3>
+                <button class="modal-close" onclick="closeResetModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-primary); margin-bottom: 1rem; font-weight: bold;">
+                    Cette action est IRRÉVERSIBLE.
+                </p>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    Vous êtes sur le point d'effacer <strong>toutes les données locales</strong> (dossier en cours,
+                    commentaires, paramètres). Tout travail non sauvegardé sera perdu.
+                </p>
+
+                <div class="form-group">
+                    <label for="resetConfirmationInput"
+                        style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                        Pour confirmer, tapez <strong>SUPPRIMER</strong> ci-dessous :
+                    </label>
+                    <input type="text" id="resetConfirmationInput" class="form-input"
+                        oninput="const btn = document.getElementById('confirmResetBtn'); if(this.value === 'SUPPRIMER') { btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; } else { btn.disabled = true; btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed'; }"
+                        placeholder="Tapez SUPPRIMER"
+                        style="border: 2px solid var(--border-primary); text-align: center; font-weight: bold; letter-spacing: 1px;">
+                </div>
+
+                <div class="neo-update-actions" style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button class="btn btn-secondary" onclick="closeResetModal()" style="flex: 1;">Annuler</button>
+                    <button id="confirmResetBtn" class="btn btn-primary" onclick="confirmAppReset()" disabled
+                        style="flex: 1; background-color: var(--color-danger); border-color: var(--color-danger); color: white; opacity: 0.5; cursor: not-allowed;">
+                        <i class="fas fa-trash"></i> TOUT EFFACER
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Viewer Modal -->
+    <div id="imageViewerModal" class="comment-modal hidden" style="z-index: 9999;">
+        <div class="modal-overlay" onclick="closeImageViewer()"></div>
+        <div class="modal-content"
+            style="max-width: 95vw; max-height: 95vh; padding: 0.5rem; background: transparent; box-shadow: none;">
+            <button class="modal-close" onclick="closeImageViewer()"
+                style="position: fixed; top: 20px; right: 20px; color: white; background: rgba(0,0,0,0.5); width: 40px; height: 40px; border-radius: 50%;">&times;</button>
+            <img id="viewerImage" src=""
+                style="width: auto; height: auto; max-width: 100%; max-height: 90vh; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 0 50px rgba(0,0,0,0.5);">
         </div>
     </div>
 
@@ -788,48 +1025,6 @@
     <script src="utils.js"></script>
     <script src="app.js"></script>
 
-    <!-- Access Code Modal -->
-    <div id="accessCodeModal" class="comment-modal hidden">
-        <div class="modal-overlay"></div>
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="accessCodeModalTitle">Changer de mode</h3>
-                <button class="modal-close" onclick="closeAccessCodeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="neo-update-form">
-                    <!-- Mode Selection for Initial Call -->
-                    <div id="initialModeSelection" class="form-group mb-4 hidden">
-                        <label class="block text-center mb-2">Sélectionnez votre mode :</label>
-                        <div class="flex justify-center space-x-4">
-                            <label class="inline-flex items-center">
-                                <input type="radio" name="initialMode" id="modeSelectReviewer" value="reviewer" class="form-radio text-blue-600">
-                                <span class="ml-2">Reviewer</span>
-                            </label>
-                            <label class="inline-flex items-center">
-                                <input type="radio" name="initialMode" id="modeSelectAuditor" value="auditor" class="form-radio text-green-600">
-                                <span class="ml-2">Auditeur</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="accessCodeInput" class="block text-center mb-2">Veuillez entrer le code d'accès pour changer de mode :</label>
-                        <div class="relative flex items-center justify-center">
-                            <input type="password" id="accessCodeInput" class="form-input pr-10 text-center" placeholder="Code d'accès">
-                            <button type="button" id="toggleAccessCodeVisibility" class="absolute right-2 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <small id="accessCodeError" class="text-red-500 text-center mt-2 hidden">Code incorrect. Veuillez réessayer.</small>
-                    </div>
-                    <div class="neo-update-actions">
-                        <button class="btn btn-secondary" onclick="closeAccessCodeModal()">Annuler</button>
-                        <button class="btn btn-primary" onclick="verifyAccessCode()">Valider</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
+
 </html>
