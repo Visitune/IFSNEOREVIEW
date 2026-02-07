@@ -173,6 +173,68 @@ class UIManager {
         }
     }
 
+    setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+Enter to save comment
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                const activeElement = document.activeElement;
+                if (activeElement && activeElement.id === 'newCommentInput') {
+                    e.preventDefault();
+                    this.saveComment();
+                } else if (activeElement && activeElement.id === 'neoUpdateDescription') {
+                    e.preventDefault();
+                    this.fileHandler.addNeoUpdateToPackage();
+                }
+            }
+
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                // Check which modal is open based on visibility (handling overlay logic is tricky, so checking classes)
+                const isHidden = (id) => {
+                    const el = document.getElementById(id);
+                    return !el || el.classList.contains('hidden') || el.style.display === 'none';
+                };
+
+                if (!isHidden('packageModal')) {
+                    this.closePackageModal();
+                } else if (!isHidden('neoUpdateModal')) {
+                    this.closeNeoUpdateModal();
+                } else if (!isHidden('helpModal')) { // Help modal uses a different mechanism often
+                    this.closeHelpModal();
+                } else if (!isHidden('imageViewerModal')) {
+                    this.closeImageViewer();
+                } else if (this.currentFieldId) {
+                    this.closeCommentModal();
+                }
+            }
+
+            // Arrow Keys for Navigation (Only when Comment Modal is open)
+            if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && this.currentFieldId) {
+                // Prevent scrolling page if focus is not in a text area
+                if (document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'INPUT') {
+                    e.preventDefault();
+                }
+
+                // If focus is in textarea, only navigate if Ctrl is held (optional feature, but let's stick to simple first: if modal open)
+                // Actually, Reviewer might want to scroll text. Let's require Ctrl+Arrow or just use Arrow if focus is NOT in input.
+                if (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT') return;
+
+                const currentRow = document.querySelector(`tr[data-field-id="${this.currentFieldId}"]`);
+                if (currentRow) {
+                    const targetRow = e.key === 'ArrowUp'
+                        ? currentRow.previousElementSibling
+                        : currentRow.nextElementSibling;
+
+                    if (targetRow && targetRow.classList.contains('table-row-clickable')) {
+                        // Simulate click to open next modal
+                        // We must close current first? openCommentModal usually handles switching.
+                        this.openCommentModal(targetRow);
+                    }
+                }
+            }
+        });
+    }
+
     setupFileUIEventListeners() {
         const uploadZone = document.getElementById('uploadZone');
         const fileInput = document.getElementById('fileInput');
@@ -956,6 +1018,31 @@ class UIManager {
             resolveBtn.style.display = canResolve ? 'block' : 'none';
         }
 
+        // --- NEW: RESPONSE REQUIRED CHECKBOX (Reviewer Only) ---
+        const inputSection = document.querySelector('.comment-input-section');
+        const existingCheckbox = document.getElementById('responseRequiredContainer');
+
+        if (inputSection) {
+            // Remove existing if any to avoid duplication (though this function is called once per open)
+            if (existingCheckbox) existingCheckbox.remove();
+
+            if (currentMode === 'reviewer') {
+                const checkboxHtml = `
+                    <div id="responseRequiredContainer" class="flex items-center mt-2 mb-2" style="font-size: 0.9rem;">
+                        <input type="checkbox" id="responseRequiredCheckbox" class="mr-2 h-4 w-4 text-theme-600 focus:ring-theme-500 border-gray-300 rounded" checked>
+                        <label for="responseRequiredCheckbox" class="text-gray-700 dark:text-gray-300 select-none cursor-pointer">
+                            <i class="fas fa-reply mr-1 text-gray-400"></i> Attendre une réponse de l'auditeur
+                        </label>
+                    </div>
+                `;
+                // Insert before the buttons (footer) or after textarea
+                const textarea = document.getElementById('newCommentInput');
+                if (textarea) {
+                    textarea.insertAdjacentHTML('afterend', checkboxHtml);
+                }
+            }
+        }
+
         const textarea = document.getElementById('newCommentInput');
         if (textarea) {
             textarea.placeholder = currentMode === 'reviewer' ?
@@ -964,7 +1051,6 @@ class UIManager {
         }
 
         // AUDITOR RESTRICTION: Cannot initiate a conversation.
-        const inputSection = document.querySelector('.comment-input-section');
         if (inputSection) {
             // Hide input if auditor AND there are no visible messages.
             if (currentMode === 'auditor' && !hasVisibleMessages) {
@@ -994,6 +1080,14 @@ class UIManager {
         const neoCorrectionCheckbox = document.getElementById('neoCorrectionCheckbox');
         const isNeoCorrection = neoCorrectionCheckbox && !neoCorrectionCheckbox.closest('.auditor-only').hidden ? neoCorrectionCheckbox.checked : false;
 
+        // CHECKBOX STATE
+        const responseRequiredCheckbox = document.getElementById('responseRequiredCheckbox');
+        // Default to true (pending) if checkbox doesn't exist (e.g. auditor mode) or is checked
+        let initialStatus = 'pending';
+        if (this.state.get().currentMode === 'reviewer' && responseRequiredCheckbox) {
+            initialStatus = responseRequiredCheckbox.checked ? 'pending' : 'read';
+        }
+
         if (!content) {
             this.showError('Veuillez saisir un commentaire');
             return;
@@ -1009,8 +1103,7 @@ class UIManager {
             author: this.state.get().currentMode,
             content: content,
             date: new Date().toISOString(),
-            status: 'pending',
-            status: 'pending',
+            status: initialStatus,
             version: this.state.get().packageVersion,
             correctionInNeo: isNeoCorrection
         };
@@ -1975,6 +2068,160 @@ class UIManager {
         } else {
             btn.classList.remove('active');
             btn.style.color = 'var(--text-tertiary)';
+        }
+    }
+
+    injectBulkActionButtons() {
+        // Helper to inject buttons if not present
+        const inject = (containerId, tab) => {
+            const container = document.querySelector(`#${containerId} .filters-actions`);
+            if (container && !container.querySelector('.bulk-btn')) {
+                const isReviewer = this.state.get().currentMode === 'reviewer';
+                if (!isReviewer) return; // Auditor doesn't need these mostly
+
+                const btnGroup = document.createElement('div');
+                btnGroup.className = 'bulk-btn-group ml-auto flex gap-2'; // Tailwind classes
+                btnGroup.innerHTML = `
+                    <button class="bulk-btn btn btn-sm btn-outline-secondary" onclick="window.uiManager.markVisibleAsRead('${tab}')">
+                        <i class="fas fa-eye"></i> Tout Lu
+                    </button>
+                    ${tab !== 'auditor-tasks' ? `
+                    <button class="bulk-btn btn btn-sm btn-outline-success" onclick="window.uiManager.resolveVisible('${tab}')">
+                        <i class="fas fa-check-double"></i> Tout Résoudre
+                    </button>` : ''}
+                `;
+                container.appendChild(btnGroup);
+            }
+        };
+
+        inject('profil', 'profil');
+        inject('checklist', 'checklist');
+        inject('nonconformites', 'checklist'); // reusing checklist logic for NC tab if needed, but NC tab has its own valid logic
+        // For NC tab, maybe specific
+    }
+
+    injectBulkActionButtons() {
+        if (this.state.get().currentMode !== 'reviewer') return;
+
+        const tabs = ['profil', 'checklist'];
+        tabs.forEach(tab => {
+            const container = document.querySelector(`#${tab} .filters-actions`);
+            if (!container) return;
+
+            if (container.querySelector('.bulk-action-btn')) return; // Already injected
+
+            const btnGroup = document.createElement('div');
+            btnGroup.className = 'bulk-actions-group';
+            btnGroup.style.display = 'inline-flex';
+            btnGroup.style.gap = '0.5rem';
+            btnGroup.style.marginLeft = '1rem';
+            btnGroup.style.borderLeft = '1px solid var(--border-primary)';
+            btnGroup.style.paddingLeft = '1rem';
+
+            const markReadBtn = document.createElement('button');
+            markReadBtn.className = 'btn btn-sm btn-secondary bulk-action-btn';
+            markReadBtn.innerHTML = '<i class="fas fa-check-double"></i> Tout lu';
+            markReadBtn.onclick = () => this.markVisibleAsRead(tab);
+            markReadBtn.title = "Marquer tous les points affichés comme lus";
+
+            const resolveBtn = document.createElement('button');
+            resolveBtn.className = 'btn btn-sm btn-success bulk-action-btn';
+            resolveBtn.innerHTML = '<i class="fas fa-gavel"></i> Tout résoudre';
+            resolveBtn.onclick = () => this.resolveVisible(tab);
+            resolveBtn.title = "Résoudre (clôturer) tous les points affichés";
+
+            btnGroup.appendChild(markReadBtn);
+            btnGroup.appendChild(resolveBtn);
+            container.appendChild(btnGroup);
+        });
+    }
+
+    markVisibleAsRead(tab) {
+        if (!confirm("Voulez-vous marquer tous les points AFFICHÉS comme 'Lus' ?")) return;
+
+        const conversations = this.state.get().conversations;
+        const currentMode = this.state.get().currentMode;
+        let count = 0;
+
+        const isProfile = tab === 'profil';
+        const isChecklist = tab === 'checklist';
+
+        // Better approach: Iterate keys
+        Object.keys(conversations).forEach(fieldId => {
+            let belongs = false;
+            if (isProfile && fieldId.startsWith('profile-')) belongs = true;
+            if (isChecklist && (fieldId.startsWith('req-') || fieldId.startsWith('ckl-') || fieldId.startsWith('nc-') || fieldId.startsWith('pa-'))) belongs = true;
+
+            if (belongs) {
+                const conv = conversations[fieldId];
+                if (!conv.thread) return;
+
+                let modified = false;
+                const newThread = conv.thread.map(msg => {
+                    // If message is from OTHER and is PENDING
+                    if (msg.author !== currentMode && msg.status === 'pending') {
+                        modified = true;
+                        count++;
+                        return { ...msg, status: 'read' };
+                    }
+                    return msg;
+                });
+
+                if (modified) {
+                    conversations[fieldId] = { ...conv, thread: newThread };
+                }
+            }
+        });
+
+        if (count > 0) {
+            this.state.setState({ conversations });
+            this.showSuccess(`${count} messages marqués comme lus.`);
+        } else {
+            this.showInfo("Aucun message à marquer comme lu.");
+        }
+    }
+
+    resolveVisible(tab) {
+        if (!confirm("⚠️ ATTENTION : Voulez-vous CLÔTURER (Résoudre) tous les points AFFICHÉS qui sont 'En attente' ?\n\nCela signifie que vous validez la réponse de l'auditeur.")) return;
+
+        const conversations = this.state.get().conversations;
+        let count = 0;
+        const isProfile = tab === 'profil';
+        const isChecklist = tab === 'checklist';
+
+        Object.keys(conversations).forEach(fieldId => {
+            let belongs = false;
+            if (isProfile && fieldId.startsWith('profile-')) belongs = true;
+            if (isChecklist && (fieldId.startsWith('req-') || fieldId.startsWith('ckl-') || fieldId.startsWith('nc-') || fieldId.startsWith('pa-'))) belongs = true;
+
+            if (belongs) {
+                const conv = conversations[fieldId];
+                // Only resolve if it's currently pending (Reviewer Action needed)
+                const status = this.dataProcessor.getConversationStatus(conv);
+                if (status === 'pending' && conv.status !== 'resolved') {
+                    // Logic from markAsResolved:
+                    conv.status = 'resolved';
+                    conv.thread = conv.thread.map(m => ({ ...m, status: 'read' })); // Mark all as read
+
+                    // Add history
+                    if (!conv.history) conv.history = [];
+                    conv.history.push({
+                        type: 'status_changed',
+                        date: new Date().toISOString(),
+                        actor: this.state.get().currentMode,
+                        details: 'Résolu en masse'
+                    });
+
+                    count++;
+                }
+            }
+        });
+
+        if (count > 0) {
+            this.state.setState({ conversations });
+            this.showSuccess(`${count} points résolus.`);
+        } else {
+            this.showInfo("Aucun point éligible à la résolution (seuls les points 'À traiter' peuvent être résolus en masse).");
         }
     }
 }

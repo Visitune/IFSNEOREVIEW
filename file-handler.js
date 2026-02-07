@@ -90,8 +90,34 @@ class FileHandler {
         reader.readAsText(file);
     }
 
+    validateAuditData(data) {
+        if (!data || typeof data !== 'object') {
+            throw new Error('Format de fichier invalide (JSON attendu)');
+        }
+
+        // Basic check for IFS structure
+        const hasCompanyName = data.companyName || (data.questions && data.questions.companyName);
+        if (!hasCompanyName) {
+            throw new Error('Nom de l\'entreprise manquant. Est-ce un fichier IFS valide ?');
+        }
+
+        // Check for checklist data if it's supposed to be a full audit
+        // (Note: collaborative packages might structure this differently, so this is mainly for .ifs)
+        // We can make this less strict or return warnings.
+
+        return true;
+    }
+
     processNewIFSFile(data) {
         console.log('🎯 PROCESSING NEW IFS FILE');
+
+        try {
+            this.validateAuditData(data);
+        } catch (e) {
+            this.uiManager.showError(`Fichier invalide : ${e.message}`);
+            return;
+        }
+
         this.uiManager.setPartialView(false); // Ensure full view
 
         this.state.setState({
@@ -233,7 +259,16 @@ class FileHandler {
                 checklistData: packageData.checklistData || [],
                 companyProfileData: packageData.companyProfileData || {},
                 requirementNumberMapping: packageData.requirementNumberMapping || {},
+                // dossierReviewState: packageData.dossierReviewState || {}, // OLD
+                certificationDecisionData: packageData.certificationDecisionData || {}
             });
+
+            // Merge Dossier State (important for round trip if Auditor updates status)
+            if (packageData.dossierReviewState) {
+                const currentDossierState = this.state.get().dossierReviewState || {};
+                const newDossierState = { ...currentDossierState, ...packageData.dossierReviewState };
+                this.state.setState({ dossierReviewState: newDossierState });
+            }
 
             if (packageData.conversations) {
                 const migratedConversations = this.migrateConversationKeys(packageData.conversations);
@@ -284,18 +319,66 @@ class FileHandler {
 
     mergeConversations(newConversations) {
         const currentConversations = { ...this.state.get().conversations };
-        for (const fieldId in newConversations) {
-            if (!currentConversations[fieldId]) {
-                currentConversations[fieldId] = newConversations[fieldId];
-            } else {
-                const existingIds = new Set(currentConversations[fieldId].thread.map(msg => msg.id));
-                const newMessages = newConversations[fieldId].thread.filter(msg => !existingIds.has(msg.id));
+        let updatedCount = 0;
 
-                currentConversations[fieldId].thread = [...currentConversations[fieldId].thread, ...newMessages];
-                currentConversations[fieldId].thread.sort((a, b) => new Date(a.date) - new Date(b.date));
-                currentConversations[fieldId].lastActivity = newConversations[fieldId].lastActivity;
+        for (const fieldId in newConversations) {
+            const newConv = newConversations[fieldId];
+
+            if (!currentConversations[fieldId]) {
+                // New conversation entirely
+                currentConversations[fieldId] = newConv;
+                updatedCount++;
+            } else {
+                const currentConv = currentConversations[fieldId];
+                const currentThread = currentConv.thread || [];
+                const newThread = newConv.thread || [];
+
+                // Map existing messages by ID for easy lookup and status update
+                const messageMap = new Map();
+                currentThread.forEach(msg => messageMap.set(msg.id, msg));
+
+                let threadChanged = false;
+
+                // Merge new messages or update status of existing ones
+                newThread.forEach(newMsg => {
+                    if (messageMap.has(newMsg.id)) {
+                        // Message exists. Check if status changed (e.g. 'pending' -> 'read')
+                        const existingMsg = messageMap.get(newMsg.id);
+                        if (existingMsg.status !== newMsg.status) {
+                            // If local is 'read' and incoming is 'pending', keep 'read' (local user read it)
+                            // If local is 'pending' and incoming is 'read', update to 'read' (remote user read it)
+                            // Actually, logic depends on who is author.
+                            // Simplified: specific status updates from remote take precedence if valid transition.
+                            if (newMsg.status === 'read' && existingMsg.status === 'pending') {
+                                existingMsg.status = 'read';
+                                threadChanged = true;
+                            }
+                        }
+                    } else {
+                        // New message
+                        messageMap.set(newMsg.id, newMsg);
+                        threadChanged = true;
+                        updatedCount++;
+                    }
+                });
+
+                if (threadChanged) {
+                    // Reconstruct thread from map values and sort
+                    currentConversations[fieldId].thread = Array.from(messageMap.values()).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                    // Update header info if newer
+                    if (new Date(newConv.lastActivity) > new Date(currentConv.lastActivity)) {
+                        currentConversations[fieldId].lastActivity = newConv.lastActivity;
+                        currentConversations[fieldId].status = newConv.status; // Take status from latest package interaction
+                    }
+                }
             }
         }
+
+        if (updatedCount > 0) {
+            console.log(`✅ ${updatedCount} conversations updated or added.`);
+        }
+
         this.state.setState({ conversations: currentConversations });
     }
 
@@ -390,15 +473,88 @@ class FileHandler {
         }
     }
 
+    checkPackageHealth() {
+        const conversations = this.state.get().conversations;
+        const currentMode = this.state.get().currentMode;
+        const otherMode = currentMode === 'reviewer' ? 'auditor' : 'reviewer';
+
+        let pending = 0;
+        let waiting = 0;
+        let resolved = 0;
+        let total = 0;
+
+        Object.values(conversations).forEach(conv => {
+            if (conv.thread && conv.thread.length > 0) {
+                total++;
+                const status = this.dataProcessor.getConversationStatus(conv);
+                if (status === 'pending') pending++;
+                else if (status === 'waiting') waiting++;
+                else if (status === 'resolved') resolved++;
+            }
+        });
+
+        const checklistData = this.state.get().checklistData;
+        const dossierState = this.state.get().dossierReviewState || {};
+        const checklistStructure = this.dataProcessor.constructor.REVIEW_CHECKLIST_STRUCTURE || {}; // Access via constructor or instance property if available
+
+        let incompleteDossier = 0;
+        // Basic check for dossier completeness (Reviewer -> Auditor direction)
+        if (currentMode === 'reviewer') {
+            // We need access to the structure. Assuming it's available globally or via DataProcessor class
+            // If not available, we skip this check or use a simplified one based on keys
+            // For now, let's just count keys in dossierState vs expected (if we had the count)
+            // Simplified: Check if any item in state is 'écart' but has no comment? 
+            // Or just report stats.
+        }
+
+        return {
+            pending,
+            waiting,
+            resolved,
+            total,
+            mode: currentMode
+        };
+    }
+
     createPackage() {
         try {
+            // --- HEALTH CHECK ---
+            const health = this.checkPackageHealth();
+            let confirmMsg = `📦 RÉSUMÉ DU PACKAGE (${health.mode === 'reviewer' ? 'Reviewer ➔ Auditeur' : 'Auditeur ➔ Reviewer'})\n\n`;
+
+            if (health.mode === 'reviewer') {
+                confirmMsg += `• Points en attente de réponse (Waiting): ${health.waiting}\n`;
+                confirmMsg += `• Points à traiter par vous (Pending): ${health.pending}\n`;
+                confirmMsg += `• Points résolus: ${health.resolved}\n`;
+
+                if (health.pending > 0) {
+                    confirmMsg += `\n⚠️ ATTENTION: Il vous reste ${health.pending} points à traiter avant l'envoi !\n`;
+                }
+            } else {
+                // Auditor
+                confirmMsg += `• Points traités (répondus): ${health.waiting} (en attente valid. reviewer)\n`;
+                confirmMsg += `• Points restant à traiter: ${health.pending}\n`;
+
+                if (health.pending > 0) {
+                    confirmMsg += `\n⚠️ ATTENTION: Vous n'avez pas répondu à ${health.pending} questions !\n`;
+                }
+            }
+
+            confirmMsg += `\nConfirmer la création du package ?`;
+
+            if (!confirm(confirmMsg)) {
+                return;
+            }
+            // --------------------
+
             const {
                 companyProfileData,
                 conversations,
                 checklistData,
                 auditData,
                 requirementNumberMapping,
-                currentMode
+                currentMode,
+                dossierReviewState // Added
             } = this.state.get();
 
             const companyName = companyProfileData['Nom du site à auditer'] || 'Société inconnue';
@@ -422,6 +578,7 @@ class FileHandler {
                 checklistData: checklistData,
                 companyProfileData: companyProfileData,
                 requirementNumberMapping: requirementNumberMapping,
+                dossierReviewState: dossierReviewState || {}, // Added to package
 
                 conversations: conversations,
 
@@ -436,7 +593,7 @@ class FileHandler {
             this.downloadFile(packageData, filename);
             this.state.setState({ hasUnsavedChanges: false });
 
-            this.uiManager.showSuccess(`📦 Package partiel créé : ${filename}`);
+            this.uiManager.showSuccess(`📦 Package créé : ${filename}`);
             this.uiManager.closePackageModal();
 
         } catch (error) {

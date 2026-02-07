@@ -13,6 +13,8 @@ class State {
             currentSession: { id: null, name: '', created: null, lastModified: null, data: null },
             packageVersion: 1,
             hasUnsavedChanges: false,
+            dossierReviewState: {}, // Initialized empty state
+            certificationDecisionData: {}, // Initialized empty state
             activeFilters: {
                 profil: {
                     status: '',
@@ -28,7 +30,6 @@ class State {
                 nonconformites: {
                     type: '',
                     chapter: '',
-                    correction: '',
                     correction: '',
                     search: ''
                 },

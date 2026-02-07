@@ -3066,3 +3066,529 @@ window.ifsData = [
         ]
     }
 ];
+
+window.IFS_V8_MAPPING_CSV = `UUID,Num,Chapitre,Theme,SSTheme,Exigence FR
+b0befafb-d6f3-4eaa-abc3-818e804b72ca,1.1.1,1-Gouvernance et engagement,Politique,,"La direction gÃ©nÃ©rale Ã©labore, met en Å“uvre et tient Ã  jour une politique d'entreprise qui comprend au moins les Ã©lÃ©ments suivants  
+au minimum : 
+- la sÃ©curitÃ© alimentaire, la qualitÃ© des produits, la lÃ©galitÃ© et l'authenticitÃ© 
+- l'attention portÃ©e Ã  la clientÃ¨le 
+- la culture de la sÃ©curitÃ© alimentaire 
+- le dÃ©veloppement durable. 
+- Cette politique d'entreprise est communiquÃ©e Ã  tous les employÃ©s et se dÃ©cline en objectifs spÃ©cifiques pour les services concernÃ©s.  
+dÃ©partements concernÃ©s. 
+Les objectifs relatifs Ã  la culture de la sÃ©curitÃ© alimentaire comprennent, au minimum, la communication sur les politiques et les responsabilitÃ©s en matiÃ¨re de sÃ©curitÃ© alimentaire, la formation, le retour d'information des employÃ©s sur les questions liÃ©es Ã  la sÃ©curitÃ© alimentaire et l'Ã©valuation des performances."
+af21e652-745c-4ef7-ace8-fec6e2e0d183,1.1.2,1-Gouvernance et engagement,Politique,,"Toutes les informations pertinentes relatives Ã  la sÃ©curitÃ© alimentaire, Ã  la qualitÃ© des produits, Ã  la lÃ©galitÃ© et Ã  l'authenticitÃ© sont communiquÃ©es efficacement et en temps utile au personnel concernÃ©."
+6db028c0-a208-41ee-9240-83fd88bf8f8c,"1.2.1 *
+KO",1-Gouvernance et engagement,Organisation de la sociÃ©tÃ©,,kO NÂ° 1 : La direction gÃ©nÃ©rale doit veiller Ã  ce que les employÃ©s soient conscients de leurs responsabilitÃ©s en matiÃ¨re de sÃ©curitÃ© alimentaire et de qualitÃ© des produits et Ã  ce que des mÃ©canismes soient mis en Å“uvre pour contrÃ´ler l'efficacitÃ© de leur action. Ces mÃ©canismes doivent Ãªtre clairement identifiÃ©s et documentÃ©s.
+d417c0e5-2881-450e-ae30-888fc19b2fa6,1.2.2,1-Gouvernance et engagement,Organisation de la sociÃ©tÃ©,,La direction gÃ©nÃ©rale fournit des ressources suffisantes et appropriÃ©es pour rÃ©pondre aux exigences en matiÃ¨re de produits et de processus.
+0ce2bd38-1b0a-4ac5-9ca6-4eedd9425c8b,1.2.3*,1-Gouvernance et engagement,Organisation de la sociÃ©tÃ©,,"Le service responsable de la gestion de la sÃ©curitÃ© et de la qualitÃ© des denrÃ©es alimentaires
+doit Ãªtre directement rattachÃ© Ã  la direction gÃ©nÃ©rale. Un organigramme montrant la structure de l'entreprise doit Ãªtre documentÃ© et tenu Ã  jour.
+de l'entreprise, doit Ãªtre documentÃ© et tenu Ã  jour."
+25b4482f-41e9-4130-867d-bfb642fe2855,1.2.4,1-Gouvernance et engagement,Organisation de la sociÃ©tÃ©,,La direction gÃ©nÃ©rale veille Ã  ce que tous les processus (documentÃ©s ou non) soient connus du personnel concernÃ© et appliquÃ©s de maniÃ¨re cohÃ©rente.
+08a1c7e6-9397-4a53-bea4-7f7f58581859,1.2.5*,1-Gouvernance et engagement,Organisation de la sociÃ©tÃ©,,"La direction gÃ©nÃ©rale maintient un systÃ¨me garantissant que l'entreprise est
+informÃ©e de l'ensemble de la lÃ©gislation pertinente, des dÃ©veloppements scientifiques et techniques,
+les codes de pratique de l'industrie, les questions de sÃ©curitÃ© alimentaire et de qualitÃ© des produits, et qu'ils sont conscients des facteurs pouvant influencer les risques de dÃ©fense et de fraude alimentaires.
+qu'ils sont conscients des facteurs susceptibles d'influer sur les risques de dÃ©fense et de fraude alimentaires."
+2b9073fe-b3ff-4881-bfa5-c37e81afc4df,1.2.6*,1-Gouvernance et engagement,Organisation de la sociÃ©tÃ©,," La direction gÃ©nÃ©rale doit veiller Ã  ce que l'organisme de certification soit informÃ© de tout changement susceptible d'affecter la capacitÃ© de l'entreprise Ã  se conformer aux exigences de certification. Il s'agit au minimum des Ã©lÃ©ments suivants 
+- tout changement de nom de l'entitÃ© juridique 
+- tout changement d'emplacement du site de production. Pour les situations spÃ©cifiques suivantes - tout rappel de produit 
+- tout rappel de produit et/ou retrait dÃ©cidÃ© par les autoritÃ©s pour des raisons de sÃ©curitÃ© alimentaire et/ou de fraude alimentaire  
+pour des raisons de sÃ©curitÃ© alimentaire et/ou de fraude alimentaire 
+- toute visite des autoritÃ©s entraÃ®nant une action obligatoire  
+liÃ©e Ã  la sÃ©curitÃ© alimentaire et/ou Ã  la fraude alimentaire, l'organisme de certification doit en Ãªtre informÃ© dans les trois (3) jours ouvrables."
+cd18101a-f1c6-496b-aac7-7be3f1a0fb2e,1.3.1*,1-Gouvernance et engagement,Revue de direction,,"La direction gÃ©nÃ©rale veille Ã  ce que le systÃ¨me de gestion de la qualitÃ© et de la sÃ©curitÃ© des denrÃ©es alimentaires soit rÃ©examinÃ©. Cette activitÃ© est planifiÃ©e dans un dÃ©lai de douze mois et son exÃ©cution ne dÃ©passe pas quinze mois. 
+Ces examens comprennent, au minimum  
+au minimum : 
+- un examen des objectifs et des politiques, y compris des Ã©lÃ©ments de la culture de la sÃ©curitÃ© alimentaire 
+- les rÃ©sultats des audits et des inspections sur place - les rÃ©actions positives et nÃ©gatives des clients 
+- la conformitÃ© des processus 
+- les rÃ©sultats de l'Ã©valuation de la fraude alimentaire - les rÃ©sultats de l'Ã©valuation de la dÃ©fense alimentaire - les questions de conformitÃ© 
+- l'Ã©tat des corrections et des actions correctives 
+- La direction gÃ©nÃ©rale doit veiller Ã  ce que le systÃ¨me de gestion de la qualitÃ© et de la sÃ©curitÃ© des denrÃ©es alimentaires soit revu. Cette activitÃ© doit Ãªtre planifiÃ©e dans un dÃ©lai de 12 mois et son exÃ©cution ne doit pas dÃ©passer 15 mois. 
+Ces examens comprennent, au minimum  
+au minimum : 
+- un examen des objectifs et des politiques, y compris des Ã©lÃ©ments de la culture de la sÃ©curitÃ© alimentaire 
+- les rÃ©sultats des audits et des inspections sur place - les rÃ©actions positives et nÃ©gatives des clients 
+- la conformitÃ© des processus 
+- les rÃ©sultats de l'Ã©valuation de la fraude alimentaire - les rÃ©sultats de l'Ã©valuation de la dÃ©fense alimentaire - les questions de conformitÃ© 
+- l'Ã©tat des corrections et des actions correctives 
+- les notifications des autoritÃ©s."
+bc605939-9b6a-4bdc-8093-0a0437450e3f,1.3.2,1-Gouvernance et engagement,Revue de direction,,Les actions dÃ©coulant de la revue de direction visent Ã  soutenir l'amÃ©lioration. La revue de direction Ã©value les actions de suivi des revues de direction prÃ©cÃ©dentes et tout changement susceptible d'affecter le systÃ¨me de gestion de la qualitÃ© et de la sÃ©curitÃ© des denrÃ©es alimentaires. La revue de direction est entiÃ¨rement documentÃ©e.
+78e80a4a-83e9-4151-b9b6-5d7461e5622c,1.3.3,1-Gouvernance et engagement,Revue de direction,,"La direction gÃ©nÃ©rale identifie et examine (par exemple au moyen d'audits internes ou d'inspections sur place) l'infrastructure et l'environnement de travail nÃ©cessaires pour garantir la sÃ©curitÃ© alimentaire, la qualitÃ© des produits, la lÃ©galitÃ© et l'authenticitÃ©, au moins une fois au cours d'une pÃ©riode de 12 mois, ou Ã  chaque fois que des changements significatifs interviennent. Ces infrastructures et cet environnement de travail comprennent au minimum 
+- les bÃ¢timents 
+- les systÃ¨mes d'approvisionnement 
+- les machines et les Ã©quipements 
+- les transports 
+- les installations pour le personnel 
+- conditions environnementales 
+- conditions d'hygiÃ¨ne 
+- l'amÃ©nagement du lieu de travail 
+- les influences extÃ©rieures (par exemple, le bruit, 
+vibrations). 
+En fonction des risques, les rÃ©sultats de l'examen doivent Ãªtre pris en considÃ©ration pour la planification des investissements."
+a1f4cd4a-459c-4fcf-863a-e8c69c3d2151,2.1.1.1,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Management de la qualitÃ©,Gestion de la documentation,"Une procÃ©dure doit Ãªtre documentÃ©e, mise en Å“uvre et tenue Ã  jour pour contrÃ´ler les documents et leurs modifications. Tous les documents nÃ©cessaires au respect de la sÃ©curitÃ© alimentaire, de la qualitÃ© des produits, de la lÃ©galitÃ©, de l'authenticitÃ© et des exigences des clients doivent Ãªtre disponibles dans leur derniÃ¨re version. La raison de toute modification des 
+La raison de toute modification des documents, essentielle pour ces exigences, doit Ãªtre enregistrÃ©e."
+56840ddd-eae6-4572-969b-b86f4fd9f92d,2.1.1.2,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Management de la qualitÃ©,Gestion de la documentation,"Le systÃ¨me de gestion de la sÃ©curitÃ© et de la qualitÃ© des denrÃ©es alimentaires doit Ãªtre documentÃ©, mis en Å“uvre et tenu Ã  jour et doit Ãªtre conservÃ© dans un endroit sÃ»r. Cela s'applique aux systÃ¨mes documentÃ©s physiques et/ou numÃ©riques."
+7264be8c-9453-44f3-ab6a-319360ee9b10,2.1.1.3*,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Management de la qualitÃ©,Gestion de la documentation,"Tous les documents doivent Ãªtre lisibles, non ambigus et complets. Ils doivent Ãªtre Ã  la disposition du personnel concernÃ© Ã  tout moment."
+7084dd9a-ed3a-479e-8ccb-1881d62698d6,2.1.2.1,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Management de la qualitÃ©,Enregistrements et informations documentÃ©es,"Les enregistrements et les informations documentÃ©es doivent Ãªtre lisibles, correctement remplis et authentiques. Ils doivent Ãªtre conservÃ©s de maniÃ¨re Ã  interdire toute rÃ©vision ou modification ultÃ©rieure. Si les enregistrements sont documentÃ©s par voie Ã©lectronique, un systÃ¨me doit Ãªtre mis en place pour garantir que seul le personnel autorisÃ© a accÃ¨s Ã  la crÃ©ation ou Ã  la modification de ces enregistrements (par exemple, protection par mot de passe)."
+6544579d-da50-4599-96b8-8326a2f3204f,2.1.2.2 *,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Management de la qualitÃ©,Enregistrements et informations documentÃ©es,"Tous les enregistrements et toutes les informations documentÃ©es doivent Ãªtre conservÃ©s conformÃ©ment aux exigences lÃ©gales et aux exigences des clients. Si aucune exigence de ce type n'est dÃ©finie, les enregistrements et les informations documentÃ©es doivent Ãªtre conservÃ©s pendant au moins un an aprÃ¨s la durÃ©e de conservation. Pour les produits qui n'ont pas de durÃ©e de conservation, la durÃ©e de conservation des enregistrements et des informations documentÃ©es doit Ãªtre justifiÃ©e et cette justification doit Ãªtre documentÃ©e."
+95653f64-cda9-4ee4-b6e6-a07f0242ec6b,2.1.2.3,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Management de la qualitÃ©,Enregistrements et informations documentÃ©es,Les dossiers et les informations documentÃ©es sont conservÃ©s en toute sÃ©curitÃ© et facilement accessibles.
+5e687929-a0e3-45f6-a6a9-90e9b9d047e5,2.2.1.1 *,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Management de la sÃ©curitÃ© des aliments,HACCP plan,"Le systÃ¨me de gestion de la sÃ©curitÃ© alimentaire de l'entreprise doit reposer sur un plan HACCP entiÃ¨rement mis en Å“uvre, systÃ©matique et complet, conforme aux principes du Codex Alimentarius, aux bonnes pratiques de fabrication, aux bonnes pratiques d'hygiÃ¨ne et Ã  toutes les exigences lÃ©gales des pays de production et de destination susceptibles d'aller au-delÃ  de ces principes. Le plan HACCP doit Ãªtre spÃ©cifique et mis en Å“uvre sur le site de production."
+5e83c2d7-bf01-48bb-aaa5-02caacbbaf75,2.2.1.2 *,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Management de la sÃ©curitÃ© des aliments,HACCP plan,"The HACCP plan shall cover all raw materials, packaging materials, products or product groups, as well as every process from incoming goods up to the dispatch of finished products, including product development."
+b86ed641-0dd6-488d-a156-7844122927aa,2.2.1.3,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Management de la sÃ©curitÃ© des aliments,HACCP plan,"Le plan HACCP est fondÃ© sur la littÃ©rature scientifique ou sur les avis d'experts obtenus auprÃ¨s d'autres sources, notamment les associations commerciales et industrielles, les experts indÃ©pendants et les autoritÃ©s. Ces informations sont mises Ã  jour en fonction de l'Ã©volution des procÃ©dÃ©s techniques."
+1b17df5e-acb4-4294-895e-8bce29d5d559,2.2.1.4,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Management de la sÃ©curitÃ© des aliments,HACCP plan,"En cas de modification des matiÃ¨res premiÃ¨res 
+matiÃ¨res premiÃ¨res, des matÃ©riaux d'emballage, 
+des mÃ©thodes de transformation, de l'infrastructure et/ou de l'Ã©quipement, le plan HACCP doit Ãªtre revu afin de garantir le respect des exigences en matiÃ¨re de sÃ©curitÃ© des produits."
+428d6954-18d8-4116-a32d-b98fada29e87,2.3.1.1,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Equipe HACCP,"Constituer l'Ã©quipe HACCP : 
+L'Ã©quipe HACCP doit disposer des connaissances et de l'expertise spÃ©cifiques appropriÃ©es et Ãªtre une Ã©quipe pluridisciplinaire comprenant du personnel opÃ©rationnel."
+63229f76-283d-4f27-b1de-46cb29f96c48,2.3.1.2,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Equipe HACCP,Les personnes chargÃ©es de l'Ã©laboration et de la mise Ã  jour du plan HACCP disposent d'un chef d'Ã©quipe interne et ont reÃ§u une formation appropriÃ©e Ã  l'application des principes HACCP et Ã  la connaissance spÃ©cifique des produits et des procÃ©dÃ©s.
+04477440-9c07-4399-876e-58b99f96af6b,2.3.2.1,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,DÃ©crire les produits,"Une description complÃ¨te du produit doit Ãªtre documentÃ©e et tenue Ã  jour et doit contenir toutes les informations pertinentes sur la sÃ©curitÃ© du produit, Ã  savoir, au minimum, les Ã©lÃ©ments suivants 
+- la composition 
+- les caractÃ©ristiques physiques, organoleptiques, chimiques et microbiologiques 
+- les exigences lÃ©gales en matiÃ¨re de sÃ©curitÃ© alimentaire du produit 
+- les mÃ©thodes de traitement, d'emballage et de durabilitÃ© (durÃ©e de conservation) 
+- les conditions de stockage, les mÃ©thodes de transport et de distribution."
+b2b6fd37-1554-4bbb-adad-e43a1f2b8135,2.3.3.1,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Identifier l'utilisation prÃ©vue et les utilisateurs du produit,"L'utilisation prÃ©vue du produit est dÃ©crite en fonction de l'utilisation attendue du produit par le consommateur final, en tenant compte des groupes de consommateurs vulnÃ©rables. 
+en tenant compte des groupes de consommateurs vulnÃ©rables."
+bddae36f-6b48-428c-98c9-09122dd18838,2.3.4.1,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Construire un diagramme de flux,Un diagramme de flux doit Ãªtre documentÃ© et tenu Ã  jour pour chaque produit ou groupe de produits et pour toutes les variantes des processus et sous-processus (y compris les reprises et le retraitement). L'organigramme doit identifier chaque Ã©tape et chaque mesure de maÃ®trise dÃ©finie pour les CCP et les autres mesures de maÃ®trise. Il doit Ãªtre datÃ© et mis Ã  jour en cas de modification.
+e2ef4917-9ec6-4be2-a7d2-eefd3ee73d3f,2.3.5.1,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Confirmation sur place du diagramme de flux,"Representatives of the HACCP team shall verify the flow diagram, through on-site verifications, at all operation stages and shifts. Where appropriate, amendments to the diagram shall be made."
+1a28da66-51af-4ff5-9856-1333a6a03a0a,2.3.6.1,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Effectuer une analyse des risques pour chaque Ã©tape,"Une analyse des risques doit Ãªtre effectuÃ©e pour tous les risques physiques, chimiques (y compris radiologiques et allergÃ¨nes) et biologiques possibles et attendus. L'analyse porte Ã©galement sur les dangers liÃ©s aux matÃ©riaux en contact avec les denrÃ©es alimentaires, aux matÃ©riaux d'emballage ainsi qu'aux dangers liÃ©s Ã  l'environnement de travail. L'analyse des dangers tient compte de l'occurrence probable des dangers et de la gravitÃ© de leurs effets nÃ©fastes sur la santÃ©. 
+Les mesures de contrÃ´le spÃ©cifiques Ã  appliquer pour maÃ®triser chaque danger significatif doivent Ãªtre prises en considÃ©ration."
+f66e568b-fe0a-45f4-94b3-170e1967850b,2.3.7.1,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,DÃ©terminer les points de contrÃ´le critiques et les autres mesures de contrÃ´le,"Pour dÃ©terminer si l'Ã©tape Ã  laquelle une mesure de maÃ®trise est appliquÃ©e est un CCP dans le systÃ¨me HACCP, il convient d'utiliser un arbre de dÃ©cision ou un autre outil dÃ©montrant une approche logique et raisonnÃ©e."
+17c78125-2e50-4aa0-b99e-ed1ad5451641,2.3.8.1 *,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Ã‰tablir des limites critiques validÃ©es pour chaque CCP,"Pour chaque CCP, des limites critiques doivent Ãªtre dÃ©finies et validÃ©es afin de dÃ©terminer si un processus est hors de contrÃ´le."
+4b1e1c3d-8221-46cd-ad48-e99ed848093c,"2.3.9.1 
+KO *",2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Mettre en place un systÃ¨me de surveillance pour chaque CCP,"KO NÂ° 2 : Des procÃ©dures de surveillance spÃ©cifiques, en termes de mÃ©thode, de frÃ©quence de mesure ou d'observation et d'enregistrement des rÃ©sultats, doivent Ãªtre documentÃ©es, mises en Å“uvre et tenues Ã  jour pour chaque CCP afin de dÃ©tecter toute perte de maÃ®trise de ce CCP. Chaque CCP dÃ©fini doit Ãªtre maÃ®trisÃ©. La surveillance et la maÃ®trise de chaque CCP sont dÃ©montrÃ©es par des enregistrements."
+f415099d-af69-4d2e-8b38-4b8c62af63c7,2.3.9.2,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Mettre en place un systÃ¨me de surveillance pour chaque CCP,Les registres de surveillance des CCP sont vÃ©rifiÃ©s par une personne responsable au sein de l'entreprise et conservÃ©s pendant une pÃ©riode appropriÃ©e.
+304775f7-ce6a-4e03-9be4-7d5127b63d07,2.3.9.3,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Mettre en place un systÃ¨me de surveillance pour chaque CCP,Le personnel opÃ©rationnel chargÃ© de la surveillance des mesures de contrÃ´le dÃ©finies pour les CCP et d'autres mesures de contrÃ´le doit avoir reÃ§u une formation/instruction spÃ©cifique.
+5dcb980a-d5d8-4a96-a4f8-ac56aeec7d84,2.3.9.4,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Mettre en place un systÃ¨me de surveillance pour chaque CCP,"Les mesures de contrÃ´le, autres que celles dÃ©finies pour les CCP, doivent Ãªtre surveillÃ©es, enregistrÃ©es et contrÃ´lÃ©es au moyen de critÃ¨res mesurables ou observables."
+1741ef36-46fc-46a7-9de9-0304b0b7eaeb,2.3.10.1,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Mettre en place des actions correctives,"Si la surveillance indique qu'une mesure de maÃ®trise particuliÃ¨re dÃ©finie pour un CCP ou toute autre mesure de maÃ®trise n'est pas maÃ®trisÃ©e, des actions correctives sont documentÃ©es et mises en Å“uvre. Ces actions correctives tiennent Ã©galement compte de toute action relative Ã  des produits non conformes et identifient la cause premiÃ¨re de la perte de maÃ®trise des CCP."
+da7bdeb1-e127-40d1-bd53-f7c03e94dec2,2.3.11.1 NEW,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Valider le plan HACCP et Ã©tablir des procÃ©dures de vÃ©rification,"Les procÃ©dures de validation, y compris la revalidation aprÃ¨s toute modification susceptible d'avoir une incidence sur la sÃ©curitÃ© alimentaire, sont documentÃ©es, mises en Å“uvre et tenues Ã  jour afin de garantir que le plan HACCP permet de maÃ®triser efficacement les dangers identifiÃ©s."
+783d1970-08a9-4936-9a06-44a28f401fbf,2.3.11.2 *,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Valider le plan HACCP et Ã©tablir des procÃ©dures de vÃ©rification,"Les procÃ©dures de vÃ©rification doivent Ãªtre documentÃ©es, mises en Å“uvre et tenues Ã  jour afin de confirmer que le plan HACCP fonctionne correctement. Les activitÃ©s de vÃ©rification du plan HACCP sont par exemple les suivantes - audits internes 
+- essais 
+- Ã©chantillonnage 
+- Ã©carts et non-conformitÃ©s - plaintes. 
+sont effectuÃ©es au moins une fois au cours d'une pÃ©riode de 12 mois ou Ã  chaque fois que des changements importants se produisent. 
+Les rÃ©sultats de cette vÃ©rification sont enregistrÃ©s et intÃ©grÃ©s dans le plan HACCP."
+9fe76064-8cd4-4c93-99a0-50b6265a181e,2.3.12.1,2-SystÃ¨me de management de la sÃ©curitÃ© des aliments et de la qualitÃ©,Analyse HACCP,Ã‰tablir la documentation et la tenue de registres,"Documents et enregistrements relatifs au plan HACCP, par exemple : 
+- analyse des dangers 
+- dÃ©termination des mesures de maÃ®trise dÃ©finies pour les CCP et autres mesures de maÃ®trise 
+- dÃ©termination des limites critiques 
+- les processus, 
+- procÃ©dures 
+- rÃ©sultats des mesures de maÃ®trise 
+dÃ©finies pour les CCP et les autres activitÃ©s de surveillance des mesures de contrÃ´le 
+- les dossiers de formation du personnel chargÃ© de la surveillance des CCP 
+- les Ã©carts et les non-conformitÃ©s observÃ©s, ainsi que les actions correctives mises en Å“uvre. 
+sont disponibles."
+3a2dccf1-c5bf-46d7-8c71-420a253e02c5,3.1.1,3- Gestion des ressources,Ressources humaines,,"Tout le personnel effectuant des travaux ayant une incidence sur la sÃ©curitÃ©, la qualitÃ©, la lÃ©galitÃ© et l'authenticitÃ© des produits doit possÃ©der les compÃ©tences requises, en fonction de son rÃ´le, grÃ¢ce Ã  l'Ã©ducation, Ã  l'expÃ©rience professionnelle et/ou Ã  la formation."
+9e1dad93-3d1b-4d6a-8cd5-7845a5b77414,3.1.2,3- Gestion des ressources,Ressources humaines,,"Les responsabilitÃ©s, les compÃ©tences et les descriptions d'emploi pour tous les postes ayant un impact sur la sÃ©curitÃ© alimentaire et la qualitÃ© des produits doivent Ãªtre documentÃ©es, mises en Å“uvre et tenues Ã  jour. L'attribution des rÃ´les clÃ©s doit Ãªtre dÃ©finie."
+06e799e4-e60c-442d-97dd-c8b4060c036a,3.2.1*,3- Gestion des ressources,HygiÃ¨ne personnelle,,"Les exigences fondÃ©es sur les risques en matiÃ¨re d'hygiÃ¨ne personnelle sont documentÃ©es, mises en Å“uvre et tenues Ã  jour et portent au minimum sur les domaines suivants 
+- les cheveux et la barbe 
+- vÃªtements de protection (y compris leurs conditions d'utilisation dans les locaux du personnel) - lavage des mains, dÃ©sinfection et hygiÃ¨ne 
+- manger, boire, fumer, vaper ou utiliser d'autres produits du tabac 
+- mesures Ã  prendre en cas de coupures ou d'abrasions cutanÃ©es 
+- ongles, bijoux, faux ongles/cils et effets personnels (y compris les mÃ©dicaments) 
+- notification des maladies infectieuses et des conditions ayant un impact sur la sÃ©curitÃ© alimentaire par le biais d'une procÃ©dure de  la sÃ©curitÃ© alimentaire par le biais d'une procÃ©dure de dÃ©pistage mÃ©dical. "
+de005a46-5c55-416f-b95a-26dafaf3084b,"3.2.2 
+KO *",3- Gestion des ressources,HygiÃ¨ne personnelle,,"KO NÂ° 3: Les exigences en matiÃ¨re d'hygiÃ¨ne personnelle doivent Ãªtre comprises et appliquÃ©es par l'ensemble du personnel concernÃ©, des contractants et des visiteurs."
+1e60c675-864e-41e6-91c2-c33e74da5894,3.2.3,3- Gestion des ressources,HygiÃ¨ne personnelle,,"Le respect des exigences en matiÃ¨re d'hygiÃ¨ne personnelle est contrÃ´lÃ© Ã  une frÃ©quence fondÃ©e sur le risque, mais au moins une fois au cours d'une pÃ©riode de trois mois."
+4275ccf1-6196-4fac-bcea-353705223412,3.2.4,3- Gestion des ressources,HygiÃ¨ne personnelle,,Un programme fondÃ© sur les risques doit Ãªtre mis en Å“uvre et maintenu pour contrÃ´ler l'efficacitÃ© de l'hygiÃ¨ne des mains.
+d2b682eb-97da-4b32-8e64-c0cf0e5fb3a0,3.2.5,3- Gestion des ressources,HygiÃ¨ne personnelle,,Le port de bijoux visibles (y compris les piercings) et de montres est interdit. Toute exception doit avoir Ã©tÃ© Ã©valuÃ©e de maniÃ¨re comprÃ©hensive en fonction des risques et doit Ãªtre gÃ©rÃ©e efficacement.
+713d1921-63a1-4b0d-899a-fcb0b9ec6cfc,3.2.6,3- Gestion des ressources,HygiÃ¨ne personnelle,,"Les coupures et les abrasions cutanÃ©es doivent Ãªtre recouvertes d'un plÃ¢tre ou d'un bandage qui ne doit pas prÃ©senter de risques de contamination. Le plÃ¢tre/bandeau doit Ãªtre impermÃ©able et d'une couleur diffÃ©rente de celle du produit. 
+Le cas Ã©chÃ©ant : 
+- les sparadraps/bandages doivent contenir une bande mÃ©tallique 
+- des gants Ã  usage unique doivent Ãªtre portÃ©s."
+9a3b80a6-3471-47e0-8227-ff9abd89693c,3.2.7,3- Gestion des ressources,HygiÃ¨ne personnelle,,"Dans les zones de travail oÃ¹ le port d'un couvre-chef et/ou d'un foulard est requis, les cheveux doivent Ãªtre entiÃ¨rement couverts pour Ã©viter la contamination par le produit. 
+contamination du produit."
+1f885696-a52a-47d8-b119-75e7f8c32b6c,3.2.8,3- Gestion des ressources,HygiÃ¨ne personnelle,,Des rÃ¨gles d'utilisation doivent Ãªtre mises en Å“uvre pour les zones de travail/activitÃ©s oÃ¹ le port de gants (d'une couleur diffÃ©rente de celle du produit) e
+f37ee58d-671f-442f-88a2-4d09cd60be9c,3.2.9*,3- Gestion des ressources,HygiÃ¨ne personnelle,,Des vÃªtements de protection adÃ©quats sont fournis en quantitÃ© suffisante pour chaque employÃ©.
+eb1c9258-ad04-4cc5-9694-2c0bb65d0d66,3.2.10,3- Gestion des ressources,HygiÃ¨ne personnelle,,"Tous les vÃªtements de protection doivent Ãªtre soigneusement et rÃ©guliÃ¨rement lavÃ©s en interne, par des sous-traitants agrÃ©Ã©s ou par les employÃ©s. Cette dÃ©cision doit Ãªtre documentÃ©e et fondÃ©e sur les risques. Les exigences relatives Ã  la blanchisserie doivent garantir, au minimum, les Ã©lÃ©ments suivants 
+- une sÃ©paration suffisante entre les vÃªtements sales et les vÃªtements propres Ã  tout moment 
+- des conditions de lavage dÃ©finies concernant la tempÃ©rature de l'eau et le dosage du dÃ©tergent 
+- Ã©viter toute contamination jusqu'Ã  l'utilisation. 
+L'efficacitÃ© du lavage doit Ãªtre contrÃ´lÃ©e de maniÃ¨re appropriÃ©e."
+c7c9edf9-a840-4da9-8c7d-87aa6d14cc43,3.2.11,3- Gestion des ressources,HygiÃ¨ne personnelle,,"En cas de problÃ¨me sanitaire ou de maladie infectieuse susceptible d'avoir un impact sur la sÃ©curitÃ© alimentaire, des mesures sont prises pour minimiser les risques de contamination."
+44fc33d3-44b2-43a2-842e-771b1546bb37,3.3.1*,3- Gestion des ressources,Formation et instruction,,"Des programmes documentÃ©s de formation et/ou d'instruction doivent Ãªtre mis en Å“uvre en tenant compte des exigences du produit et du processus et des besoins de formation des employÃ©s, en fonction de leur travail, et doivent inclure : 
+- le contenu de la formation 
+- la frÃ©quence de la formation 
+- la tÃ¢che de l'employÃ© 
+- les langues 
+- le formateur/tuteur qualifiÃ© 
+- Ã©valuation de l'efficacitÃ© de la formation."
+d834fd2d-708e-4398-ba22-34ee0cae4326,3.3.2,3- Gestion des ressources,Formation et instruction,,"Les programmes de formation et/ou d'instruction documentÃ©s s'appliquent Ã  l'ensemble du personnel, y compris les travailleurs saisonniers et temporaires et les employÃ©s d'entreprises extÃ©rieures, employÃ©s dans la zone de travail concernÃ©e. DÃ¨s leur embauche et avant de commencer Ã  travailler, ils doivent recevoir une formation/instruction conformÃ©ment aux programmes de formation/instruction documentÃ©s."
+d740a6e8-7926-4b9e-a799-d784e48995bb,3.3.3,3- Gestion des ressources,Formation et instruction,,"Des comptes rendus de tous les Ã©vÃ©nements de formation/instruction doivent Ãªtre disponibles, avec les informations suivantes - la liste des participants (y compris leur signature) 
+- la date 
+- la durÃ©e 
+- le contenu de la formation 
+- le nom du formateur ou du tuteur. 
+Une procÃ©dure ou un programme doit Ãªtre documentÃ©, mis en Å“uvre et tenu Ã  jour pour prouver l'efficacitÃ© des programmes de formation et/ou d'instruction."
+65333ae6-6858-437d-8501-e35b7d1afad5,3.3.4,3- Gestion des ressources,Formation et instruction,,"Le contenu de la formation et/ou des instructions doit Ãªtre revu et mis Ã  jour si nÃ©cessaire. Une attention particuliÃ¨re doit Ãªtre accordÃ©e Ã  ces questions spÃ©cifiques au minimum : 
+- la sÃ©curitÃ© alimentaire 
+- l'authenticitÃ© des produits, y compris la fraude alimentaire 
+- la qualitÃ© des produits 
+- la dÃ©fense des denrÃ©es alimentaires 
+- exigences lÃ©gales relatives aux denrÃ©es alimentaires - modifications des produits/processus 
+- le retour d'information sur les programmes de formation/instruction documentÃ©s 
+de formation documentÃ©s."
+32472b90-efcb-4e1f-ac3f-505b8bb5ac12,3.4.1*,3- Gestion des ressources,Locaux du personnel,,"Des locaux adÃ©quats sont mis Ã  la disposition du personnel ; ils sont de taille proportionnelle, Ã©quipÃ©s en fonction du nombre d'employÃ©s et conÃ§us et contrÃ´lÃ©s de maniÃ¨re Ã  rÃ©duire au minimum les risques en matiÃ¨re de sÃ©curitÃ© alimentaire. Ces installations sont entretenues de maniÃ¨re Ã  Ã©viter toute contamination."
+abc47cbb-9847-4297-be3e-f4e1461305e6,3.4.2,3- Gestion des ressources,Locaux du personnel,,"Les risques de contamination des produits par des aliments et des boissons et/ou des matiÃ¨res Ã©trangÃ¨res doivent Ãªtre rÃ©duits au minimum. Les aliments et boissons provenant des distributeurs automatiques, de la cantine et/ou apportÃ©s sur le lieu de travail par le personnel doivent Ãªtre pris en considÃ©ration"
+0f4ad416-e295-4d34-8cb0-67adf94d78c0,3.4.3,3- Gestion des ressources,Locaux du personnel,,"Les vestiaires doivent Ãªtre situÃ©s de maniÃ¨re Ã  permettre un accÃ¨s direct aux zones oÃ¹ les denrÃ©es alimentaires non emballÃ©es sont manipulÃ©es. Lorsque l'infrastructure ne le permet pas, des mesures alternatives doivent Ãªtre mises en Å“uvre et maintenues pour minimiser les risques de contamination des produits. Les vÃªtements de plein air et les vÃªtements de protection sont stockÃ©s sÃ©parÃ©ment, Ã  moins que d'autres mesures ne soient mises en Å“uvre et maintenues pour prÃ©venir les risques de contamination."
+5964bc6e-e2d5-47fb-bb60-b690671ce840,3.4.4,3- Gestion des ressources,Locaux du personnel,,Les toilettes ne doivent pas avoir d'accÃ¨s direct ni prÃ©senter de risques de contamination pour les zones oÃ¹ les produits sont manipulÃ©s. Les toilettes doivent Ãªtre Ã©quipÃ©es d'installations adÃ©quates pour le lavage des mains. Les installations doivent disposer d'une ventilation naturelle ou mÃ©canique adÃ©quate. Les flux d'air mÃ©caniques d'une zone contaminÃ©e vers une zone propre doivent Ãªtre Ã©vitÃ©s.
+171e9f65-7029-41e8-a16f-3f5e22c08bc6,3.4.5*,3- Gestion des ressources,Locaux du personnel,,"Des installations d'hygiÃ¨ne des mains doivent Ãªtre prÃ©vues et comprendre au minimum - un nombre suffisant de lavabos - convenablement situÃ©s aux points d'accÃ¨s aux zones de production et/ou Ã  l'intÃ©rieur de celles-ci 
+- destinÃ©s uniquement au nettoyage des mains. La nÃ©cessitÃ© de disposer d'Ã©quipements similaires dans d'autres zones (par exemple, la zone d'emballage) doit Ãªtre dÃ©terminÃ©e en fonction des risques."
+28ad004d-7fea-4b97-84a2-d0050e4901a7,3.4.6,3- Gestion des ressources,Locaux du personnel,,"Les installations d'hygiÃ¨ne des mains doivent fournir - de l'eau potable courante Ã  une 
+tempÃ©rature adÃ©quate 
+- un Ã©quipement de nettoyage et de dÃ©sinfection adÃ©quat 
+- des moyens adÃ©quats pour le sÃ©chage des mains."
+3d1dbd02-64d7-4bc8-b9fb-d1ede60db59e,3.4.7,3- Gestion des ressources,Locaux du personnel,,"Lorsque les processus exigent un contrÃ´le plus poussÃ© de l'hygiÃ¨ne, l'Ã©quipement de lavage des mains doit en outre Ãªtre dotÃ© des Ã©lÃ©ments suivants 
+- des raccords sans contact avec les mains 
+- une dÃ©sinfection des mains 
+- un conteneur Ã  dÃ©chets avec une ouverture sans contact avec les mains."
+17f35b6c-3d19-44ac-88d4-4eb616173935,3.4.8,3- Gestion des ressources,Locaux du personnel,,"Si nÃ©cessaire, des installations de nettoyage et de dÃ©sinfection sont disponibles et utilisÃ©es pour les bottes, les chaussures et les autres vÃªtements de protection."
+600826fb-66aa-4093-b7a3-01d178efb062,4.1.1,4-ProcÃ©dÃ©s opÃ©rationnels,Orientation client et l'accord contractuel , ,Une procÃ©dure doit Ãªtre mise en Å“uvre et maintenue pour identifier les besoins fondamentaux et les attentes des clients. Le retour d'information issu de ce processus est utilisÃ© pour l'amÃ©lioration continue de l'entreprise.
+274a4938-d4c2-466b-a269-18e4ce8be725,4.1.2,4-ProcÃ©dÃ©s opÃ©rationnels,Orientation client et l'accord contractuel , ,"Toutes les exigences relatives Ã  la sÃ©curitÃ© alimentaire et Ã  la qualitÃ© des produits, dans le cadre du 
+et toute rÃ©vision de ces clauses, doivent Ãªtre communiquÃ©es et mises en Å“uvre par chaque service concernÃ©."
+fa12c451-5683-4def-b29d-c9cd302249ea,"4.1.3 
+KO*",4-ProcÃ©dÃ©s opÃ©rationnels,Orientation client et l'accord contractuel , ,"KO NÂ° 4 : Lorsqu'il existe des accords avec des clients concernant : 
+- la recette du produit (y compris les 
+caractÃ©ristiques des matiÃ¨res premiÃ¨res) 
+- le processus 
+- les exigences technologiques 
+- le plan d'essai et de surveillance 
+- l'emballage 
+- l'Ã©tiquetage 
+Ces exigences doivent Ãªtre respectÃ©es."
+ed3ee1c8-3721-4eba-9725-4d7c6f5d2b2f,4.1.4,4-ProcÃ©dÃ©s opÃ©rationnels,Orientation client et l'accord contractuel , ,"ConformÃ©ment aux exigences des clients, les cadres supÃ©rieurs informent leurs clients concernÃ©s, dans les meilleurs dÃ©lais, de tout problÃ¨me liÃ© Ã  la sÃ©curitÃ© ou Ã  la lÃ©galitÃ© des produits, y compris les Ã©carts et les non-conformitÃ©s identifiÃ©s par les autoritÃ©s compÃ©tentes."
+324321ae-ecc9-4206-ba36-3fcfe2d18071,4.2.1.1 *,4-ProcÃ©dÃ©s opÃ©rationnels,SpÃ©cifications et formules,SpÃ©cifications,"Les spÃ©cifications doivent Ãªtre documentÃ©es et mises en Å“uvre pour tous les produits finis. Elles doivent Ãªtre Ã  jour, sans ambiguÃ¯tÃ© et conformes aux exigences lÃ©gales et Ã  celles des clients."
+174b2b6f-6951-4615-abfd-17b7dff70508,4.2.1.2,4-ProcÃ©dÃ©s opÃ©rationnels,SpÃ©cifications et formules,SpÃ©cifications,"Une procÃ©dure de contrÃ´le de la crÃ©ation, de l'approbation et de la modification des spÃ©cifications doit Ãªtre documentÃ©e, mise en Å“uvre et tenue Ã  jour et doit inclure, le cas Ã©chÃ©ant, l'acceptation du ou des clients. Lorsque les clients l'exigent, les spÃ©cifications des produits font l'objet d'un accord formel. 
+Cette procÃ©dure comprend la mise Ã  jour des spÃ©cifications des produits finis en cas de modification liÃ©e aux Ã©lÃ©ments suivants - les matiÃ¨res premiÃ¨res 
+- les formules/recettes 
+- les processus ayant une incidence sur les produits finis 
+- les matÃ©riaux d'emballage ayant une incidence sur les produits finis."
+e5690382-3876-4475-9029-6c70c8529aa4,"4.2.1.3 
+KO *",4-ProcÃ©dÃ©s opÃ©rationnels,SpÃ©cifications et formules,SpÃ©cifications,"KO NÂ° 5 : Les spÃ©cifications doivent Ãªtre documentÃ©es et mises en Å“uvre pour toutes les matiÃ¨res premiÃ¨res (ingrÃ©dients, additifs, matÃ©riaux d'emballage, retouches). 
+Les spÃ©cifications doivent Ãªtre Ã  jour, sans ambiguÃ¯tÃ© et conformes aux exigences lÃ©gales et, si elles sont dÃ©finies, aux exigences des clients."
+603b2e28-cb19-45f9-9e49-1bb8ff029146,4.2.1.4,4-ProcÃ©dÃ©s opÃ©rationnels,SpÃ©cifications et formules,SpÃ©cifications,Les spÃ©cifications et/ou leur contenu doivent Ãªtre disponibles sur place pour tout le personnel concernÃ©.
+06c8cbac-8ef3-4b04-93ea-8bd07591a7af,4.2.1.5 *,4-ProcÃ©dÃ©s opÃ©rationnels,SpÃ©cifications et formules,SpÃ©cifications,"Lorsqu'il est demandÃ© que les produits soient Ã©tiquetÃ©s et/ou promus avec une allÃ©gation ou lorsque certaines mÃ©thodes de traitement ou de production sont exclues, des mesures doivent Ãªtre mises en Å“uvre pour dÃ©montrer la conformitÃ© avec une telle dÃ©claration."
+2c02e8b2-ffc6-46ad-b21b-5fb4dc72d15d,4.3.1,4-ProcÃ©dÃ©s opÃ©rationnels,DÃ©veloppement de produits/Modification de produits/Modification des processus de production, ,"Une procÃ©dure de dÃ©veloppement ou de modification des produits et/ou des procÃ©dÃ©s doit Ãªtre documentÃ©e, mise en Å“uvre et tenue Ã  jour et doit comprendre, au minimum, une analyse des dangers et une Ã©valuation des risques associÃ©s."
+3601ee32-ef3b-4625-ab79-7a22d0ab888e,4.3.2*,4-ProcÃ©dÃ©s opÃ©rationnels,DÃ©veloppement de produits/Modification de produits/Modification des processus de production, ,La procÃ©dure garantit que l'Ã©tiquetage est conforme Ã  la lÃ©gislation en vigueur dans le(s) pays de destination et aux exigences des clients.
+fd331aff-b428-4547-b84d-299a4837dc74,4.3.3*,4-ProcÃ©dÃ©s opÃ©rationnels,DÃ©veloppement de produits/Modification de produits/Modification des processus de production, ,"Le processus de dÃ©veloppement et/ou de modification doit aboutir Ã  des spÃ©cifications concernant la formulation, la retouche, les matÃ©riaux d'emballage, les processus de fabrication et respecter la sÃ©curitÃ© alimentaire, la qualitÃ© des produits, la lÃ©galitÃ©, l'authenticitÃ© et les exigences des clients. Cela comprend les essais en usine, les tests de produits et le contrÃ´le des processus. Les progrÃ¨s et les rÃ©sultats du dÃ©veloppement/modification des produits doivent Ãªtre enregistrÃ©s."
+73ad18af-eb42-4b59-9e74-f2e1e634cef7,4.3.4,4-ProcÃ©dÃ©s opÃ©rationnels,DÃ©veloppement de produits/Modification de produits/Modification des processus de production, ,"Des essais de durÃ©e de conservation ou une validation appropriÃ©e par une Ã©valuation microbiologique, chimique et organoleptique sont effectuÃ©s et il est tenu compte de la formulation, de l'emballage, de la fabrication et des conditions dÃ©clarÃ©es du produit. 
+de la formulation du produit, de l'emballage, des conditions de fabrication et des conditions dÃ©clarÃ©es. La durÃ©e de conservation est dÃ©finie en fonction de cette Ã©valuation."
+92048684-3e7e-4edc-b8fe-02166001c967,4.3.5,4-ProcÃ©dÃ©s opÃ©rationnels,DÃ©veloppement de produits/Modification de produits/Modification des processus de production, ,Les recommandations de prÃ©paration et/ou les instructions d'utilisation des produits alimentaires relatives Ã  la sÃ©curitÃ© alimentaire et/ou Ã  la qualitÃ© des produits doivent Ãªtre validÃ©es et documentÃ©es.
+5b68c3c8-decc-43a2-b30e-0db8adc1361b,4.3.6,4-ProcÃ©dÃ©s opÃ©rationnels,DÃ©veloppement de produits/Modification de produits/Modification des processus de production, ,"Les informations ou allÃ©gations nutritionnelles dÃ©clarÃ©es sur l'Ã©tiquetage doivent Ãªtre validÃ©es par des Ã©tudes et/ou des tests, tout au long de la durÃ©e de conservation des produits. 
+produits."
+443e32b3-da1a-4fd9-a49f-4a9cad57e255,4.4.1*,4-ProcÃ©dÃ©s opÃ©rationnels,Achats,,"Une procÃ©dure d'approvisionnement en matiÃ¨res premiÃ¨res, produits semi-finis et matÃ©riaux d'emballage, ainsi que d'approbation et de contrÃ´le des fournisseurs (internes et externes) doit Ãªtre documentÃ©e, mise en Å“uvre et tenue Ã  jour. 
+Cette procÃ©dure doit contenir au minimum les Ã©lÃ©ments suivants 
+- les risques liÃ©s aux matiÃ¨res premiÃ¨res et/ou aux fournisseurs 
+- les normes de performance requises (par exemple, certification, origine, etc.) 
+- les situations exceptionnelles (par exemple 
+achat d'urgence) et, en fonction des risques, des critÃ¨res supplÃ©mentaires, comme par exemple 
+- audits rÃ©alisÃ©s par une personne expÃ©rimentÃ©e et compÃ©tente 
+- les rÃ©sultats des tests 
+- la fiabilitÃ© du fournisseur 
+les plaintes 
+- questionnaire du fournisseur."
+9ed89ac3-9109-48f7-83b6-a43f02a22156,4.4.2,4-ProcÃ©dÃ©s opÃ©rationnels,Achats,,"Les matiÃ¨res achetÃ©es sont Ã©valuÃ©es, en fonction des risques et du statut des fournisseurs, pour ce qui est de la sÃ©curitÃ© alimentaire, de la qualitÃ© des produits, de la lÃ©galitÃ© et de l'authenticitÃ©. Les rÃ©sultats serviront de base aux plans d'essai et de contrÃ´le."
+e2afbd47-bdd6-4407-97ae-8f59e2085406,4.4.3*,4-ProcÃ©dÃ©s opÃ©rationnels,Achats,,"Les services d'achat qui ont, sur la base des risques, une incidence sur la sÃ©curitÃ© alimentaire et la qualitÃ© des produits sont Ã©valuÃ©s afin de s'assurer qu'ils sont conformes aux exigences dÃ©finies. Cette Ã©valuation doit prendre en compte, au minimum 
+- les exigences du service 
+- le statut du fournisseur (selon son Ã©valuation) 
+- l'impact du service sur les produits finis."
+02f69f33-7bd6-4491-b21d-e5664372a7af,4.4.4*,4-ProcÃ©dÃ©s opÃ©rationnels,Achats,,"Lorsqu'une partie de la transformation du produit et/ou de l'emballage primaire et/ou de l'Ã©tiquetage est externalisÃ©e, cela doit Ãªtre documentÃ© dans le systÃ¨me de gestion de la sÃ©curitÃ© et de la qualitÃ© des denrÃ©es alimentaires. 
+dans le systÃ¨me de gestion de la sÃ©curitÃ© et de la qualitÃ© des denrÃ©es alimentaires et ces processus doivent Ãªtre contrÃ´lÃ©s afin de garantir que la sÃ©curitÃ© des denrÃ©es alimentaires, la qualitÃ© des produits, la lÃ©galitÃ© et l'authenticitÃ© ne sont pas compromises. Le contrÃ´le de ces processus externalisÃ©s doit Ãªtre identifiÃ© et documentÃ©. Lorsque le client l'exige, il doit Ãªtre prouvÃ© qu'il a Ã©tÃ© informÃ© du processus externalisÃ© et qu'il l'a acceptÃ©."
+f6c6811b-6c21-4af6-99fb-6c869cc715f1,4.4.5,4-ProcÃ©dÃ©s opÃ©rationnels,Achats,,"Un accord doit Ãªtre documentÃ© et mis en Å“uvre, couvrant les processus externalisÃ©s et dÃ©crivant toutes les dispositions prises Ã  cet Ã©gard, y compris les contrÃ´les en cours de processus, les essais et le plan de surveillance."
+a3946007-f2e1-4e33-b448-0d693c56aba5,4.4.6,4-ProcÃ©dÃ©s opÃ©rationnels,Achats,,"Les fournisseurs des processus externalisÃ©s doivent Ãªtre approuvÃ©s par le biais de 
+- d'une certification IFS Food ou d'une autre norme de certification de la sÃ©curitÃ© alimentaire reconnue par la GFSI, ou 
+- d'un audit documentÃ© du fournisseur, 
+rÃ©alisÃ© par une personne expÃ©rimentÃ©e et compÃ©tente, qui doit 
+inclure, au minimum, des exigences en matiÃ¨re de sÃ©curitÃ© alimentaire, de qualitÃ© des produits, de lÃ©galitÃ© et d'authenticitÃ©, 
+la lÃ©galitÃ© et l'authenticitÃ©."
+8282e6a2-7336-4c2c-9974-0976d6b840f9,4.4.7,4-ProcÃ©dÃ©s opÃ©rationnels,Achats,,Les Ã©valuations de l'approvisionnement en matiÃ¨res premiÃ¨res et des fournisseurs sont rÃ©examinÃ©es au moins une fois au cours d'une pÃ©riode de 12 mois ou Ã  chaque fois que des changements significatifs interviennent. Les enregistrements des rÃ©visions et des actions consÃ©cutives Ã  l'Ã©valuation doivent Ãªtre documentÃ©s.
+d1afbedd-db55-426c-bd4b-4c2a7c7fe2dc,4.5.1*,4-ProcÃ©dÃ©s opÃ©rationnels,Emballage du produit,,"En fonction des risques et de l'utilisation prÃ©vue, les paramÃ¨tres clÃ©s des matÃ©riaux d'emballage doivent Ãªtre dÃ©finis dans des spÃ©cifications dÃ©taillÃ©es conformes Ã  la lÃ©gislation en vigueur et aux autres dangers ou risques pertinents. 
+L'adÃ©quation des matÃ©riaux d'emballage en contact avec les aliments et l'existence d'une barriÃ¨re fonctionnelle doivent Ãªtre validÃ©es pour chaque produit concernÃ©. 
+L'adÃ©quation des matÃ©riaux d'emballage entrant en contact avec les denrÃ©es alimentaires et l'existence d'une barriÃ¨re fonctionnelle doivent Ãªtre validÃ©es pour chaque produit concernÃ©. 
+Elle doit Ãªtre contrÃ´lÃ©e et dÃ©montrÃ©e par des tests/analyses, par exemple 
+- tests organoleptiques 
+- essais de stockage 
+- analyses chimiques 
+- rÃ©sultats des tests de migration."
+081710ff-8663-43d8-8396-ffa939cfda51,4.5.2,4-ProcÃ©dÃ©s opÃ©rationnels,Emballage du produit,,"Pour tous les matÃ©riaux d'emballage susceptibles d'avoir un impact sur les produits, des dÃ©clarations de conformitÃ© attestant du respect des exigences lÃ©gales doivent Ãªtre documentÃ©es. Si aucune exigence lÃ©gale spÃ©cifique n'est applicable, des preuves doivent Ãªtre conservÃ©es pour garantir que les matÃ©riaux d'emballage sont adaptÃ©s Ã  l'utilisation. Cela s'applique aux matÃ©riaux d'emballage susceptibles d'avoir une influence sur les matiÃ¨res premiÃ¨res, les produits semi-finis et finis. 
+matiÃ¨res premiÃ¨res, les produits semi-finis et les produits finis."
+23858c97-1d2a-417d-800f-ce347a280277,4.5.3,4-ProcÃ©dÃ©s opÃ©rationnels,Emballage du produit,,"L'emballage et l'Ã©tiquetage utilisÃ©s doivent correspondre au produit emballÃ© et Ãªtre conformes aux spÃ©cifications du produit convenues avec le client. Les informations figurant sur l'Ã©tiquette doivent Ãªtre lisibles et indÃ©lÃ©biles. Elles doivent Ãªtre contrÃ´lÃ©es et documentÃ©es au moins au dÃ©but et Ã  la fin d'un cycle de production, ainsi qu'Ã  chaque changement de produit."
+92b9ac24-5a96-49a9-b97b-1004f67f1c5c,4.6.1*,4-ProcÃ©dÃ©s opÃ©rationnels,Lieu de l'usine,,"Les incidences nÃ©gatives potentielles de l'environnement de l'usine (par exemple, le sol, l'air) sur la sÃ©curitÃ© alimentaire et/ou la qualitÃ© des produits doivent Ãªtre Ã©tudiÃ©es. Lorsque des risques ont Ã©tÃ© identifiÃ©s (par exemple, air extrÃªmement poussiÃ©reux, fortes odeurs), des mesures doivent Ãªtre documentÃ©es, mises en Å“uvre et leur efficacitÃ© doit Ãªtre vÃ©rifiÃ©e au moins une fois au cours d'une pÃ©riode de 12 mois ou Ã  chaque fois que des changements significatifs se produisent."
+0ab37e3e-f3a1-490c-b8cd-9ecfe526d9ea,4.7.1,4-ProcÃ©dÃ©s opÃ©rationnels,ExtÃ©rieur de l'usine,,"Toutes les zones extÃ©rieures de l'usine doivent Ãªtre propres, ordonnÃ©es, conÃ§ues et entretenues de maniÃ¨re Ã  Ã©viter toute contamination. Lorsque le drainage naturel est inadÃ©quat, un 
+un systÃ¨me de drainage appropriÃ© doit Ãªtre installÃ©."
+cf092a27-e4d6-4e60-9dcd-923538885c64,4.7.2,4-ProcÃ©dÃ©s opÃ©rationnels,ExtÃ©rieur de l'usine,,"L'entreposage Ã  l'extÃ©rieur doit Ãªtre rÃ©duit au minimum. Lorsque des marchandises sont stockÃ©es Ã  l'extÃ©rieur, il convient de s'assurer qu'il n'y a pas de risques de contamination ou d'effets nÃ©gatifs sur la sÃ©curitÃ© et la qualitÃ© des denrÃ©es alimentaires."
+9c31a047-f0b1-4b49-8d29-a91ed8b60acf,4.8.1,4-ProcÃ©dÃ©s opÃ©rationnels,Implantation de l'usine et flux de production, ," Un plan du site couvrant tous les bÃ¢timents documentÃ©s et entretenus et dÃ©crivant, au minimum, le dÃ©roulement du processus : 
+- des produits finis 
+- produits semi-finis, y compris les retouches 
+- matÃ©riaux d'emballage 
+- matiÃ¨res premiÃ¨res 
+- le personnel 
+- les dÃ©chets 
+- l'eau."
+0b5e4983-05a9-47e8-b4de-8bda34d0b062,4.8.2*,4-ProcÃ©dÃ©s opÃ©rationnels,Implantation de l'usine et flux de production, ,"Le dÃ©roulement du processus, de la rÃ©ception des marchandises Ã  l'expÃ©dition, doit Ãªtre mis en Å“uvre et entretenu, revu et, le cas Ã©chÃ©ant, modifiÃ© pour garantir que les risques de contamination microbiologique, chimique et physique des matiÃ¨res premiÃ¨res, des matÃ©riaux d'emballage, des produits semi-finis et des produits finis sont Ã©vitÃ©s. Les risques de contamination croisÃ©e doivent Ãªtre rÃ©duits au minimum par des mesures efficaces."
+cb5e9b77-2704-47b2-9e5f-987ed59e9247,4.8.3,4-ProcÃ©dÃ©s opÃ©rationnels,Implantation de l'usine et flux de production, ,"Lorsque des zones sensibles aux risques microbiologiques, chimiques et physiques ont Ã©tÃ© identifiÃ©es, elles doivent Ãªtre conÃ§ues et exploitÃ©es de maniÃ¨re Ã  ne pas compromettre la sÃ©curitÃ© du produit."
+f1e8b5c3-4831-482b-b8b5-a638b8559b2d,4.8.4,4-ProcÃ©dÃ©s opÃ©rationnels,Implantation de l'usine et flux de production, ,Les installations de laboratoire et les contrÃ´les en cours de fabrication ne doivent pas affecter la sÃ©curitÃ© du produit.
+d6dcc158-351a-4fe5-8ae5-ceda7d7d4f78,4.9.1.1*,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Exigences de construction,"Les locaux oÃ¹ les denrÃ©es alimentaires sont prÃ©parÃ©es, traitÃ©es, transformÃ©es et entreposÃ©es sont conÃ§us, construits et entretenus de maniÃ¨re Ã  garantir la sÃ©curitÃ© des denrÃ©es alimentaires."
+817ce7ff-9138-4d40-a657-db69bd6a5968,4.9.2.1,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Murs,"Les murs sont conÃ§us et construits pour rÃ©pondre aux exigences de la production de maniÃ¨re Ã  prÃ©venir la contamination, Ã  rÃ©duire la condensation et la formation de moisissures, Ã  faciliter le nettoyage et, le cas Ã©chÃ©ant, la dÃ©sinfection."
+9f47fb58-e6ff-4915-ae86-3e97bda912c3,4.9.2.2,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Murs,Les surfaces des murs doivent Ãªtre entretenues de maniÃ¨re Ã  Ã©viter toute contamination et Ãªtre faciles Ã  nettoyer ; elles doivent Ãªtre impermÃ©ables et rÃ©sistantes Ã  l'usure afin de minimiser les risques de contamination des produits.
+3ae09906-b396-4d57-802c-e3f69002d0fe,4.9.2.3,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Murs,"Les jonctions entre les murs, les sols et les plafonds doivent Ãªtre conÃ§ues de maniÃ¨re Ã  faciliter le nettoyage et, si nÃ©cessaire, la dÃ©sinfection."
+a76e9393-eb32-4841-bb6a-9f1828b5cffb,4.9.3.1,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Sols,"Les revÃªtements de sol doivent Ãªtre conÃ§us et construits pour rÃ©pondre aux exigences de la production et Ãªtre entretenus de maniÃ¨re Ã  prÃ©venir la contamination et Ã  faciliter le nettoyage et, si nÃ©cessaire, la dÃ©sinfection. Les surfaces doivent Ãªtre impermÃ©ables et rÃ©sistantes Ã  l'usure."
+6428e015-b4cf-4be3-a4bf-78f868640a76,4.9.3.2,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Sols,"L'Ã©vacuation hygiÃ©nique de l'eau et des autres liquides doit Ãªtre assurÃ©e. Les systÃ¨mes d'Ã©vacuation doivent Ãªtre conÃ§us, construits et entretenus de maniÃ¨re Ã  minimiser les risques de contamination des produits (par exemple, entrÃ©e de parasites, zones sensibles Ã  la transmission d'odeurs ou de contaminants) et doivent Ãªtre faciles Ã  nettoyer."
+5563939c-7afd-4eb2-b95f-57141c49b561,4.9.3.3,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Sols,"Dans les zones de manipulation des denrÃ©es alimentaires, les machines et les canalisations doivent Ãªtre disposÃ©es de maniÃ¨re Ã  ce que les eaux usÃ©es puissent, si possible, s'Ã©couler directement dans un Ã©gout. 
+l'Ã©gout. L'eau et les autres liquides doivent pouvoir Ãªtre Ã©vacuÃ©s sans difficultÃ© par des mesures appropriÃ©es. La stagnation de flaques d'eau doit Ãªtre Ã©vitÃ©e."
+37b2b213-84b3-497c-9dc3-97642a2a6812,4.9.4.1,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Plafonds / frais gÃ©nÃ©raux,"Les plafonds (ou, en l'absence de plafonds, l'intÃ©rieur des toits) et les installations aÃ©riennes (y compris les tuyauteries, les cÃ¢bles, les lampes, etc.) sont conÃ§us, construits et entretenus de maniÃ¨re Ã  rÃ©duire au minimum l'accumulation de saletÃ© et de condensation et ne prÃ©sentent pas de risques de contamination physique et/ou microbio logique."
+6e66a3d5-ec98-4747-bb78-d79e6e7d55c0,4.9.4.2,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Plafonds / frais gÃ©nÃ©raux,"En cas d'utilisation de faux plafonds, l'accÃ¨s Ã  la zone inoccupÃ©e doit Ãªtre prÃ©vu pour faciliter le nettoyage, l'entretien et l'inspection en vue de la lutte contre les parasites."
+cbc6d047-d1be-4cec-b372-4c4754b1d08f,4.9.5.1,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,FenÃªtres et autres ouvertures,"Les fenÃªtres et autres ouvertures doivent Ãªtre conÃ§ues et construites de maniÃ¨re Ã  Ã©viter l'accumulation de saletÃ©s et doivent Ãªtre entretenues de maniÃ¨re Ã  prÃ©venir la contamination. 
+contamination"
+3eba92da-2acd-4f97-a5d9-65a0a4e2117d,4.9.5.2,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,FenÃªtres et autres ouvertures,"En cas de risque de contamination, les fenÃªtres et les vitres de toit doivent rester fermÃ©es et fixÃ©es pendant la production."
+448c8397-8b3c-48b6-aa56-41a3c57c7387,4.9.5.3,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,FenÃªtres et autres ouvertures,"Lorsque les fenÃªtres et les vitrages de toit sont conÃ§us pour Ãªtre ouverts Ã  des fins de ventilation, ils sont Ã©quipÃ©s de grilles antiparasitaires faciles Ã  nettoyer ou d'autres mesures destinÃ©es Ã  Ã©viter toute contamination."
+d2d48e96-8ada-44ac-8cb0-d09e0fbf9db0,4.9.5.4,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,FenÃªtres et autres ouvertures,"Dans les zones oÃ¹ des produits non emballÃ©s sont manipulÃ©s, les fenÃªtres doivent Ãªtre protÃ©gÃ©es contre les bris."
+b7118d9e-f526-4f23-bcb5-3fee8df6f0ce,4.9.6.1,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Portes et systÃ¨mes de fermeture,"Les portes et les barriÃ¨res doivent Ãªtre entretenues de maniÃ¨re Ã  Ã©viter toute contamination et Ã  Ãªtre faciles Ã  nettoyer. Elles doivent Ãªtre conÃ§ues et construites en matÃ©riaux non absorbants afin d'Ã©viter 
+- l'Ã©clatement des piÃ¨ces 
+- l'Ã©caillage de la peinture 
+- la corrosion"
+aebe4d0b-30b5-43ce-ab4b-bc3ce89be1f6,4.9.6.2,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Portes et systÃ¨mes de fermeture,Les portes et portails extÃ©rieurs doivent Ãªtre construits de maniÃ¨re Ã  empÃªcher l'accÃ¨s des animaux nuisibles. 
+1a7aca76-8bc6-48a9-9d06-57fdf80abd61,4.9.6.3,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Portes et systÃ¨mes de fermeture,Les rideaux en plastique sÃ©parant les zones doivent Ãªtre entretenus de maniÃ¨re Ã  Ã©viter toute contamination et Ã  Ãªtre faciles Ã  nettoyer.
+696d43e3-3240-49f3-9304-3a18edd70047,4.9.7.1,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Eclairage,"Toutes les zones de production, de stockage, de rÃ©ception et d'expÃ©dition doivent Ãªtre suffisamment Ã©clairÃ©es."
+fd3fe601-cb81-44d7-8f04-0cf775b288d8,4.9.8.1,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Climatisation/ventillation,"Une ventilation naturelle et/ou artificielle adÃ©quate doit Ãªtre conÃ§ue, 
+construite et entretenue dans toutes les zones"
+67408ff4-9910-4308-af70-8015f5162c45,4.9.8.2,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Climatisation/ventillation,"Si des Ã©quipements de ventilation sont installÃ©s, les filtres et autres composants doivent Ãªtre facilement accessibles et contrÃ´lÃ©s, nettoyÃ©s ou remplacÃ©s si nÃ©cessaire."
+fdf2eb10-6b1c-4ea6-a57a-4d1915d91676,4.9.8.3,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Climatisation/ventillation,Les Ã©quipements de climatisation et les flux d'air gÃ©nÃ©rÃ©s artificiellement ne doivent pas compromettre la sÃ©curitÃ© et la qualitÃ© des produits.
+e321d9d3-f6c4-4b73-a3da-63fd2aa67c5f,4.9.8.4,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Climatisation/ventillation,"Un Ã©quipement d'extraction des poussiÃ¨res doit Ãªtre conÃ§u, construit et entretenu dans les zones oÃ¹ des quantitÃ©s considÃ©rables de poussiÃ¨res sont gÃ©nÃ©rÃ©es."
+773e43ea-c733-4d2c-8133-43993ed74492,4.9.9.1*,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Eau,"L'eau utilisÃ©e pour le lavage des mains, le nettoyage et la dÃ©sinfection, ou comme ingrÃ©dient du processus de production, doit Ãªtre de qualitÃ© potable au point d'utilisation et fournie en quantitÃ© suffisante."
+11b7431c-ab17-4945-9a7b-058774a00995,4.9.9.2,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Eau,"La qualitÃ© de l'eau (y compris de l'eau recyclÃ©e), de la vapeur ou de la glace est contrÃ´lÃ©e selon un plan d'Ã©chantillonnage fondÃ© sur les risques."
+8e83b6dd-b853-4eba-bd96-bc0213559b01,4.9.9.3,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Eau,"L'eau recyclÃ©e, qui est utilisÃ©e dans le processus, ne doit pas prÃ©senter de risques de contamination."
+c7b9918e-2a95-4ecc-a995-c2143052aa39,4.9.9.4,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Eau,"L'eau non potable est transportÃ©e dans des canalisations sÃ©parÃ©es et correctement identifiÃ©es. Ces conduites ne doivent pas Ãªtre reliÃ©es au systÃ¨me d'eau potable ni permettre un reflux, afin d'Ã©viter la contamination des sources d'eau potable ou de l'environnement de l'usine."
+e9e99e56-c5d5-41f2-af17-7bc308aa4ca1,4.9.10.1,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Air et gaz comprimÃ©s,"La qualitÃ© de l'air comprimÃ© qui entre en contact direct avec des denrÃ©es alimentaires ou des matÃ©riaux entrant en contact avec des denrÃ©es alimentaires doit Ãªtre 
+surveillÃ©e en fonction des risques. L'air comprimÃ© ne doit pas prÃ©senter de risques de contamination."
+edd7fad1-a2c5-488f-acf6-5d91b5680e94,4.9.10.2,4-ProcÃ©dÃ©s opÃ©rationnels,Locaux de production et de stockage,Air et gaz comprimÃ©s,Les gaz qui entrent en contact direct avec les denrÃ©es alimentaires ou les matÃ©riaux en contact avec les denrÃ©es alimentaires doivent dÃ©montrer leur sÃ©curitÃ© et leur qualitÃ© pour l'utilisation prÃ©vue.
+d3d45842-bf99-415f-84b9-e3e3ddaed99d,4.10.1*,4-ProcÃ©dÃ©s opÃ©rationnels,Nettoyage et dÃ©sinfection, ,"Des programmes de nettoyage et de dÃ©sinfection fondÃ©s sur les risques doivent Ãªtre validÃ©s, documentÃ©s et mis en Å“uvre. Ces programmes doivent prÃ©ciser 
+- les objectifs 
+- les responsabilitÃ©s 
+- les produits utilisÃ©s et leurs instructions d'utilisation 
+- le dosage des produits chimiques de nettoyage et de dÃ©sinfection 
+- les zones et les crÃ©neaux horaires pour les activitÃ©s de nettoyage et de dÃ©sinfection 
+- la frÃ©quence du nettoyage et de la dÃ©sinfection - les critÃ¨res de nettoyage en place (CIP), le cas Ã©chÃ©ant 
+- les exigences en matiÃ¨re de documentation 
+- les symboles de danger (si nÃ©cessaire). "
+7ec916f6-88a4-49c8-9137-1827bc41790f,4.10.2,4-ProcÃ©dÃ©s opÃ©rationnels,Nettoyage et dÃ©sinfection, ,"Les activitÃ©s de nettoyage et de dÃ©sinfection doivent Ãªtre mises en Å“uvre et aboutir Ã  un nettoyage efficace des locaux, des installations et des Ã©quipements. "
+93732fa3-3d22-4efd-abcc-c695bf24fba0,4.10.3,4-ProcÃ©dÃ©s opÃ©rationnels,Nettoyage et dÃ©sinfection,,Les activitÃ©s de nettoyage et de dÃ©sinfection doivent Ãªtre documentÃ©es et ces enregistrements doivent Ãªtre vÃ©rifiÃ©s par une personne responsable dÃ©signÃ©e au sein de l'entreprise. 
+6e9890f9-5cec-4e44-80e5-efecc1588360,4.10.4*,4-ProcÃ©dÃ©s opÃ©rationnels,Nettoyage et dÃ©sinfection,,"Seul le personnel compÃ©tent doit effectuer les opÃ©rations de nettoyage et de dÃ©sinfection. Ce personnel doit Ãªtre formÃ© et recyclÃ© 
+pour mettre en Å“uvre les programmes de nettoyage et de dÃ©sinfection"
+07431efc-dfa6-4992-8574-67ca9c89b794,4.10.5*,4-ProcÃ©dÃ©s opÃ©rationnels,Nettoyage et dÃ©sinfection,,L'utilisation prÃ©vue du matÃ©riel de nettoyage et de dÃ©sinfection doit Ãªtre clairement spÃ©cifiÃ©e. Il doit Ãªtre utilisÃ© et stockÃ© de maniÃ¨re Ã  Ã©viter toute contamination. 
+d5a4c912-1488-465a-9104-0a6324a1e9e6,4.10.6,4-ProcÃ©dÃ©s opÃ©rationnels,Nettoyage et dÃ©sinfection,,Des fiches de donnÃ©es de sÃ©curitÃ© et des instructions d'utilisation doivent Ãªtre disponibles sur place pour les produits chimiques de nettoyage et de dÃ©sinfection. Le personnel responsable des activitÃ©s de nettoyage et de dÃ©sinfection doit Ãªtre en mesure de dÃ©montrer qu'il connaÃ®t ces instructions. 
+82e72237-77b4-444b-9ffe-066b927a4131,4.10.7,4-ProcÃ©dÃ©s opÃ©rationnels,Nettoyage et dÃ©sinfection,,"L'efficacitÃ© des mesures de nettoyage et de dÃ©sinfection doit Ãªtre vÃ©rifiÃ©e. La vÃ©rification s'appuie sur un programme d'Ã©chantillonnage fondÃ© sur les risques et prend en compte une ou plusieurs actions, par exemple 
+- une inspection visuelle 
+- essais rapides 
+- mÃ©thodes d'analyse. 
+Les actions qui en rÃ©sultent doivent Ãªtre documentÃ©es. "
+b463e2c2-c3cd-4a67-8087-5886fc31c93a,4.10.8,4-ProcÃ©dÃ©s opÃ©rationnels,Nettoyage et dÃ©sinfection,,"Les programmes de nettoyage et de dÃ©sinfection doivent Ãªtre revus et modifiÃ©s si des changements interviennent au niveau des produits, des procÃ©dÃ©s ou du matÃ©riel de nettoyage et de dÃ©sinfection, si nÃ©cessaire. "
+9691bd23-3d5d-4a8f-85dc-9421868f2ff8,4.10.9,4-ProcÃ©dÃ©s opÃ©rationnels,Nettoyage et dÃ©sinfection,,"Lorsqu'une entreprise fait appel Ã  un prestataire de services tiers pour les activitÃ©s de nettoyage et de dÃ©sinfection dans les zones de production, toutes les exigences susmentionnÃ©es doivent Ãªtre documentÃ©es dans le contrat de service."
+afd6ed70-085f-4354-9d4c-aadaad8e817a,4.11.1*,4-ProcÃ©dÃ©s opÃ©rationnels,Gestion des dÃ©chets,,"Une procÃ©dure de gestion des dÃ©chets doit Ãªtre documentÃ©e, mise en Å“uvre et maintenue afin de prÃ©venir la contamination croisÃ©e. 
+contamination croisÃ©e"
+f16a515e-8ccb-4edf-a94e-e866c89e50e7,4.11.2,4-ProcÃ©dÃ©s opÃ©rationnels,Gestion des dÃ©chets,,Toutes les exigences lÃ©gales locales en matiÃ¨re d'Ã©limination des dÃ©chets doivent Ãªtre respectÃ©es.
+6da39551-ac6c-4473-a4e0-032dc2cf5791,4.11.3,4-ProcÃ©dÃ©s opÃ©rationnels,Gestion des dÃ©chets,,Les dÃ©chets alimentaires et les autres dÃ©chets doivent Ãªtre Ã©liminÃ©s le plus rapidement possible des zones oÃ¹ les denrÃ©es alimentaires sont manipulÃ©es. L'accumulation de dÃ©chets doit Ãªtre Ã©vitÃ©e.
+011c351c-448a-49db-a58b-9bc7b302b4b6,4.11.4,4-ProcÃ©dÃ©s opÃ©rationnels,Gestion des dÃ©chets,,"Les conteneurs de collecte des dÃ©chets doivent Ãªtre clairement identifiÃ©s, conÃ§us et entretenus de maniÃ¨re appropriÃ©e, faciles Ã  nettoyer et, si nÃ©cessaire, dÃ©sinfectÃ©s."
+b55941a5-f75d-402b-858a-d6ef7a3edcde,4.11.5,4-ProcÃ©dÃ©s opÃ©rationnels,Gestion des dÃ©chets,,"Si une entreprise dÃ©cide de sÃ©parer les dÃ©chets alimentaires et de les rÃ©introduire dans la chaÃ®ne d'approvisionnement en aliments pour animaux, des mesures ou des procÃ©dures doivent Ãªtre mises en Å“uvre pour empÃªcher la contamination ou la dÃ©tÃ©rioration de ces matiÃ¨res."
+b942da2e-1e92-4ecd-9459-622f719e40d3,4.11.6,4-ProcÃ©dÃ©s opÃ©rationnels,Gestion des dÃ©chets,,Les dÃ©chets sont collectÃ©s dans des conteneurs distincts en fonction du mode d'Ã©limination prÃ©vu. Ces dÃ©chets ne sont Ã©liminÃ©s que par des tiers autorisÃ©s. L'entreprise tient un registre de l'Ã©limination des dÃ©chets.
+b8709602-fa76-49be-a71a-82db9e3abd69,"4.12.1 
+KO *",4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux corps Ã©trangers, ,"KO NÂ° 6 : En fonction des risques, des procÃ©dures doivent Ãªtre documentÃ©es, mises en Å“uvre et maintenues afin d'Ã©viter la contamination par des matiÃ¨res Ã©trangÃ¨res. Les produits contaminÃ©s doivent Ãªtre traitÃ©s comme des produits non conformes. "
+279bf7be-6c70-4c78-9913-f5d9f63811b3,4.12.2,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux corps Ã©trangers, ,"Les produits transformÃ©s doivent Ãªtre protÃ©gÃ©s contre la contamination physique, ce qui inclut, sans s'y limiter 
+- les contaminants environnementaux 
+- les huiles ou les liquides s'Ã©coulant des 
+des machines 
+- les dÃ©versements de poussiÃ¨res. 
+Une attention particuliÃ¨re doit Ã©galement Ãªtre accordÃ©e aux risques de contamination des produits causÃ©s par : 
+- les Ã©quipements et les ustensiles 
+- les tuyaux 
+- les passerelles 
+- les plates-formes 
+- les Ã©chelles. 
+Si, en raison de caractÃ©ristiques technologiques et/ou de besoins, il n'est pas possible de protÃ©ger les produits, des mesures de contrÃ´le appropriÃ©es doivent Ãªtre mises en Å“uvre"
+fe51d438-7311-4c9f-be98-0b1879884cc3,"4.12.3 
+NEW",4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux corps Ã©trangers, ,"Tous les produits chimiques prÃ©sents sur le site doivent Ãªtre adaptÃ©s Ã  leur usage, Ã©tiquetÃ©s, stockÃ©s et manipulÃ©s de maniÃ¨re Ã  ne pas prÃ©senter de risque de contamination."
+646122c2-65d6-49f5-a590-01f7314f4f79,4.12.4,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux corps Ã©trangers, ,"Lorsque des dÃ©tecteurs de mÃ©taux et/ou d'autres matiÃ¨res Ã©trangÃ¨res sont nÃ©cessaires, ils doivent Ãªtre installÃ©s de maniÃ¨re Ã  garantir une efficacitÃ© maximale de la dÃ©tection afin d'Ã©viter toute contamination ultÃ©rieure. Les dÃ©tecteurs doivent faire l'objet d'une maintenance afin d'Ã©viter tout dysfonctionnement, au moins une fois au cours d'une pÃ©riode de 12 mois ou Ã  chaque fois que des changements importants se produisent."
+b102fbad-62ab-4eb3-95a4-ad8a3cef9a9c,4.12.5,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux corps Ã©trangers, ,"La prÃ©cision de tous les Ã©quipements et mÃ©thodes conÃ§us pour dÃ©tecter et/ou Ã©liminer les matiÃ¨res Ã©trangÃ¨res doit Ãªtre prÃ©cisÃ©e. Les essais de fonctionnement de ces Ã©quipements et mÃ©thodes doivent Ãªtre effectuÃ©s Ã  une frÃ©quence basÃ©e sur le risque. En cas de dysfonctionnement ou de dÃ©faillance, l'impact sur les produits et les processus doit Ãªtre Ã©valuÃ©."
+d382da20-f028-4582-9310-e8ff93749a93,4.12.6,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux corps Ã©trangers, ," Les produits potentiellement contaminÃ©s doivent Ãªtre isolÃ©s. L'accÃ¨s Ã  ces produits isolÃ©s et les mesures Ã  prendre pour les manipuler ou les tester ne doivent Ãªtre effectuÃ©s que par le personnel autorisÃ©.
+"
+9ccd909b-ab74-4a6f-a50d-5f75fc3f72f9,4.12.7,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux corps Ã©trangers, ,"Dans les zones oÃ¹ sont manipulÃ©s des matiÃ¨res premiÃ¨res, des produits semi-finis et des produits finis, l'utilisation de verre et/ou de matÃ©riaux fragiles est exclue ; toutefois, lorsque la prÃ©sence de verre et/ou de matÃ©riaux fragiles ne peut Ãªtre Ã©vitÃ©e, les risques sont contrÃ´lÃ©s et le verre et/ou les matÃ©riaux fragiles sont propres et ne prÃ©sentent aucun risque pour la sÃ©curitÃ© du produit."
+af7b1c8f-080c-4b5f-9000-8de301ac4858,4.12.8,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux corps Ã©trangers, ,"Des mesures fondÃ©es sur les risques doivent Ãªtre mises en Å“uvre et maintenues pour la manipulation des emballages en verre, des conteneurs en verre ou d'autres types de conteneurs dans le processus de production (retournement, soufflage, rinÃ§age, etc.). AprÃ¨s cette Ã©tape du processus, il ne doit plus y avoir de risques de contamination."
+0a02f15b-df73-47c7-b585-49040e6682ca,4.12.9,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux corps Ã©trangers, ,"Une ou plusieurs procÃ©dures doivent Ãªtre documentÃ©es, mises en Å“uvre et tenues Ã  jour pour dÃ©crire les mesures Ã  prendre en cas de bris de verre et/ou de matÃ©riaux fragiles. Ces mesures comprennent l'identification de l'Ã©tendue des marchandises Ã  isoler, la dÃ©signation du personnel autorisÃ©, le nettoyage et, si nÃ©cessaire, la dÃ©sinfection."
+2a1f1627-8484-4f47-8f0a-766a78357ed9,4.12.10,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux corps Ã©trangers, ,"personnel autorisÃ©, le nettoyage et, si nÃ©cessaire, la dÃ©sinfection de l'environnement de production et la libÃ©ration de la ligne de production pour la poursuite de la production""."
+7759c167-ea70-4962-bbf0-4ca78a4dbeae,4.12.11,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux corps Ã©trangers, ,"Lorsque l'inspection visuelle est utilisÃ©e pour dÃ©tecter les matiÃ¨res Ã©trangÃ¨res, les employÃ©s doivent Ãªtre formÃ©s et des changements opÃ©rationnels doivent Ãªtre effectuÃ©s Ã  une frÃ©quence appropriÃ©e pour maximiser l'efficacitÃ© du processus."
+a4df4d11-9964-476a-b9c2-96bfe0764be2,4.12.12,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux corps Ã©trangers, ,"Dans les zones oÃ¹ sont manipulÃ©s des matiÃ¨res premiÃ¨res, des produits semi-finis et des produits finis, l'utilisation du bois doit Ãªtre exclue ; toutefois, lorsque la prÃ©sence de bois ne peut Ãªtre Ã©vitÃ©e, les risques doivent Ãªtre maÃ®trisÃ©s et le bois doit Ãªtre propre et ne prÃ©senter aucun risque pour la sÃ©curitÃ© du produit."
+1d6cb70e-84ce-4674-b09c-1b9e25151059,4.13.1,4-ProcÃ©dÃ©s opÃ©rationnels,Surveillance des nuisibles/lutte contre les nuisibles, ,"Les locaux et les Ã©quipements du site doivent Ãªtre conÃ§us, construits et entretenus de maniÃ¨re Ã  prÃ©venir les infestations parasitaires."
+0ec187fc-6619-4721-9700-84c79473623e,4.13.2*,4-ProcÃ©dÃ©s opÃ©rationnels,Surveillance des nuisibles/lutte contre les nuisibles, ,"Des mesures de lutte contre les nuisibles fondÃ©es sur les risques doivent Ãªtre documentÃ©es, mises en Å“uvre et entretenues. Elles doivent Ãªtre conformes aux exigences lÃ©gales locales et tenir compte, au minimum, des Ã©lÃ©ments suivants 
+- l'environnement de l'usine (parasites potentiels et ciblÃ©s) 
+- le type de matiÃ¨res premiÃ¨res/produits finis 
+produits finis 
+- plan du site avec la zone d'application (carte des appÃ¢ts) 
+- les Ã©lÃ©ments de construction susceptibles de favoriser l'activitÃ© des organismes nuisibles, par exemple les plafonds, les caves, les tuyaux, les coins 
+- identification des appÃ¢ts sur le site - responsabilitÃ©s, internes/externes - agents utilisÃ©s et leurs instructions d'utilisation et de sÃ©curitÃ© 
+- la frÃ©quence des inspections 
+- le cas Ã©chÃ©ant, le stockage louÃ©"
+daeb9de8-4cbf-4481-9552-dc9f425c593d,4.13.3,4-ProcÃ©dÃ©s opÃ©rationnels,Surveillance des nuisibles/lutte contre les nuisibles, ,"Lorsqu'une entreprise fait appel Ã  un prestataire de services tiers pour la lutte contre les nuisibles, toutes les exigences susmentionnÃ©es doivent Ãªtre consignÃ©es dans le contrat de service. Une personne compÃ©tente au sein de l'entreprise doit Ãªtre dÃ©signÃ©e pour contrÃ´ler les activitÃ©s de lutte contre les nuisibles. MÃªme si le service de lutte contre les nuisibles est externalisÃ©, la responsabilitÃ© des actions nÃ©cessaires (y compris la supervision continue des activitÃ©s de lutte contre les nuisibles) doit rester au sein de l'entreprise.
+"
+ee1bb979-dc7c-426f-bdfb-5625b8b48efb,4.13.4,4-ProcÃ©dÃ©s opÃ©rationnels,Surveillance des nuisibles/lutte contre les nuisibles, ,"Les inspections de lutte contre les nuisibles et les actions qui en dÃ©coulent doivent Ãªtre documentÃ©es. 
+La mise en Å“uvre des actions doit Ãªtre contrÃ´lÃ©e et enregistrÃ©e. Toute infestation doit Ãªtre documentÃ©e et des mesures de lutte doivent Ãªtre prises."""
+9f8f53f3-4bb0-4c2f-99d6-eff149442c84,4.13.5,4-ProcÃ©dÃ©s opÃ©rationnels,Surveillance des nuisibles/lutte contre les nuisibles, ,"Les appÃ¢ts, les piÃ¨ges et les dÃ©sinsectiseurs doivent Ãªtre pleinement opÃ©rationnels, en nombre suffisant, conÃ§us Ã  cet effet, placÃ©s dans des endroits appropriÃ©s et utilisÃ©s de maniÃ¨re Ã  Ã©viter toute contamination."
+4def86f0-19b2-4655-a152-e931a5d6380b,4.13.6,4-ProcÃ©dÃ©s opÃ©rationnels,Surveillance des nuisibles/lutte contre les nuisibles, ,Les livraisons entrantes sont inspectÃ©es Ã  l'arrivÃ©e pour dÃ©tecter la prÃ©sence de parasites. Toute constatation doit Ãªtre consignÃ©e.
+3127cb67-9732-411c-97e0-e5369b2a6c2a,4.13.7,4-ProcÃ©dÃ©s opÃ©rationnels,Surveillance des nuisibles/lutte contre les nuisibles, ,"L'efficacitÃ© des mesures de lutte contre les organismes nuisibles doit faire l'objet d'un suivi, y compris d'une analyse des tendances, afin que des mesures puissent Ãªtre prises en temps utile. Les documents relatifs Ã  ce suivi doivent Ãªtre disponibles."
+e54b31b4-d052-4ff4-8f4b-7848681feea7,4.14.1*,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©ception et stockage des produits,,"Toutes les marchandises entrantes, y compris les 
+les matÃ©riaux d'emballage et les Ã©tiquettes, doivent Ãªtre contrÃ´lÃ©s pour vÃ©rifier qu'ils sont conformes aux spÃ©cifications et Ã  un plan de surveillance fondÃ© sur les risques. Le plan de surveillance doit Ãªtre justifiÃ© par une Ã©valuation des risques. Les enregistrements de ces inspections doivent Ãªtre disponibles."
+91d86a00-e0e7-4703-87bd-0dc8b3c5d115,4.14.2*,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©ception et stockage des produits,,"Un systÃ¨me doit Ãªtre mis en Å“uvre et tenu Ã  jour pour garantir que les conditions de stockage des matiÃ¨res premiÃ¨res, des produits semi-finis, des produits finis et des matÃ©riaux d'emballage correspondent aux spÃ©cifications du produit et n'ont pas d'impact nÃ©gatif sur les autres produits."
+f2c9990c-0362-4133-b057-5217c9801808,4.14.3,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©ception et stockage des produits,,"Les matiÃ¨res premiÃ¨res, les matÃ©riaux d'emballage, les produits semi-finis et finis doivent Ãªtre stockÃ©s de maniÃ¨re Ã  minimiser les risques de contamination ou tout autre impact nÃ©gatif."
+bd3f28b2-1077-4d7c-8906-6deb681c0f13,4.14.4,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©ception et stockage des produits,,"Des installations de stockage adÃ©quates doivent Ãªtre disponibles pour la gestion et le stockage des matiÃ¨res premiÃ¨res, des auxiliaires de fabrication et des additifs. Le personnel responsable de la gestion des installations de stockage doit Ãªtre formÃ©."
+c523b7de-aa33-4506-9a50-dd40cc01e871,4.14.5*,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©ception et stockage des produits,,"Tous les produits doivent Ãªtre identifiÃ©s. L'utilisation des produits doit se faire conformÃ©ment aux principes ""premier entrÃ©/premier sorti"" et/ou ""premier expirÃ©/premier sorti"
+5ea530d8-d558-43fc-95e2-bbfefe9f2ce3,4.14.6,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©ception et stockage des produits,,"Lorsqu'une entreprise fait appel Ã  un prestataire de services d'entreposage tiers, celui-ci doit Ãªtre certifiÃ© IFS 
+Logistics ou toute autre norme de certification reconnue par la GFSI couvrant le champ d'activitÃ© concernÃ©. Si ce n'est pas le cas, toutes les exigences pertinentes Ã©quivalentes aux propres pratiques de stockage de l'entreprise doivent Ãªtre respectÃ©es, ce qui doit Ãªtre dÃ©fini dans le contrat concernÃ©"
+81ba7de4-764a-4137-8f11-a025ca58eae9,4.15.1*,4-ProcÃ©dÃ©s opÃ©rationnels,Transport,,"Les conditions Ã  l'intÃ©rieur des vÃ©hicules sont liÃ©es Ã  l'absence, par exemple, de - odeurs Ã©tranges 
+- une forte charge de poussiÃ¨re 
+- humiditÃ© dÃ©favorable 
+- parasites 
+- moisissures 
+doivent Ãªtre contrÃ´lÃ©s avant le chargement et faire l'objet d'une documentation afin de garantir le respect des conditions dÃ©finies"
+0d3e1cfe-ccfe-4424-b469-e7fee21abfb9,4.15.2,4-ProcÃ©dÃ©s opÃ©rationnels,Transport,,"Lorsque les marchandises sont transportÃ©es Ã  certaines tempÃ©ratures, la tempÃ©rature Ã  l'intÃ©rieur des vÃ©hicules doit Ãªtre vÃ©rifiÃ©e et documentÃ©e avant le chargement."
+5bc8e156-cef7-4ea3-9159-5795c5f21673,4.15.3,4-ProcÃ©dÃ©s opÃ©rationnels,Transport,,"Les procÃ©dures visant Ã  prÃ©venir la contamination pendant le transport, y compris le chargement et le dÃ©chargement, doivent Ãªtre documentÃ©es, mises en Å“uvre et tenues Ã  jour. Les diffÃ©rentes catÃ©gories de marchandises (alimentaires/non alimentaires) doivent Ãªtre prises en considÃ©ration, le cas Ã©chÃ©ant."
+6012b1f7-fab0-4a1f-815d-5c7399cbf19e,4.15.4,4-ProcÃ©dÃ©s opÃ©rationnels,Transport,,"Lorsque les marchandises sont transportÃ©es Ã  certaines tempÃ©ratures, le maintien de la plage de tempÃ©ratures appropriÃ©e pendant le transport doit Ãªtre assurÃ© et documentÃ©. 
+documentÃ©."
+8aa62cad-f721-44cd-8772-2c9d4115b514,4.15.5,4-ProcÃ©dÃ©s opÃ©rationnels,Transport,,"Des exigences en matiÃ¨re d'hygiÃ¨ne fondÃ©es sur les risques doivent Ãªtre mises en Å“uvre pour tous les vÃ©hicules de transport et les Ã©quipements utilisÃ©s pour le chargement/dÃ©chargement (par exemple, les tuyaux des installations de silos). 
+Les mesures prises doivent Ãªtre consignÃ©es"
+712177d3-f5df-4576-9276-00aa42c8e933,4.15.6,4-ProcÃ©dÃ©s opÃ©rationnels,Transport,,"Les aires de chargement/dÃ©chargement doivent Ãªtre adaptÃ©es Ã  l'usage auquel elles sont destinÃ©es. Elles doivent Ãªtre construites de maniÃ¨re Ã  ce que 
+- les risques d'introduction de parasites soient attÃ©nuÃ©s - les produits soient protÃ©gÃ©s des conditions mÃ©tÃ©orologiques dÃ©favorables 
+- l'accumulation de dÃ©chets soit Ã©vitÃ©e - la condensation et la formation de moisissures soient Ã©vitÃ©es 
+- le nettoyage et, le cas Ã©chÃ©ant, la dÃ©sinfection puissent Ãªtre facilement effectuÃ©s"
+a9182b1c-33f0-4f74-974a-66e1bcc82cab,4.15.7,4-ProcÃ©dÃ©s opÃ©rationnels,Transport,,"Lorsqu'une entreprise fait appel Ã  un prestataire de services de transport tiers, celui-ci doit Ãªtre certifiÃ© IFS Logistics ou toute autre norme de certification reconnue par la GFSI et couvrant le champ d'activitÃ© concernÃ©. Si ce n'est pas le cas, toutes les exigences pertinentes Ã©quivalentes aux pratiques de transport de l'entreprise doivent Ãªtre respectÃ©es, ce qui doit Ãªtre dÃ©fini dans le contrat concernÃ©."
+40acb059-d661-43f6-accc-1e9ca9f0537d,4.16.1*,4-ProcÃ©dÃ©s opÃ©rationnels,Maintenance et rÃ©paration,,"Un plan de maintenance doit Ãªtre documentÃ©, mis en Å“uvre et tenu Ã  jour, couvrant tous les Ã©quipements critiques (y compris les locaux de transport et de stockage) afin de garantir la sÃ©curitÃ© alimentaire, la qualitÃ© des produits et la lÃ©galitÃ©. Ce plan s'applique Ã  la fois aux activitÃ©s de maintenance internes et aux prestataires de services. Le plan doit prÃ©ciser les responsabilitÃ©s, les prioritÃ©s et les Ã©chÃ©ances."
+b7891288-b708-4083-ab13-ed7779afc9a7,4.16.2,4-ProcÃ©dÃ©s opÃ©rationnels,Maintenance et rÃ©paration,,"La sÃ©curitÃ© alimentaire, la qualitÃ© des produits, la lÃ©galitÃ© et l'authenticitÃ© doivent Ãªtre garanties pendant et aprÃ¨s les travaux d'entretien et de rÃ©paration. Les travaux d'entretien et de rÃ©paration doivent Ãªtre consignÃ©s dans des registres."
+39f7eb95-2f20-4e4a-b84b-09c6ef32ec92,4.16.3,4-ProcÃ©dÃ©s opÃ©rationnels,Maintenance et rÃ©paration,,Tous les matÃ©riaux utilisÃ©s pour l'entretien et les rÃ©parations doivent Ãªtre adaptÃ©s Ã  l'usage prÃ©vu et ne doivent pas prÃ©senter de risques de contamination.
+9254bc1f-1839-4a88-ad61-18f7ac852ea8,4.16.4,4-ProcÃ©dÃ©s opÃ©rationnels,Maintenance et rÃ©paration,,"Les dÃ©faillances et les dysfonctionnements des locaux et des Ã©quipements (y compris les moyens de transport) qui sont essentiels Ã  la sÃ©curitÃ© alimentaire et Ã  la qualitÃ© des produits doivent Ãªtre identifiÃ©s et documentÃ©s. 
+qualitÃ© des produits, doivent Ãªtre identifiÃ©s, documentÃ©s et examinÃ©s afin de permettre des actions rapides et d'amÃ©liorer le plan d'entretien"
+900c4a12-0424-42f3-b422-7cf7a263879a,4.16.5,4-ProcÃ©dÃ©s opÃ©rationnels,Maintenance et rÃ©paration,,Des rÃ©parations temporaires sont effectuÃ©es pour Ã©viter de compromettre la sÃ©curitÃ© des denrÃ©es alimentaires et la qualitÃ© des produits. Ces travaux doivent Ãªtre documentÃ©s et un dÃ©lai Ã  court terme doit Ãªtre fixÃ© pour rÃ©soudre le problÃ¨me.
+a80e431d-bd04-438c-89c2-7eb30b2b251e,4.16.6,4-ProcÃ©dÃ©s opÃ©rationnels,Maintenance et rÃ©paration,,"Lorsqu'une entreprise fait appel Ã  un prestataire de services d'entretien et de rÃ©paration tiers, toutes les exigences de l'entreprise en matiÃ¨re de matÃ©riel et d'Ã©quipement doivent Ãªtre respectÃ©es. 
+de maintenance et de rÃ©paration, toutes les exigences de l'entreprise concernant le matÃ©riel, l'Ã©quipement et les rÃ¨gles opÃ©rationnelles doivent Ãªtre dÃ©finies, documentÃ©es et maintenues dans le contrat de service, afin d'Ã©viter toute contamination du produit"
+d76003fc-cdba-4320-bd6d-6189ed8e5d5e,4.17.1*,4-ProcÃ©dÃ©s opÃ©rationnels,Equipements,,"L'Ã©quipement doit Ãªtre conÃ§u et dÃ©fini de maniÃ¨re appropriÃ©e pour l'utilisation prÃ©vue. Avant la mise en service d'un nouvel Ã©quipement, la conformitÃ© avec la sÃ©curitÃ© alimentaire, la qualitÃ© du produit, la lÃ©galitÃ©, l'authenticitÃ© et les exigences du client doit Ãªtre validÃ©e."
+9ec1aa92-1718-45f4-a7f7-31a869e740e3,4.17.2,4-ProcÃ©dÃ©s opÃ©rationnels,Equipements,,"Pour tous les Ã©quipements et ustensiles susceptibles d'avoir un impact sur le produit, des preuves doivent Ãªtre documentÃ©es pour dÃ©montrer la conformitÃ© aux exigences lÃ©gales. 
+En l'absence d'exigences lÃ©gales spÃ©cifiques, des preuves doivent Ãªtre disponibles, par exemple : 
+- certificat de conformitÃ© 
+- spÃ©cifications techniques 
+- autodÃ©claration du fabricant - pour dÃ©montrer qu'ils conviennent Ã  l'utilisation prÃ©vue. 
+adaptÃ©s Ã  l'utilisation prÃ©vue"
+ed881bae-2b9e-4806-82af-d0667660100e,4.17.3,4-ProcÃ©dÃ©s opÃ©rationnels,Equipements,,"L'Ã©quipement doit Ãªtre situÃ© de maniÃ¨re Ã  permettre des opÃ©rations efficaces de nettoyage, de dÃ©sinfection et d'entretien."
+70939b63-893d-417b-b307-70f3dbb30c2a,4.17.4,4-ProcÃ©dÃ©s opÃ©rationnels,Equipements,,Tous les Ã©quipements de production doivent Ãªtre dans un Ã©tat qui ne compromette pas la sÃ©curitÃ© alimentaire et la qualitÃ© des produits.
+94ffc99d-aca2-4c36-b2c5-551b1059d667,4.17.5,4-ProcÃ©dÃ©s opÃ©rationnels,Equipements,,"En cas de modification de l'Ã©quipement, les caractÃ©ristiques du processus doivent Ãªtre rÃ©examinÃ©es afin de garantir le respect de la sÃ©curitÃ© alimentaire, de la qualitÃ© des produits, de la lÃ©galitÃ©, de l'authenticitÃ© et des exigences des clients. 
+sont respectÃ©es."
+2be36df4-be3d-431f-bd74-e7196bbf8aae,"4.18.1 
+KO*",4-ProcÃ©dÃ©s opÃ©rationnels,TraÃ§abilitÃ©,,"KO NÂ° 7 : Un systÃ¨me de traÃ§abilitÃ© doit Ãªtre documentÃ©, mis en Å“uvre et maintenu pour permettre l'identification des lots de produits et leur relation avec les lots de matiÃ¨res premiÃ¨res et les matÃ©riaux d'emballage en contact avec les denrÃ©es alimentaires, et/ou les matÃ©riaux contenant des informations lÃ©gales et/ou pertinentes en matiÃ¨re de sÃ©curitÃ© alimentaire. 
+Le systÃ¨me de traÃ§abilitÃ© doit comprendre tous les enregistrements pertinents concernant 
+- la rÃ©ception 
+- la transformation Ã  toutes les Ã©tapes 
+- l'utilisation de la reprise 
+- la distribution. 
+La traÃ§abilitÃ© doit Ãªtre assurÃ©e et documentÃ©e jusqu'Ã  la livraison au client."
+4294df17-a249-4556-98a4-3356868e1dc7,4.18.2*,4-ProcÃ©dÃ©s opÃ©rationnels,TraÃ§abilitÃ©,,"Le systÃ¨me de traÃ§abilitÃ©, y compris le bilan massique, est testÃ© au moins une fois au cours d'une pÃ©riode de douze mois ou Ã  chaque fois que des changements importants interviennent. Les Ã©chantillons testÃ©s doivent reflÃ©ter la complexitÃ© de la gamme de produits de l'entreprise. Les comptes rendus d'essais doivent dÃ©montrer la traÃ§abilitÃ© en amont et en aval (des produits livrÃ©s aux matiÃ¨res premiÃ¨res, et vice versa)."
+92c1608d-ab63-4393-bbdf-cf99e110f51b,4.18.3,4-ProcÃ©dÃ©s opÃ©rationnels,TraÃ§abilitÃ©,,"La traÃ§abilitÃ© des produits finis aux matiÃ¨res premiÃ¨res et aux clients doit Ãªtre rÃ©alisÃ©e dans un dÃ©lai maximum de quatre (4) heures. Les rÃ©sultats des tests, y compris le dÃ©lai d'obtention des informations, sont enregistrÃ©s et, le cas Ã©chÃ©ant, des mesures sont prises. Les objectifs en matiÃ¨re de dÃ©lais doivent Ãªtre conformes aux exigences du client si moins de quatre (4) heures sont requises."
+23389de6-4cc7-4197-94fe-1bfa3e455b6c,4.18.4,4-ProcÃ©dÃ©s opÃ©rationnels,TraÃ§abilitÃ©,,"L'Ã©tiquetage des lots de produits semi-finis ou finis doit Ãªtre effectuÃ© au moment oÃ¹ les marchandises sont directement emballÃ©es afin de garantir une traÃ§abilitÃ© claire des marchandises. Lorsque les marchandises sont Ã©tiquetÃ©es ultÃ©rieurement, les marchandises stockÃ©es temporairement doivent porter un Ã©tiquetage de lot spÃ©cifique. La durÃ©e de conservation (par exemple, la date de pÃ©remption) des produits Ã©tiquetÃ©s doit Ãªtre dÃ©finie en fonction du lot de production d'origine."
+be84cd41-1203-4451-b3e4-bb28633c2af8,4.18.5,4-ProcÃ©dÃ©s opÃ©rationnels,TraÃ§abilitÃ©,,"Si le client l'exige, des Ã©chantillons reprÃ©sentatifs identifiÃ©s du lot de fabrication ou du numÃ©ro de lot sont stockÃ©s de maniÃ¨re appropriÃ©e et conservÃ©s jusqu'Ã  l'expiration de la date limite de consommation ou de la date limite d'utilisation optimale des produits finis et, si nÃ©cessaire, pendant une pÃ©riode dÃ©terminÃ©e au-delÃ  de cette date."
+66a29ecd-d5d8-47e7-890c-a3efbe03ba3a,4.19.1,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux allergÃ¨nes,,"Pour toutes les matiÃ¨res premiÃ¨res, une Ã©valuation des risques doit Ãªtre rÃ©alisÃ©e afin d'identifier les allergÃ¨nes nÃ©cessitant une dÃ©claration, y compris les contaminations croisÃ©es accidentelles ou techniquement inÃ©vitables d'allergÃ¨nes et de traces lÃ©galement dÃ©clarÃ©s. 
+lÃ©galement dÃ©clarÃ©s et les traces. Ces informations doivent Ãªtre disponibles et pertinentes pour le/les pays de vente des produits finis et doivent Ãªtre documentÃ©es et conservÃ©es pour toutes les matiÃ¨res premiÃ¨res. Une liste actualisÃ©e en permanence de toutes les matiÃ¨res premiÃ¨res contenant des allergÃ¨nes utilisÃ©es dans les locaux doit Ãªtre tenue Ã  jour. Cette liste doit Ã©galement identifier tous les mÃ©langes et formules auxquels ces matiÃ¨res premiÃ¨res contenant des allergÃ¨nes sont ajoutÃ©es."
+232bca37-cf44-4bf2-9a1c-484118fc9636,4.19.2*,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux allergÃ¨nes,,"Des mesures fondÃ©es sur les risques sont mises en Å“uvre et maintenues depuis la rÃ©ception jusqu'Ã  l'expÃ©dition, afin de garantir que la contamination croisÃ©e potentielle des produits par des allergÃ¨nes est rÃ©duite au minimum. Les risques potentiels de contamination croisÃ©e doivent Ãªtre pris en compte et liÃ©s, au minimum, aux aspects suivants 
+- l'environnement 
+- le transport 
+- le stockage 
+- les matiÃ¨res premiÃ¨res 
+- le personnel (y compris les sous-traitants et les visiteurs) 
+Les mesures mises en Å“uvre doivent faire l'objet d'un suivi."
+b716ca9d-3824-4e65-a9ae-3c426d998d2e,4.19.3,4-ProcÃ©dÃ©s opÃ©rationnels,RÃ©duction des risques liÃ©s aux allergÃ¨nes,,Les produits finis contenant des allergÃ¨nes devant Ãªtre dÃ©clarÃ©s doivent l'Ãªtre conformÃ©ment aux exigences lÃ©gales. Les contaminations croisÃ©es accidentelles ou techniquement inÃ©vitables d'allergÃ¨nes et de traces lÃ©galement dÃ©clarÃ©s doivent Ãªtre Ã©tiquetÃ©es. La dÃ©cision doit Ãªtre fondÃ©e sur les risques. La contamination croisÃ©e potentielle avec des allergÃ¨nes provenant de matiÃ¨res premiÃ¨res transformÃ©es dans l'entreprise doit Ã©galement Ãªtre prise en compte sur l'Ã©tiquette du produit.
+f0fd0667-42f1-4324-a898-8aa4d0b8e1e6,4.20.1,4-ProcÃ©dÃ©s opÃ©rationnels,Fraude alimentaire,,Les responsabilitÃ©s en matiÃ¨re d'Ã©valuation de la vulnÃ©rabilitÃ© Ã  la fraude alimentaire et de plan d'attÃ©nuation doivent Ãªtre dÃ©finies. La (les) personne(s) responsable(s) doit (doivent) possÃ©der les connaissances spÃ©cifiques appropriÃ©es.
+61aa6d6e-786e-49fc-a0da-ca9cdb1dfad9,4.20.2*,4-ProcÃ©dÃ©s opÃ©rationnels,Fraude alimentaire,,"Une Ã©valuation documentÃ©e de la vulnÃ©rabilitÃ© Ã  la fraude alimentaire, comprenant des critÃ¨res d'Ã©valuation, doit Ãªtre documentÃ©e, mise en Å“uvre et tenue Ã  jour. L'Ã©valuation doit porter sur l'ensemble des matiÃ¨res premiÃ¨res, des ingrÃ©dients, des matÃ©riaux d'emballage et des processus externalisÃ©s, afin de dÃ©terminer les risques d'activitÃ©s frauduleuses en matiÃ¨re de substitution, d'Ã©tiquetage erronÃ©, d'adultÃ©ration ou de contrefaÃ§on. 
+contrefaÃ§on"
+23cbc6fc-6c51-4de1-9e49-f60d6983f21c,4.20.3,4-ProcÃ©dÃ©s opÃ©rationnels,Fraude alimentaire,,"Un plan d'attÃ©nuation de la fraude alimentaire doit Ãªtre documentÃ©, mis en Å“uvre et tenu Ã  jour, en se rÃ©fÃ©rant Ã  l'Ã©valuation de la vulnÃ©rabilitÃ©. 
+L'Ã©valuation de la vulnÃ©rabilitÃ© Ã  la fraude alimentaire est documentÃ©e, mise en Å“uvre et tenue Ã  jour, en se rÃ©fÃ©rant Ã  l'Ã©valuation de la vulnÃ©rabilitÃ©, et comprend les mÃ©thodes de test et de contrÃ´le."
+726cae4b-4320-4213-aebe-cabe42fc3280,4.20.4 *,4-ProcÃ©dÃ©s opÃ©rationnels,Fraude alimentaire,,"L'Ã©valuation de la vulnÃ©rabilitÃ© Ã  la fraude alimentaire est rÃ©examinÃ©e au moins une fois au cours d'une pÃ©riode de 12 mois ou Ã  chaque fois que des changements significatifs interviennent. Le cas Ã©chÃ©ant, le plan d'attÃ©nuation de la fraude alimentaire est rÃ©visÃ©/actualisÃ© en consÃ©quence."
+7737fc99-17b1-4acb-8cf8-26f4b659c293,4.21.1,4-ProcÃ©dÃ©s opÃ©rationnels,DÃ©fense alimentaire,,Les responsabilitÃ©s en matiÃ¨re de dÃ©fense des denrÃ©es alimentaires sont dÃ©finies. La ou les personnes responsables doivent possÃ©der les connaissances spÃ©cifiques appropriÃ©es. 
+20aa00fc-a53b-4ee6-9f9e-87bf33791611,4.21.2*,4-ProcÃ©dÃ©s opÃ©rationnels,DÃ©fense alimentaire,,"Une procÃ©dure et un plan de dÃ©fense alimentaire doivent Ãªtre documentÃ©s, mis en Å“uvre et tenus Ã  jour afin d'identifier les menaces potentielles et de dÃ©finir les mesures de dÃ©fense alimentaire. Ces mesures doivent comprendre au minimum 
+- les exigences lÃ©gales 
+- l'identification des zones et/ou pratiques critiques et la politique d'accÃ¨s des employÃ©s, des visiteurs et des sous-traitants 
+- les visiteurs et les sous-traitants 
+- la maniÃ¨re de gÃ©rer les inspections externes et les visites rÃ©glementaires 
+- toute autre mesure de contrÃ´le 
+mesures de contrÃ´le appropriÃ©es"
+27fe14e4-9a6d-4179-bd1b-12fe397100bd,4.21.3,4-ProcÃ©dÃ©s opÃ©rationnels,DÃ©fense alimentaire,,L'efficacitÃ© du plan de dÃ©fense alimentaire doit Ãªtre testÃ©e et rÃ©examinÃ©e au moins une fois au cours d'une pÃ©riode de 12 mois ou Ã  chaque fois que des changements significatifs interviennent.
+79d9b2a2-6954-4838-a533-373288694690,"5.1.1 
+KO*","5-Mesures, analyses, amÃ©liorations",Audits internes,,"KO NÂ° 8 : Un programme d'audit interne efficace doit Ãªtre documentÃ©, mis en Å“uvre et maintenu, et doit garantir au minimum que toutes les exigences du rÃ©fÃ©rentiel IFS sont contrÃ´lÃ©es. Cette activitÃ© doit Ãªtre planifiÃ©e sur une pÃ©riode de 12 mois et son exÃ©cution ne doit pas dÃ©passer 15 mois. L'entreprise doit disposer d'un systÃ¨me d'Ã©valuation des risques dans lequel les activitÃ©s critiques pour la sÃ©curitÃ© alimentaire et la qualitÃ© des produits sont auditÃ©es plus frÃ©quemment. Elle s'applique Ã©galement aux lieux de stockage hors site que l'entreprise possÃ¨de ou loue. "
+76d9ea7b-1e9e-4c11-ba96-cdf498aafe58,5.1.2,"5-Mesures, analyses, amÃ©liorations",Audits internes,,"Les auditeurs doivent Ãªtre compÃ©tents et indÃ©pendants du service auditÃ©. 
+auditÃ©"
+c7d775e7-d4c7-45a0-9a89-d467f3a9ee42,5.1.3,"5-Mesures, analyses, amÃ©liorations",Audits internes,,"Les audits internes sont documentÃ©s et leurs rÃ©sultats sont communiquÃ©s Ã  la direction gÃ©nÃ©rale et aux personnes responsables des activitÃ©s concernÃ©es. Les conformitÃ©s, les Ã©carts et les non-conformitÃ©s sont documentÃ©s et communiquÃ©s aux personnes concernÃ©es."
+c2687456-fd03-4391-a575-6f0d9f124a71,5.2.1*,"5-Mesures, analyses, amÃ©liorations",Inspections d'usine,,"Des inspections de sites et d'usines doivent Ãªtre planifiÃ©es et rÃ©alisÃ©es pour certains sujets, comme par exemple 
+- l'Ã©tat de construction des locaux de production et de stockage 
+- les zones extÃ©rieures 
+- le contrÃ´le du produit pendant la transformation - l'hygiÃ¨ne pendant la transformation et au sein de l'infrastructure 
+- les risques liÃ©s aux matiÃ¨res Ã©trangÃ¨res 
+- l'hygiÃ¨ne personnelle. 
+La frÃ©quence des inspections est fonction des risques et de l'historique des rÃ©sultats prÃ©cÃ©dents."
+604874f5-c089-4f04-bd1c-e3c3bbe36168,5.3.1,"5-Mesures, analyses, amÃ©liorations",Validation et contrÃ´le des processus,,Les critÃ¨res de validation et de contrÃ´le des processus doivent Ãªtre dÃ©finis.
+2fde52ce-2342-474b-9bb1-1075d8ae87dd,5.3.2,"5-Mesures, analyses, amÃ©liorations",Validation et contrÃ´le des processus,,"Les paramÃ¨tres du processus (tempÃ©rature, durÃ©e, pression, propriÃ©tÃ©s chimiques, etc.) qui sont essentiels pour garantir la sÃ©curitÃ© alimentaire et la qualitÃ© du produit doivent Ãªtre surveillÃ©s, enregistrÃ©s en continu et/ou Ã  des intervalles appropriÃ©s et protÃ©gÃ©s contre tout accÃ¨s et/ou modification non autorisÃ©s."
+29627134-d9f0-475c-8a95-daac12a6c689,5.3.3*,"5-Mesures, analyses, amÃ©liorations",Validation et contrÃ´le des processus,,"Toutes les opÃ©rations de reprise doivent Ãªtre validÃ©es, contrÃ´lÃ©es et documentÃ©es. Ces opÃ©rations ne doivent pas avoir d'incidence sur les exigences en matiÃ¨re de sÃ©curitÃ© alimentaire et de qualitÃ© des produits. 
+des produits."
+588aae19-0efb-4419-80c5-a7de47a8bc87,5.3.4,"5-Mesures, analyses, amÃ©liorations",Validation et contrÃ´le des processus,,"Des procÃ©dures doivent Ãªtre documentÃ©es, mises en Å“uvre et tenues Ã  jour pour la notification, l'enregistrement et la surveillance rapides des dysfonctionnements de l'Ã©quipement et des Ã©carts de processus."
+ba415203-742e-4699-b95f-f5c398f9f7c7,5.3.5,"5-Mesures, analyses, amÃ©liorations",Validation et contrÃ´le des processus,,"La validation des procÃ©dÃ©s doit Ãªtre effectuÃ©e Ã  l'aide des donnÃ©es collectÃ©es qui sont pertinentes pour la sÃ©curitÃ© alimentaire et les procÃ©dÃ©s. En cas de modifications substantielles, une nouvelle validation doit Ãªtre effectuÃ©e."
+418e073a-febe-4788-bfb0-fe0c43dea329,5.4.1*,"5-Mesures, analyses, amÃ©liorations","Etalonnage, ajustement et vÃ©rification des appareils de mesure et de surveillance",,"Les dispositifs de mesure et de surveillance nÃ©cessaires pour garantir le respect des exigences en matiÃ¨re de sÃ©curitÃ© alimentaire et de qualitÃ© des produits doivent Ãªtre identifiÃ©s et enregistrÃ©s. Leur Ã©tat d'Ã©talonnage doit Ãªtre leur Ã©tat d'Ã©talonnage doit Ãªtre enregistrÃ©. Les dispositifs de mesure et de surveillance doivent Ãªtre lÃ©galement approuvÃ©s, si la lÃ©gislation pertinente en vigueur l'exige."
+06740f22-9c77-4ae8-ae57-0e2b00144b2d,5.4.2*,"5-Mesures, analyses, amÃ©liorations","Etalonnage, ajustement et vÃ©rification des appareils de mesure et de surveillance",,"Tous les dispositifs de mesure doivent Ãªtre vÃ©rifiÃ©s, contrÃ´lÃ©s, rÃ©glÃ©s et Ã©talonnÃ©s Ã  des intervalles dÃ©finis, conformÃ©ment Ã  des normes/mÃ©thodes dÃ©finies et reconnues, et dans les limites pertinentes des valeurs des paramÃ¨tres du processus. Les rÃ©sultats doivent Ãªtre documentÃ©s. "
+1da69cae-203b-4ec9-8e80-684418879c09,5.4.3,"5-Mesures, analyses, amÃ©liorations","Etalonnage, ajustement et vÃ©rification des appareils de mesure et de surveillance",,"Tous les dispositifs de mesure doivent Ãªtre utilisÃ©s exclusivement dans le but pour lequel ils ont Ã©tÃ© conÃ§us. Lorsque les rÃ©sultats des mesures ou l'Ã©tat du dispositif indiquent un dysfonctionnement, le dispositif en question est immÃ©diatement rÃ©parÃ© ou remplacÃ©. Lorsqu'un dysfonctionnement a Ã©tÃ© identifiÃ©, l'impact sur les processus et les produits doit Ãªtre Ã©valuÃ© afin de dÃ©terminer si des produits non conformes ont Ã©tÃ© traitÃ©s."
+c8c35809-3a96-43f5-ad61-e35f5ba0a604,5.5.1*,"5-Mesures, analyses, amÃ©liorations",Surveillance de la maÃ®trise de la quantitÃ©,,"Les critÃ¨res de conformitÃ© permettant de contrÃ´ler la quantitÃ© des lots doivent Ãªtre dÃ©finis. Un systÃ¨me relatif Ã  la frÃ©quence et Ã  la mÃ©thodologie du contrÃ´le des quantitÃ©s doit Ãªtre mis en Å“uvre et tenu Ã  jour afin de rÃ©pondre aux exigences lÃ©gales du/des pays de destination et aux spÃ©cifications du client. 
+"
+da18b61a-4407-4c61-9b99-71c83cb9bb57,5.5.2,"5-Mesures, analyses, amÃ©liorations",Surveillance de la maÃ®trise de la quantitÃ©,,"Un suivi du contrÃ´le des quantitÃ©s est mis en Å“uvre et enregistrÃ©, selon un plan d'Ã©chantillonnage garantissant une reprÃ©sentation adÃ©quate du lot de fabrication. Les rÃ©sultats de ce contrÃ´le doivent Ãªtre conformes aux critÃ¨res dÃ©finis pour tous les produits prÃªts Ã  Ãªtre livrÃ©s."
+abd4ca4e-f863-4c17-907d-1b600abcfb0d,5.6.1*,"5-Mesures, analyses, amÃ©liorations",Essais de produits et surveillance de l'environnement,,"Les plans d'essai et de surveillance pour les analyses internes et externes sont documentÃ©s et mis en Å“uvre et sont fondÃ©s sur les risques afin de garantir le respect de la sÃ©curitÃ©, de la qualitÃ©, de la lÃ©galitÃ© et de l'authenticitÃ© des produits, ainsi que des exigences spÃ©cifiques des clients. Les plans couvrent au minimum les Ã©lÃ©ments suivants - les matiÃ¨res premiÃ¨res 
+- les produits semi-finis 
+(le cas Ã©chÃ©ant) 
+- les produits finis 
+- les matÃ©riaux d'emballage 
+- les surfaces de contact des Ã©quipements de transformation 
+- les paramÃ¨tres pertinents pour la surveillance de l'environnement. 
+Tous les rÃ©sultats des tests doivent Ãªtre enregistrÃ©s."
+ca492fd2-e741-4284-a0cf-a95d1916e1f1,"5.6.2* 
+NEW","5-Mesures, analyses, amÃ©liorations",Essais de produits et surveillance de l'environnement,,"En fonction des risques, les critÃ¨res du programme de surveillance de l'environnement doivent Ãªtre documentÃ©s, mis en Å“uvre et maintenus. 
+documentÃ©s, mis en Å“uvre et maintenus."
+29661fc2-bf0d-44f0-ba22-739ab4907bb9,5.6.3*,"5-Mesures, analyses, amÃ©liorations",Essais de produits et surveillance de l'environnement,,"Les analyses pertinentes pour la sÃ©curitÃ© alimentaire sont de prÃ©fÃ©rence effectuÃ©es par des laboratoires disposant de programmes/mÃ©thodes accrÃ©ditÃ©s appropriÃ©s (ISO/IEC 17025). Si les analyses sont effectuÃ©es en interne ou par un laboratoire ne disposant pas des programmes/mÃ©thodes accrÃ©ditÃ©s appropriÃ©s, les rÃ©sultats doivent Ãªtre recoupÃ©s avec les rÃ©sultats de tests effectuÃ©s par des laboratoires accrÃ©ditÃ©s pour ces programmes/mÃ©thodes (ISO/CEI 17025) au moins une fois au cours d'une pÃ©riode de 12 mois ou Ã  chaque fois que des changements significatifs interviennent."
+e62ca60a-e100-4f23-aa54-8760cf8a332a,5.6.4,"5-Mesures, analyses, amÃ©liorations",Analyse des produits et des procÃ©dÃ©s,,"Des procÃ©dures doivent Ãªtre documentÃ©es, mises en Å“uvre et tenues Ã  jour pour garantir la fiabilitÃ© des rÃ©sultats des analyses internes, sur la base de mÃ©thodes d'analyse officiellement reconnues. Cette fiabilitÃ© est dÃ©montrÃ©e par des essais circulaires ou d'autres essais d'aptitude."
+fd8afaf2-1120-470a-b503-efd0569a6fd0,5.6.5,"5-Mesures, analyses, amÃ©liorations",Analyse des produits et des procÃ©dÃ©s,,"Les rÃ©sultats des analyses sont Ã©valuÃ©s en temps utile par un personnel compÃ©tent. 
+compÃ©tent. Des corrections immÃ©diates doivent Ãªtre mises en Å“uvre pour tout rÃ©sultat insatisfaisant. En fonction des risques et des exigences lÃ©gales 
+En fonction des risques et des exigences lÃ©gales, la frÃ©quence d'examen des rÃ©sultats du plan d'essai et de surveillance est dÃ©finie afin d'identifier les tendances. Lorsque des tendances insatisfaisantes sont identifiÃ©es, l'impact sur les processus et les produits ainsi que la nÃ©cessitÃ© de prendre des mesures sont Ã©valuÃ©s""."
+f9bab4a3-0a3f-4873-9eea-dbd77bc7ff2f,5.6.6,"5-Mesures, analyses, amÃ©liorations",Analyse des produits et des procÃ©dÃ©s,,"Lorsque des analyses ou des contrÃ´les internes sont effectuÃ©s, ils sont rÃ©alisÃ©s conformÃ©ment Ã  des procÃ©dures dÃ©finies, par un personnel compÃ©tent et agrÃ©Ã©, dans des zones ou des laboratoires dÃ©finis, Ã  l'aide d'un Ã©quipement appropriÃ©."
+5d93b2d6-a530-4d76-b829-e0fda4d17478,5.6.7,"5-Mesures, analyses, amÃ©liorations",Analyse des produits et des procÃ©dÃ©s,,"Pour le suivi de la qualitÃ© du produit fini, des tests organoleptiques internes sont effectuÃ©s. Ces tests doivent Ãªtre conformes aux spÃ©cifications et liÃ©s Ã  l'impact sur les paramÃ¨tres respectifs des caractÃ©ristiques du produit. Les rÃ©sultats de ces tests doivent Ãªtre documentÃ©s."
+67fb819b-36d1-416c-8a23-f5fe7e539cba,5.6.8,"5-Mesures, analyses, amÃ©liorations",Analyse des produits et des procÃ©dÃ©s,,"Les plans d'analyse et de contrÃ´le sont rÃ©guliÃ¨rement revus et mis Ã  jour en fonction des rÃ©sultats, des modifications de la lÃ©gislation ou des questions susceptibles d'avoir une incidence sur la sÃ©curitÃ©, la qualitÃ©, la lÃ©galitÃ© et l'authenticitÃ© du produit."
+3f6499ba-5551-4b00-8a34-07cb521b11fe,5.7.1*,"5-Mesures, analyses, amÃ©liorations",LibÃ©ration des produits,,"Une procÃ©dure de quarantaine (blocage/conservation) doit Ãªtre documentÃ©e, mise en Å“uvre et maintenue afin de garantir que seuls les matiÃ¨res premiÃ¨res, les produits semi-finis et finis et les matÃ©riaux d'emballage conformes Ã  la sÃ©curitÃ© alimentaire, Ã  la qualitÃ© des produits, Ã  la lÃ©galitÃ©, Ã  l'authenticitÃ© et aux exigences des clients sont transformÃ©s et livrÃ©s."
+bc1b9307-f511-41ed-931e-df6937f3054a,5.8.1*,"5-Mesures, analyses, amÃ©liorations",Gestion des rÃ©clamations des autoritÃ©s et des clients,,"Une procÃ©dure doit Ãªtre documentÃ©e, mise en Å“uvre et tenue Ã  jour pour la gestion des rÃ©clamations relatives aux produits et de toute notification Ã©crite Ã©manant des autoritÃ©s compÃ©tentes - dans le cadre des contrÃ´les officiels -, de toute action ou mesure de commande Ã  prendre lorsqu'une non-conformitÃ© est constatÃ©e. "
+aac09b39-69d8-4e95-bc90-17a247b2bac5,5.8.2*,"5-Mesures, analyses, amÃ©liorations",Gestion des rÃ©clamations des autoritÃ©s et des clients,,"Toutes les rÃ©clamations sont enregistrÃ©es, facilement accessibles et Ã©valuÃ©es par un personnel compÃ©tent. Lorsque cela se justifie, des mesures sont prises immÃ©diatement. "
+9a771b16-574d-4b7f-80b2-b31e8dfcc473,5.8.3,"5-Mesures, analyses, amÃ©liorations",Gestion des rÃ©clamations des autoritÃ©s et des clients,,Les rÃ©clamations sont analysÃ©es en vue de mettre en Å“uvre des actions visant Ã  Ã©viter que les Ã©carts et/ou les non-conformitÃ©s ne se reproduisent. 
+97393a23-4b6c-446d-a007-a8a3992cec65,5.8.4,"5-Mesures, analyses, amÃ©liorations",Gestion des rÃ©clamations des autoritÃ©s et des clients,,Les rÃ©sultats de l'analyse des donnÃ©es relatives aux rÃ©clamations sont mis Ã  la disposition des personnes responsables concernÃ©es.
+cca76a7e-b61f-48e6-9cb7-0711d1393094,"5.9.1 
+KO *","5-Mesures, analyses, amÃ©liorations","Gestion des rappels de produits, des retraits de produits et des incidents",,""" KO NÂ°9 : Une procÃ©dure efficace doit Ãªtre documentÃ©e, mise en Å“uvre, tenue Ã  jour, pour la gestion des rappels, des tirages au sort, des incidents et des situations d'urgence potentielles ayant un impact sur la sÃ©curitÃ© alimentaire, la qualitÃ© des produits, la lÃ©galitÃ© et l'authenticitÃ©. Elle comprend au minimum 
+- l'attribution des responsabilitÃ©s - la formation des personnes responsables 
+responsables 
+- le processus de prise de dÃ©cision 
+- la dÃ©signation d'une personne, autorisÃ©e par l'entreprise et disponible en permanence, pour lancer le processus nÃ©cessaire en temps utile. 
+processus nÃ©cessaire en temps utile 
+en temps utile 
+- une liste de contacts d'alerte Ã  jour 
+comprenant des informations sur les clients, des sources de conseils juridiques, des contacts disponibles 
+- un plan de communication incluant les clients, les autoritÃ©s et, le cas Ã©chÃ©ant, les consommateurs""."
+cef78ba6-6a8e-4c11-b627-a94a57799bec,5.9.2*,"5-Mesures, analyses, amÃ©liorations","Gestion des rappels de produits, des retraits de produits et des incidents",,"La procÃ©dure doit faire l'objet d'essais internes pour le rappel/retrait, en couvrant le processus de bout en bout. Cette activitÃ© doit Ãªtre planifiÃ©e sur une pÃ©riode de 12 mois et son exÃ©cution ne doit pas dÃ©passer 15 mois. Les rÃ©sultats de l'essai sont examinÃ©s en vue d'une amÃ©lioration continue."
+1f0d1dc1-54bc-4732-8daa-a5d65211c1f1,5.10.1*,"5-Mesures, analyses, amÃ©liorations",Gestion des produits non conformes,,"Une procÃ©dure doit Ãªtre documentÃ©e, mise en Å“uvre et tenue Ã  jour pour la gestion de toutes les matiÃ¨res premiÃ¨res, produits semi-finis, produits finis, Ã©quipements de transformation et matÃ©riaux d'emballage non conformes. 
+l'Ã©quipement de transformation et les matÃ©riaux d'emballage. Cette procÃ©dure doit comprendre au minimum - la dÃ©finition des responsabilitÃ©s 
+- les procÃ©dures d'isolement/de quarantaine - l'Ã©valuation des risques 
+- l'identification, y compris l'Ã©tiquetage - la dÃ©cision concernant l'utilisation ultÃ©rieure, comme la libÃ©ration, le retraitement, le blocage, la quarantaine, le rejet ou l'Ã©limination."
+8d96d003-e9fd-40c2-823b-d4bc3b4dd230,5.10.2,"5-Mesures, analyses, amÃ©liorations",Gestion des produits non conformes,,La procÃ©dure de gestion des produits non conformes doit Ãªtre comprise et appliquÃ©e par tous les employÃ©s concernÃ©s.
+045c2c3a-6bab-4dbf-ae2d-42f06d27fa70,5.10.3,"5-Mesures, analyses, amÃ©liorations",Gestion des produits non conformes,,"Lorsque des produits non conformes sont identifiÃ©s, des mesures immÃ©diates doivent Ãªtre prises pour garantir le respect des exigences en matiÃ¨re de sÃ©curitÃ© alimentaire et de qualitÃ© des produits."
+626dd728-7957-4cac-9243-a64d0d8c8e5a,5.10.4,"5-Mesures, analyses, amÃ©liorations",Gestion des produits non conformes,,"Les produits finis (y compris les emballages) qui ne rÃ©pondent pas aux spÃ©cifications ne sont pas mis sur le marchÃ© sous l'Ã©tiquette correspondante, Ã  moins qu'une approbation Ã©crite du propriÃ©taire de la marque ne soit disponible. "
+2a3ed1b3-1f72-4908-9af8-39a07a572ccd,5.11.1*,"5-Mesures, analyses, amÃ©liorations","Gestion des Ã©carts, des non-conformitÃ©s, des corrections et des actions correctives",,"Une procÃ©dure de gestion des corrections et des actions correctives doit Ãªtre documentÃ©e, mise en Å“uvre et tenue Ã  jour pour l'enregistrement, l'analyse et la communication aux personnes concernÃ©es des Ã©carts, des non-conformitÃ©s et des produits non conformes, dans le but de mettre fin aux Ã©carts et/ou aux non-conformitÃ©s et d'Ã©viter qu'ils ne se reproduisent par le biais d'actions correctives. 
+Cela inclut une analyse des causes profondes, au moins pour les Ã©carts et les non-conformitÃ©s liÃ©s Ã  la sÃ©curitÃ©, Ã  la lÃ©galitÃ©, Ã  l'authenticitÃ© et/ou Ã  la rÃ©currence des Ã©carts et des non-conformitÃ©s."
+32c90b76-2c80-48b7-b205-e9a452221af9,"5.11.2 
+NEW","5-Mesures, analyses, amÃ©liorations","Gestion des Ã©carts, des non-conformitÃ©s, des corrections et des actions correctives",,"Lorsque des Ã©carts et des non-conformitÃ©s sont identifiÃ©s, des corrections doivent Ãªtre mises en Å“uvre."
+8de333af-12bb-40c7-a82b-bf648a56038a,"5.11.3 
+KO *","5-Mesures, analyses, amÃ©liorations","Gestion des Ã©carts, des non-conformitÃ©s, des corrections et des actions correctives",,"KO NÂ° 10 : Des actions correctives doivent Ãªtre formulÃ©es, documentÃ©es et mises en Å“uvre dÃ¨s que possible afin d'Ã©viter que les Ã©carts et les non-conformitÃ©s ne se reproduisent. Les responsabilitÃ©s et les dÃ©lais des actions correctives doivent Ãªtre dÃ©finis."
+23e14f91-643d-4ecb-bfa2-fcfd004d9488,5.11.3,"5-Mesures, analyses, amÃ©liorations","Gestion des Ã©carts, des non-conformitÃ©s, des corrections et des actions correctives",,L'efficacitÃ© des corrections et des actions correctives mises en Å“uvre doit Ãªtre Ã©valuÃ©e et les rÃ©sultats de l'Ã©valuation doivent Ãªtre documentÃ©s.
+`;

@@ -460,12 +460,19 @@ class DataProcessor {
         console.log(`📊 ${Object.keys(resultScorings).length} UUIDs détectés`);
 
         try {
-            const response = await fetch('https://raw.githubusercontent.com/M00N69/Gemini-Knowledge/refs/heads/main/IFSV8listUUID.csv');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            let csvText = '';
+            if (window.IFS_V8_MAPPING_CSV) {
+                csvText = window.IFS_V8_MAPPING_CSV;
+                console.log('✅ CSV chargé (Embedded Data)');
+            } else {
+                console.warn("⚠️ Embedded CSV not found, attempting fetch...");
+                const response = await fetch('https://raw.githubusercontent.com/M00N69/Gemini-Knowledge/refs/heads/main/IFSV8listUUID.csv');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                csvText = await response.text();
+                console.log('✅ CSV chargé depuis GitHub');
             }
-            const csvText = await response.text();
-            console.log('✅ CSV chargé depuis GitHub');
 
             const uuidToInfo = this.validateAndProcessCSV(csvText);
             const ifsUUIDs = Object.keys(resultScorings);
@@ -1389,9 +1396,11 @@ class DataProcessor {
         const lastMessage = visibleMessages[visibleMessages.length - 1];
         const currentUser = this.state.get().currentMode;
 
-        // Si le dernier message vient de l'AUTRE personne -> Action requise pour MOI
+        // Si le dernier message vient de l'AUTRE personne -> Action requise pour MOI (seulement si le message est "pending")
         if (lastMessage.author !== currentUser) {
-            return 'pending'; // Sera labellisé "À traiter"
+            // FIX: On ne retourne 'pending' QUE si le message a été marqué comme tel (checkbox "Attendre réponse")
+            // Si le message est déjà 'read' (juste une info), alors pour moi c'est 'read' aussi.
+            return lastMessage.status === 'pending' ? 'pending' : 'read';
         }
 
         // Si le dernier message vient de MOI -> J'attends leur réponse
@@ -1578,6 +1587,10 @@ class DataProcessor {
     }
 
     setupTableFilters() {
+        if (this.uiManager.injectBulkActionButtons) {
+            this.uiManager.injectBulkActionButtons();
+        }
+
         const createFilterHandler = (tab, filterName) => {
             return (e) => {
                 const value = e.target.value;
