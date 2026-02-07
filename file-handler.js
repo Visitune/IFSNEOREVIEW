@@ -384,15 +384,18 @@ class FileHandler {
 
     countNewComments(packageData) {
         let newCount = 0;
+        if (!packageData?.conversations) return 0;
         const otherMode = this.state.get().currentMode === 'reviewer' ? 'auditor' : 'reviewer';
 
         for (const fieldId in packageData.conversations) {
             const conversation = packageData.conversations[fieldId];
-            conversation.thread.forEach(message => {
-                if (message.author === otherMode && message.status === 'pending') {
-                    newCount++;
-                }
-            });
+            if (conversation?.thread) {
+                conversation.thread.forEach(message => {
+                    if (message.author === otherMode && message.status === 'pending') {
+                        newCount++;
+                    }
+                });
+            }
         }
         return newCount;
     }
@@ -785,56 +788,6 @@ class FileHandler {
         XLSX.utils.book_append_sheet(wb, ws, "COMMENTAIRES");
     }
 
-    exportActionPlanForSite() {
-        if (!this.state.get().auditData) {
-            this.uiManager.showError('Aucune donnée à exporter.');
-            return;
-        }
-
-        try {
-            const wb = XLSX.utils.book_new();
-            const conversations = this.state.get().conversations;
-            const checklistData = this.state.get().checklistData;
-
-            const paData = [['N° Exigence', 'Score', 'Constat (Rappel d\'audit)', 'Questions Reviewer / Corrections demandées', 'Statut']];
-
-            Object.entries(conversations).forEach(([fieldId, conv]) => {
-                if (fieldId.startsWith('pa-')) {
-                    const uuid = fieldId.replace('pa-', '');
-                    const item = checklistData.find(i => i.uuid === uuid);
-                    if (!item) return;
-
-                    const commentsText = conv.thread.map(m => `[${m.author === 'reviewer' ? 'REVIEWER' : 'AUDITEUR'}] ${m.content}`).join('\n---\n');
-                    paData.push([
-                        item.requirementNumber,
-                        item.score,
-                        item.explanation || '-',
-                        commentsText,
-                        this.dataProcessor.getConversationStatus(conv) === 'resolved' ? 'VALIDÉ' : 'EN ATTENTE'
-                    ]);
-                }
-            });
-
-            if (paData.length === 1) {
-                this.uiManager.showError("Aucune question sur le plan d'actions (canal spécifique) n'a été identifiée.");
-                return;
-            }
-
-            const ws = XLSX.utils.aoa_to_sheet(paData);
-            ws['!cols'] = [{ width: 15 }, { width: 10 }, { width: 40 }, { width: 60 }, { width: 15 }];
-            XLSX.utils.book_append_sheet(wb, ws, "QUESTIONS SITE P.A.");
-
-            const companyName = this.state.get().companyProfileData['Nom du site à auditer'] || 'audit';
-            const filename = `QUESTIONS_PA_SITE_${this.sanitizeFileName(companyName)}_${this.getDateStamp()}.xlsx`;
-            XLSX.writeFile(wb, filename);
-
-            this.uiManager.showSuccess(`📑 Fichier pour le site généré : ${filename}`);
-
-        } catch (error) {
-            console.error('Error exporting PA for site:', error);
-            this.uiManager.showError("Erreur lors de l'exportation : " + error.message);
-        }
-    }
 
     async exportPDF() {
         if (!this.state.get().auditData) {
