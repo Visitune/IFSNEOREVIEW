@@ -70,7 +70,6 @@
                             <a href="#auditor-tasks-section" class="nav-link" data-tab-target="auditor-tasks">
                                 <i class="fas fa-tasks nav-icon"></i>
                                 <span class="sidebar-text">Questions à traiter</span>
-                                <span class="comment-counter" id="auditorTodoCounter">0</span>
                             </a>
                         </li>
 
@@ -78,7 +77,6 @@
                             <a href="#profil-section" class="nav-link" data-tab-target="profil">
                                 <i class="fas fa-user-tie nav-icon"></i>
                                 <span class="sidebar-text">Profil Entreprise</span>
-                                <span class="comment-counter" id="profilCommentCounter">0</span>
                             </a>
                         </li>
 
@@ -87,7 +85,6 @@
                             <a href="#checklist-section" class="nav-link" data-tab-target="checklist">
                                 <i class="fas fa-list-check nav-icon"></i>
                                 <span class="sidebar-text">Checklist Complète</span>
-                                <span class="comment-counter" id="checklistCommentCounter">0</span>
                             </a>
                         </li>
 
@@ -95,7 +92,6 @@
                             <a href="#dossier-section" class="nav-link" data-tab-target="dossier">
                                 <i class="fas fa-folder-open nav-icon"></i>
                                 <span class="sidebar-text">Revue du Dossier</span>
-                                <span class="comment-counter" id="dossierCommentCounter">0</span>
                             </a>
                         </li>
 
@@ -261,16 +257,6 @@
                 <div id="auditor-tasks" class="tab-content auditor-only">
                     <div class="tab-header">
                         <h2>Questions du Reviewer à traiter</h2>
-                        <div class="tab-counters">
-                            <div class="counter-badge pending">
-                                <span class="count" id="auditorPendingTotal">0</span>
-                                <span class="label">Restant à faire</span>
-                            </div>
-                            <div class="counter-badge resolved">
-                                <span class="count" id="auditorResolvedTotal">0</span>
-                                <span class="label">Répondu / Résolu</span>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Filters for Auditor Tasks -->
@@ -357,20 +343,6 @@
                 <div id="profil" class="tab-content active">
                     <div class="tab-header">
                         <h2>Profil de l'entreprise auditée</h2>
-                        <div class="tab-counters">
-                            <div class="counter-badge pending">
-                                <span class="count" id="profilPendingCount">0</span>
-                                <span class="label">En attente</span>
-                            </div>
-                            <div class="counter-badge resolved">
-                                <span class="count" id="profilResolvedCount">0</span>
-                                <span class="label">Résolus</span>
-                            </div>
-                            <div class="counter-badge total">
-                                <span class="count" id="profilTotalCount">0</span>
-                                <span class="label">Total</span>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Filters for Profile -->
@@ -493,20 +465,6 @@
                 <div id="checklist" class="tab-content">
                     <div class="tab-header">
                         <h2>Checklist complète des exigences IFS</h2>
-                        <div class="tab-counters">
-                            <div class="counter-badge pending">
-                                <span class="count" id="checklistPendingCount">0</span>
-                                <span class="label">En attente</span>
-                            </div>
-                            <div class="counter-badge resolved">
-                                <span class="count" id="checklistResolvedCount">0</span>
-                                <span class="label">Résolus</span>
-                            </div>
-                            <div class="counter-badge total">
-                                <span class="count" id="checklistTotalCount">0</span>
-                                <span class="label">Total</span>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="filters-actions">
@@ -540,16 +498,6 @@
                 <div id="dossier" class="tab-content">
                     <div class="tab-header">
                         <h2>📁 Revue du Dossier</h2>
-                        <div class="tab-counters">
-                            <div class="counter-badge pending">
-                                <span class="count" id="dossierPendingCount">0</span>
-                                <span class="label">À traiter</span>
-                            </div>
-                            <div class="counter-badge total">
-                                <span class="count" id="dossierTotalCount">0</span>
-                                <span class="label">Total points</span>
-                            </div>
-                        </div>
                     </div>
                     <div class="content-card">
                         <p class="text-secondary mb-4">Utilisez cette section pour poser des questions sur les documents

@@ -1018,30 +1018,9 @@ class UIManager {
             resolveBtn.style.display = canResolve ? 'block' : 'none';
         }
 
-        // --- NEW: RESPONSE REQUIRED CHECKBOX (Reviewer Only) ---
-        const inputSection = document.querySelector('.comment-input-section');
+        // --- RESPONSE REQUIRED CHECKBOX REMOVED PER USER REQUEST ---
         const existingCheckbox = document.getElementById('responseRequiredContainer');
-
-        if (inputSection) {
-            // Remove existing if any to avoid duplication (though this function is called once per open)
-            if (existingCheckbox) existingCheckbox.remove();
-
-            if (currentMode === 'reviewer') {
-                const checkboxHtml = `
-                    <div id="responseRequiredContainer" class="flex items-center mt-2 mb-2" style="font-size: 0.9rem;">
-                        <input type="checkbox" id="responseRequiredCheckbox" class="mr-2 h-4 w-4 text-theme-600 focus:ring-theme-500 border-gray-300 rounded" checked>
-                        <label for="responseRequiredCheckbox" class="text-gray-700 dark:text-gray-300 select-none cursor-pointer">
-                            <i class="fas fa-reply mr-1 text-gray-400"></i> Attendre une réponse de l'auditeur
-                        </label>
-                    </div>
-                `;
-                // Insert before the buttons (footer) or after textarea
-                const textarea = document.getElementById('newCommentInput');
-                if (textarea) {
-                    textarea.insertAdjacentHTML('afterend', checkboxHtml);
-                }
-            }
-        }
+        if (existingCheckbox) existingCheckbox.remove();
 
         const textarea = document.getElementById('newCommentInput');
         if (textarea) {
@@ -1080,12 +1059,10 @@ class UIManager {
         const neoCorrectionCheckbox = document.getElementById('neoCorrectionCheckbox');
         const isNeoCorrection = neoCorrectionCheckbox && !neoCorrectionCheckbox.closest('.auditor-only').hidden ? neoCorrectionCheckbox.checked : false;
 
-        // CHECKBOX STATE
-        const responseRequiredCheckbox = document.getElementById('responseRequiredCheckbox');
-        // Default to true (pending) if checkbox doesn't exist (e.g. auditor mode) or is checked
+        // Default to 'read' for reviewers as per user request (no longer counting as pending)
         let initialStatus = 'pending';
-        if (this.state.get().currentMode === 'reviewer' && responseRequiredCheckbox) {
-            initialStatus = responseRequiredCheckbox.checked ? 'pending' : 'read';
+        if (this.state.get().currentMode === 'reviewer') {
+            initialStatus = 'read';
         }
 
         if (!content) {

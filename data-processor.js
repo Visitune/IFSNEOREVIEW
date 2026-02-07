@@ -1087,9 +1087,10 @@ class DataProcessor {
             if (!thread || thread.length === 0) return;
 
             const lastMessage = thread[thread.length - 1];
-            const isResolved = conversation.status === 'resolved';
-            const isPending = !isResolved && lastMessage.author === 'reviewer'; // Auditor needs to act
-            const isReplied = !isResolved && lastMessage.author === 'auditor';
+            const status = this.getConversationStatus(conversation);
+            const isResolved = status === 'resolved';
+            const isPending = status === 'pending';
+            const isReplied = status === 'read' || status === 'waiting' || status === 'none';
 
             if (isPending) pendingCount++;
             if (isResolved || isReplied) resolvedCount++;
@@ -1393,22 +1394,21 @@ class DataProcessor {
             return 'none';
         }
 
-        const lastMessage = visibleMessages[visibleMessages.length - 1];
-        const currentUser = this.state.get().currentMode;
-
-        // Si le dernier message vient de l'AUTRE personne -> Action requise pour MOI (seulement si le message est "pending")
+        // If the last message is from the OTHER person
         if (lastMessage.author !== currentUser) {
-            // FIX: On ne retourne 'pending' QUE si le message a été marqué comme tel (checkbox "Attendre réponse")
-            // Si le message est déjà 'read' (juste une info), alors pour moi c'est 'read' aussi.
+            // FIX per user request: Reviewer comments should not be counted as pending ('disparaitre' from pending tasks)
+            if (lastMessage.author === 'reviewer') {
+                return 'read';
+            }
             return lastMessage.status === 'pending' ? 'pending' : 'read';
         }
 
-        // Si le dernier message vient de MOI -> J'attends leur réponse
-        // On vérifie si dans le fil il y a des messages encore non "lus" par l'autre
+        // If the last message is from ME
+        // Check if there are messages that haven't been 'read' by the other person yet
         const hasUnreadByOther = visibleMessages.some(m => m.author === currentUser && m.status === 'pending');
 
         if (hasUnreadByOther) {
-            return 'waiting'; // Nouveau statut interne pour "En attente de leur part"
+            return 'waiting';
         }
 
         return 'read';
