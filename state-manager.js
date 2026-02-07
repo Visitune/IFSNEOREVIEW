@@ -2,44 +2,42 @@ class State {
     constructor(dbHandler) {
         console.log('State constructor - dbHandler:', dbHandler);
         this.dbHandler = dbHandler;
+
+        const defaultFilters = {
+            profil: { status: '', search: '' },
+            checklist: { chapter: '', score: '', status: '', search: '', simpleFilter: null },
+            nonconformites: { type: '', chapter: '', correction: '', search: '' },
+            auditorTasks: { filter: 'pending' }
+        };
+
+        let persistedFilters = defaultFilters;
+        try {
+            const stored = localStorage.getItem('activeFilters');
+            if (stored) {
+                persistedFilters = JSON.parse(stored);
+                console.log('✅ Filters loaded from localStorage:', persistedFilters);
+            }
+        } catch (e) {
+            console.warn('Could not load filters from localStorage', e);
+        }
+
         this.state = {
             conversations: {},
             checklistData: [],
             companyProfileData: {},
-            fields: [], // This might be replaced by checklistData and companyProfileData fields
+            fields: [],
             currentMode: localStorage.getItem('ifsMode') || 'reviewer',
             auditData: null,
             requirementNumberMapping: {},
             currentSession: { id: null, name: '', created: null, lastModified: null, data: null },
             packageVersion: 1,
             hasUnsavedChanges: false,
-            dossierReviewState: {}, // Initialized empty state
-            certificationDecisionData: {}, // Initialized empty state
-            activeFilters: {
-                profil: {
-                    status: '',
-                    search: ''
-                },
-                checklist: {
-                    chapter: '',
-                    score: '',
-                    status: '',
-                    search: '',
-                    simpleFilter: null // Values: 'NC', 'NA', 'HAS_COMMENT'
-                },
-                nonconformites: {
-                    type: '',
-                    chapter: '',
-                    correction: '',
-                    search: ''
-                },
-                auditorTasks: {
-                    filter: 'pending' // pending, resolved, all
-                }
-            }
+            dossierReviewState: {},
+            certificationDecisionData: {},
+            activeFilters: persistedFilters
         };
         this.subscribers = [];
-        this.subscribe = this.subscribe.bind(this); // Explicitly bind subscribe
+        this.subscribe = this.subscribe.bind(this);
     }
 
     get() {
@@ -48,6 +46,12 @@ class State {
 
     setState(newState) {
         this.state = { ...this.state, ...newState, hasUnsavedChanges: true };
+
+        // Persist filters if they changed
+        if (newState.activeFilters) {
+            localStorage.setItem('activeFilters', JSON.stringify(this.state.activeFilters));
+        }
+
         this.notifySubscribers();
     }
 

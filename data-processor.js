@@ -951,7 +951,7 @@ class DataProcessor {
             const paStatus = this.getConversationStatus(paConv);
             const paCount = paConv?.thread?.length || 0;
 
-            html += `<tr class="table-row-clickable" data-chapter="${item.chapter}" data-score="${item.score}">
+            html += `<tr class="table-row-clickable" data-chapter="${item.chapter}" data-score="${item.score}" data-comment-status="${constatStatus !== 'none' ? constatStatus : (paStatus !== 'none' ? paStatus : 'none')}">
                         <td class="text-center">
                             <button class="btn-info-pop" onclick="event.stopPropagation(); window.showExigenceDetails('${item.requirementNumber}')" title="Détails de l'exigence">
                                 <i class="fas fa-info-circle"></i>
@@ -985,6 +985,8 @@ class DataProcessor {
         });
 
         tbody.innerHTML = html;
+        // Optimization: setupTableFilters should probably only be called once, not on every render.
+        // But since it has removal logic, it's okay for now.
         this.setupTableFilters();
         this.filterChecklist();
     }
@@ -1204,8 +1206,8 @@ class DataProcessor {
                             ${task.requiresSiteAction ? '<br><span style="font-size:0.7rem; color: var(--color-warning); font-weight:bold;"><i class="fas fa-industry"></i> SITE</span>' : ''}
                         </td>
                         <td class="font-bold" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${task.name}">${task.name}</td>
-                        <td class="text-gray-600 dark:text-gray-400" style="white-space: normal; word-break: break-word;">
-                            <div style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-align: justify; line-height: 1.5; max-height: 4.5em;">
+                        <td class="text-gray-600 dark:text-gray-400" style="white-space: normal; word-break: break-word; padding: 12px 15px;">
+                            <div style="text-align: justify; line-height: 1.5;">
                                 <i class="fas fa-quote-left text-xs opacity-50 mr-2 text-theme-500"></i>${shortMsg}
                             </div>
                         </td>
@@ -1367,7 +1369,10 @@ class DataProcessor {
             ...(oldConversation || {}),
             thread: updatedThread,
             lastActivity: comment.date,
-            status: oldConversation?.status === 'resolved' ? 'active' : (oldConversation?.status || 'active'),
+            // USER REQUEST: If Reviewer adds a comment to a resolved item, keep it resolved.
+            // If it's already resolved and current user is reviewer, keep status 'resolved'.
+            status: (currentMode === 'reviewer' && oldConversation?.status === 'resolved') ? 'resolved' :
+                (oldConversation?.status === 'resolved' ? 'active' : (oldConversation?.status || 'active')),
             priority: oldConversation?.priority || 'normal',
             history: newHistory
         };
@@ -1399,10 +1404,7 @@ class DataProcessor {
 
         // If the last message is from the OTHER person
         if (lastMessage.author !== currentUser) {
-            // FIX per user request: Reviewer comments should not be counted as pending ('disparaitre' from pending tasks)
-            if (lastMessage.author === 'reviewer') {
-                return 'read';
-            }
+            // PER USER REQUEST: Reviewer can decide if its a pending task or just a reflection
             return lastMessage.status === 'pending' ? 'pending' : 'read';
         }
 
@@ -2088,12 +2090,20 @@ class DataProcessor {
         const result = document.getElementById('certificationResult')?.value;
         const comments = document.getElementById('decisionComment')?.value;
 
+        // New fields
+        const reviewer = document.getElementById('reviewerName')?.value;
+        const reviewType = document.getElementById('reviewType')?.value;
+        const checkpoints = Array.from(document.querySelectorAll('.decision-checkpoint:checked')).map(cb => cb.value);
+
         // Update state
         const certificationDecisionData = {
             date,
             maker,
             result,
             comments,
+            reviewer,
+            reviewType,
+            checkpoints,
             lastUpdated: new Date().toISOString()
         };
 
@@ -2112,11 +2122,21 @@ class DataProcessor {
         const makerEl = document.getElementById('decisionMaker');
         const resultEl = document.getElementById('certificationResult');
         const commentEl = document.getElementById('decisionComment');
+        const reviewerEl = document.getElementById('reviewerName');
+        const reviewTypeEl = document.getElementById('reviewType');
 
         if (dateEl) dateEl.value = data.date || '';
         if (makerEl) makerEl.value = data.maker || '';
         if (resultEl) resultEl.value = data.result || '';
         if (commentEl) commentEl.value = data.comments || '';
+        if (reviewerEl) reviewerEl.value = data.reviewer || '';
+        if (reviewTypeEl) reviewTypeEl.value = data.reviewType || '';
+
+        // Handle checkboxes
+        const checkpoints = data.checkpoints || [];
+        document.querySelectorAll('.decision-checkpoint').forEach(cb => {
+            cb.checked = checkpoints.includes(cb.value);
+        });
     }
 
 

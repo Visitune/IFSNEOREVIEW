@@ -877,7 +877,7 @@ class FileHandler {
             const siteName = val(['nom du site', 'site name', 'société', 'company']);
             const coidCode = val(['coid']);
             const auditDateVal = val(['date audit', 'dates audit', 'période']);
-            const reviewerName = val(['reviewer', 'review par', 'nom du reviewer']) || profile['Reviewer'] || "Non spécifié";
+            const reviewerName = decision.reviewer || val(['reviewer', 'review par', 'nom du reviewer']) || profile['Reviewer'] || "Non spécifié";
             const auditorName = val(['auditeur', 'auditor', 'nom de l\'auditeur']) || profile['Auditeur'] || "Non spécifié";
             const reviewDate = new Date().toLocaleDateString();
 
@@ -954,7 +954,7 @@ class FileHandler {
 
 
             // Adjust Y for next section
-            const nextSectionY = currentY + 15;
+            let nextSectionY = currentY + 15;
 
             // Decision Block
             const decisionY = nextSectionY;
@@ -963,26 +963,50 @@ class FileHandler {
             doc.text("DÉCISION DE CERTIFICATION", 14, decisionY - 5);
 
             if (isDecisionMade) {
-                const isSuccess = ['foundation', 'higher'].includes(decision.result);
-                const boxColor = isSuccess ? [240, 253, 244] : [254, 242, 242]; // Light green or light red
-                const borderColor = isSuccess ? COLOR_SUCCESS : COLOR_DANGER;
-                const textColor = isSuccess ? [21, 128, 61] : [185, 28, 28];
-                const resultText = decision.result === 'higher' ? "NIVEAU SUPÉRIEUR" : (decision.result === 'foundation' ? "NIVEAU DE BASE" : "NON CERTIFIÉ");
+                const isSuccess = ['base', 'higher'].includes(decision.result);
+                const isFail = ['fail', 'suspension', 'withdrawal'].includes(decision.result);
+                const isPending = decision.result === 'pending';
+
+                const boxColor = isSuccess ? [240, 253, 244] : (isFail ? [254, 242, 242] : [255, 251, 235]);
+                const borderColor = isSuccess ? COLOR_SUCCESS : (isFail ? COLOR_DANGER : [245, 158, 11]);
+                const textColor = isSuccess ? [21, 128, 61] : (isFail ? [185, 28, 28] : [180, 83, 9]);
+
+                const resultMap = {
+                    'higher': 'CERTIFICATION NIVEAU SUPÉRIEUR',
+                    'base': 'CERTIFICATION NIVEAU DE BASE',
+                    'fail': 'ÉCHEC / NON CERTIFICATION',
+                    'suspension': 'SUSPENSION',
+                    'withdrawal': 'RETRAIT',
+                    'pending': 'EN ATTENTE DE COMPLÉTUDE'
+                };
+                const resultText = resultMap[decision.result] || decision.result.toUpperCase();
 
                 doc.setDrawColor(...borderColor);
                 doc.setFillColor(...boxColor);
-                doc.rect(14, decisionY, pageWidth - 28, 40, 'FD');
+                doc.rect(14, decisionY, pageWidth - 28, 45, 'FD');
 
-                doc.setFontSize(16);
+                doc.setFontSize(14);
                 doc.setTextColor(...textColor);
                 doc.setFont('helvetica', 'bold');
-                doc.text(resultText, pageWidth / 2, decisionY + 15, { align: 'center' });
+                doc.text(resultText, pageWidth / 2, decisionY + 12, { align: 'center' });
 
                 doc.setFontSize(10);
                 doc.setTextColor(50);
                 doc.setFont('helvetica', 'normal');
-                doc.text(`Décision prise par: ${decision.maker || 'N/A'}`, pageWidth / 2, decisionY + 25, { align: 'center' });
-                doc.text(`Date: ${decision.date || 'N/A'}`, pageWidth / 2, decisionY + 32, { align: 'center' });
+                doc.text(`Décideur (Signataire): ${decision.maker || 'N/A'}`, pageWidth / 2, decisionY + 22, { align: 'center' });
+                doc.text(`Date de décision: ${decision.date || 'N/A'}`, pageWidth / 2, decisionY + 29, { align: 'center' });
+
+                const typeMap = {
+                    'cdo_qualifie': 'Revue par un CDO qualifié',
+                    'double_complete': 'Double revue complète',
+                    'partielle': 'Revue partielle',
+                    'sous_traitant': 'Revue faite par un sous-traitant'
+                };
+                const reviewTypeText = typeMap[decision.reviewType] || decision.reviewType || 'N/A';
+                doc.setFont('helvetica', 'italic');
+                doc.text(`Type de revue: ${reviewTypeText}`, pageWidth / 2, decisionY + 38, { align: 'center' });
+
+                nextSectionY = decisionY + 55;
             } else {
                 doc.setDrawColor(200);
                 doc.setFillColor(245, 245, 245);
@@ -990,19 +1014,43 @@ class FileHandler {
                 doc.setFontSize(11);
                 doc.setTextColor(100);
                 doc.text("Aucune décision de certification n'a encore été enregistrée.", pageWidth / 2, decisionY + 18, { align: 'center' });
+                nextSectionY = decisionY + 40;
+            }
+
+            // Checkpoints Block (if any)
+            if (decision.checkpoints && decision.checkpoints.length > 0) {
+                doc.setFontSize(12);
+                doc.setTextColor(...COLOR_PRIMARY);
+                doc.setFont('helvetica', 'bold');
+                doc.text("Points de contrôle vérifiés par le Reviewer", 14, nextSectionY);
+
+                doc.setFontSize(9);
+                doc.setTextColor(60);
+                doc.setFont('helvetica', 'normal');
+                const checkpointLabels = {
+                    'dates': 'Dates d\'audit', 'signatures': 'Signatures', 'calcul_score': 'Calcul de score',
+                    'plan_audit': 'Plan d\'audit', 'mandat': 'Mandat', 'scope': 'Périmètre/COID',
+                    'action_plan': 'Plan d\'actions', 'nc_logic': 'Logique des NC'
+                };
+                const labels = decision.checkpoints.map(c => checkpointLabels[c] || c).join(' • ');
+                const splitCheckpoints = doc.splitTextToSize(labels, pageWidth - 28);
+                doc.text(splitCheckpoints, 14, nextSectionY + 8);
+
+                nextSectionY += (splitCheckpoints.length * 5) + 12;
             }
 
             // Synthesis Comment
             if (decision.comments) {
-                const synthesisY = decision.result ? decisionY + 50 : decisionY + 40;
                 doc.setFontSize(12);
                 doc.setTextColor(...COLOR_PRIMARY);
-                doc.text("Synthèse du Reviewer", 14, synthesisY);
+                doc.setFont('helvetica', 'bold');
+                doc.text("Synthèse / Observations du Reviewer", 14, nextSectionY);
 
                 doc.setFontSize(10);
                 doc.setTextColor(60);
+                doc.setFont('helvetica', 'normal');
                 const splitText = doc.splitTextToSize(decision.comments, pageWidth - 30);
-                doc.text(splitText, 14, synthesisY + 8);
+                doc.text(splitText, 14, nextSectionY + 8);
             }
 
             drawFooter(1);

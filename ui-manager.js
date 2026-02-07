@@ -1061,10 +1061,11 @@ class UIManager {
         const neoCorrectionCheckbox = document.getElementById('neoCorrectionCheckbox');
         const isNeoCorrection = neoCorrectionCheckbox && !neoCorrectionCheckbox.closest('.auditor-only').hidden ? neoCorrectionCheckbox.checked : false;
 
-        // Default to 'read' for reviewers as per user request (no longer counting as pending)
+        // USER REQUEST: Reviewer can choose if they want a response
         let initialStatus = 'pending';
         if (this.state.get().currentMode === 'reviewer') {
-            initialStatus = 'read';
+            const expectResponseCB = document.getElementById('expectResponseCheckbox');
+            initialStatus = (expectResponseCB && expectResponseCB.checked) ? 'pending' : 'read';
         }
 
         if (!content) {
@@ -1135,6 +1136,10 @@ class UIManager {
         const neoCorrectionCheckbox = document.getElementById('neoCorrectionCheckbox');
         if (neoCorrectionCheckbox) {
             neoCorrectionCheckbox.checked = false;
+        }
+        const expectResponseCB = document.getElementById('expectResponseCheckbox');
+        if (expectResponseCB) {
+            expectResponseCB.checked = true; // Default to checked
         }
     }
 

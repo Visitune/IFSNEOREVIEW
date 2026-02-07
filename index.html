@@ -515,29 +515,82 @@
                         <div class="decision-form" style="max-width: 600px; margin: 0 auto; padding: 2rem;">
                             <div class="form-group mb-4">
                                 <label class="form-label"
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Nom du
+                                    Reviewer</label>
+                                <input type="text" id="reviewerName" class="form-input" placeholder="Prénom Nom"
+                                    oninput="updateCertificationDecision()">
+                            </div>
+                            <div class="form-group mb-4">
+                                <label class="form-label"
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Type de
+                                    revue</label>
+                                <select id="reviewType" class="form-input" onchange="updateCertificationDecision()">
+                                    <option value="">-- Sélectionner --</option>
+                                    <option value="cdo_qualifie">Revue par un CDO qualifié</option>
+                                    <option value="double_complete">Double revue complète</option>
+                                    <option value="partielle">Revue partielle</option>
+                                    <option value="sous_traitant">Revue faite par un sous-traitant</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-4">
+                                <label class="form-label"
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Points de contrôle
+                                    vérifiés</label>
+                                <div class="checkbox-grid"
+                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <label class="cb-container"><input type="checkbox" class="decision-checkpoint"
+                                            value="dates" onchange="updateCertificationDecision()"> Dates
+                                        d'audit</label>
+                                    <label class="cb-container"><input type="checkbox" class="decision-checkpoint"
+                                            value="signatures" onchange="updateCertificationDecision()">
+                                        Signatures</label>
+                                    <label class="cb-container"><input type="checkbox" class="decision-checkpoint"
+                                            value="calcul_score" onchange="updateCertificationDecision()"> Calcul de
+                                        score</label>
+                                    <label class="cb-container"><input type="checkbox" class="decision-checkpoint"
+                                            value="plan_audit" onchange="updateCertificationDecision()"> Plan
+                                        d'audit</label>
+                                    <label class="cb-container"><input type="checkbox" class="decision-checkpoint"
+                                            value="mandat" onchange="updateCertificationDecision()"> Mandat</label>
+                                    <label class="cb-container"><input type="checkbox" class="decision-checkpoint"
+                                            value="scope" onchange="updateCertificationDecision()"> Périmètre /
+                                        COID</label>
+                                    <label class="cb-container"><input type="checkbox" class="decision-checkpoint"
+                                            value="action_plan" onchange="updateCertificationDecision()"> Plan
+                                        d'actions</label>
+                                    <label class="cb-container"><input type="checkbox" class="decision-checkpoint"
+                                            value="nc_logic" onchange="updateCertificationDecision()"> Logique des
+                                        NC</label>
+                                </div>
+                            </div>
+                            <div class="form-divider" style="height: 1px; background: #e2e8f0; margin: 2rem 0;"></div>
+                            <div class="form-group mb-4">
+                                <label class="form-label"
                                     style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Date de la
-                                    décision</label>
+                                    décision finale</label>
                                 <input type="date" id="decisionDate" class="form-input"
                                     onchange="updateCertificationDecision()">
                             </div>
                             <div class="form-group mb-4">
                                 <label class="form-label"
-                                    style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Personne en charge
-                                    de la décision</label>
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Décideur
+                                    (Signataire)</label>
                                 <input type="text" id="decisionMaker" class="form-input" placeholder="Nom du décideur"
                                     oninput="updateCertificationDecision()">
                             </div>
                             <div class="form-group mb-4">
                                 <label class="form-label"
-                                    style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Résultat de la
+                                    style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Conclusion de
                                     certification</label>
                                 <select id="certificationResult" class="form-input"
                                     onchange="updateCertificationDecision()">
                                     <option value="">-- Sélectionner un résultat --</option>
-                                    <option value="base">Niveau de base</option>
-                                    <option value="higher">Niveau supérieur</option>
-                                    <option value="fail">Échec</option>
-                                    <option value="pending">En attente</option>
+                                    <option value="higher">Certification en niveau supérieur</option>
+                                    <option value="base">Certification en niveau de base</option>
+                                    <option value="fail">Échec / Non certification</option>
+                                    <option value="suspension">Suspension</option>
+                                    <option value="withdrawal">Retrait</option>
+                                    <option value="pending">En attente de complétude</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -779,6 +832,12 @@
                                     <input type="checkbox" id="neoCorrectionCheckbox"
                                         class="w-4 h-4 text-green-600 rounded mr-2 focus:ring-green-500 border-gray-300">
                                     Correction faite sur NEO
+                                </label>
+                                <label
+                                    class="reviewer-only flex items-center mr-4 text-sm font-bold text-theme-600 dark:text-theme-400 cursor-pointer select-none">
+                                    <input type="checkbox" id="expectResponseCheckbox" checked
+                                        class="w-4 h-4 text-theme-600 rounded mr-2 focus:ring-theme-500 border-gray-300">
+                                    Attendre une réponse (Action Auditeur)
                                 </label>
                                 <button class="btn btn-primary" onclick="saveComment()" id="saveCommentBtn">
                                     <i class="fas fa-paper-plane"></i>
