@@ -1029,6 +1029,8 @@ class UIManager {
                 'Tapez votre réponse...';
         }
 
+        const inputSection = document.querySelector('.comment-input-section');
+
         // AUDITOR RESTRICTION: Cannot initiate a conversation.
         if (inputSection) {
             // Hide input if auditor AND there are no visible messages.
@@ -1300,12 +1302,15 @@ class UIManager {
 
         allFieldsWithComments.forEach(fieldId => {
             const conversation = conversations[fieldId];
-            if (!conversation || !conversation.thread.length) return;
+            if (!conversation || !conversation.thread) return;
 
-            const lastComment = conversation.thread[conversation.thread.length - 1];
-            const otherMode = this.state.get().currentMode === 'reviewer' ? 'auditor' : 'reviewer';
+            const visibleMessages = conversation.thread.filter(m => !m.isDeleted);
+            if (visibleMessages.length === 0) return;
 
-            if (lastComment.author === this.state.get().currentMode) {
+            const lastVisibleComment = visibleMessages[visibleMessages.length - 1];
+            const currentMode = this.state.get().currentMode;
+
+            if (lastVisibleComment.author === currentMode) {
                 respondedFields++;
             } else {
                 pendingFields++;
@@ -1469,6 +1474,21 @@ class UIManager {
             setTimeout(() => {
                 alert.classList.add('hidden');
             }, 5000);
+        }
+    }
+
+    showInfo(message) {
+        const alert = document.getElementById('successAlert');
+        if (alert) {
+            alert.textContent = `ℹ️ ${message}`;
+            alert.className = 'alert alert-info';
+            alert.classList.remove('hidden');
+
+            setTimeout(() => {
+                alert.classList.add('hidden');
+            }, 5000);
+        } else {
+            console.log('INFO:', message);
         }
     }
 
@@ -2049,62 +2069,31 @@ class UIManager {
     }
 
     injectBulkActionButtons() {
-        // Helper to inject buttons if not present
-        const inject = (containerId, tab) => {
-            const container = document.querySelector(`#${containerId} .filters-actions`);
-            if (container && !container.querySelector('.bulk-btn')) {
-                const isReviewer = this.state.get().currentMode === 'reviewer';
-                if (!isReviewer) return; // Auditor doesn't need these mostly
-
-                const btnGroup = document.createElement('div');
-                btnGroup.className = 'bulk-btn-group ml-auto flex gap-2'; // Tailwind classes
-                btnGroup.innerHTML = `
-                    <button class="bulk-btn btn btn-sm btn-outline-secondary" onclick="window.uiManager.markVisibleAsRead('${tab}')">
-                        <i class="fas fa-eye"></i> Tout Lu
-                    </button>
-                    ${tab !== 'auditor-tasks' ? `
-                    <button class="bulk-btn btn btn-sm btn-outline-success" onclick="window.uiManager.resolveVisible('${tab}')">
-                        <i class="fas fa-check-double"></i> Tout Résoudre
-                    </button>` : ''}
-                `;
-                container.appendChild(btnGroup);
-            }
-        };
-
-        inject('profil', 'profil');
-        inject('checklist', 'checklist');
-        inject('nonconformites', 'checklist'); // reusing checklist logic for NC tab if needed, but NC tab has its own valid logic
-        // For NC tab, maybe specific
-    }
-
-    injectBulkActionButtons() {
         if (this.state.get().currentMode !== 'reviewer') return;
 
-        const tabs = ['profil', 'checklist'];
+        const tabs = ['profil', 'checklist', 'nonconformites'];
         tabs.forEach(tab => {
-            const container = document.querySelector(`#${tab} .filters-actions`);
+            const container = document.querySelector(`#${tab === 'nonconformites' ? 'nonconformites' : tab} .filters-actions`);
             if (!container) return;
 
             if (container.querySelector('.bulk-action-btn')) return; // Already injected
 
             const btnGroup = document.createElement('div');
-            btnGroup.className = 'bulk-actions-group';
+            btnGroup.className = 'bulk-actions-group flex gap-2 ml-4 pl-4 border-l border-gray-200';
             btnGroup.style.display = 'inline-flex';
-            btnGroup.style.gap = '0.5rem';
-            btnGroup.style.marginLeft = '1rem';
-            btnGroup.style.borderLeft = '1px solid var(--border-primary)';
-            btnGroup.style.paddingLeft = '1rem';
+
+            const contextTab = tab === 'nonconformites' ? 'checklist' : tab;
 
             const markReadBtn = document.createElement('button');
             markReadBtn.className = 'btn btn-sm btn-secondary bulk-action-btn';
             markReadBtn.innerHTML = '<i class="fas fa-check-double"></i> Tout lu';
-            markReadBtn.onclick = () => this.markVisibleAsRead(tab);
+            markReadBtn.onclick = () => this.markVisibleAsRead(contextTab);
             markReadBtn.title = "Marquer tous les points affichés comme lus";
 
             const resolveBtn = document.createElement('button');
             resolveBtn.className = 'btn btn-sm btn-success bulk-action-btn';
             resolveBtn.innerHTML = '<i class="fas fa-gavel"></i> Tout résoudre';
-            resolveBtn.onclick = () => this.resolveVisible(tab);
+            resolveBtn.onclick = () => this.resolveVisible(contextTab);
             resolveBtn.title = "Résoudre (clôturer) tous les points affichés";
 
             btnGroup.appendChild(markReadBtn);
@@ -2112,6 +2101,8 @@ class UIManager {
             container.appendChild(btnGroup);
         });
     }
+
+
 
     markVisibleAsRead(tab) {
         if (!confirm("Voulez-vous marquer tous les points AFFICHÉS comme 'Lus' ?")) return;
