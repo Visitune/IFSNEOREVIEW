@@ -1394,6 +1394,9 @@ class DataProcessor {
             return 'none';
         }
 
+        const lastMessage = visibleMessages[visibleMessages.length - 1];
+        const currentUser = this.state.get().currentMode;
+
         // If the last message is from the OTHER person
         if (lastMessage.author !== currentUser) {
             // FIX per user request: Reviewer comments should not be counted as pending ('disparaitre' from pending tasks)
