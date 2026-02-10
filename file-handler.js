@@ -95,15 +95,11 @@ class FileHandler {
             throw new Error('Format de fichier invalide (JSON attendu)');
         }
 
-        // Basic check for IFS structure
-        const hasCompanyName = data.companyName || (data.questions && data.questions.companyName);
-        if (!hasCompanyName) {
-            throw new Error('Nom de l\'entreprise manquant. Est-ce un fichier IFS valide ?');
+        // Support pour différentes structures de fichiers .ifs
+        const hasModules = data.modules?.food_8 || data.data?.modules?.food_8;
+        if (!hasModules) {
+            throw new Error('Structure IFS invalide : module food_8 manquant');
         }
-
-        // Check for checklist data if it's supposed to be a full audit
-        // (Note: collaborative packages might structure this differently, so this is mainly for .ifs)
-        // We can make this less strict or return warnings.
 
         return true;
     }
@@ -138,13 +134,22 @@ class FileHandler {
             }
         });
 
-        if (!data?.data?.modules?.food_8) {
-            this.uiManager.showError('Format de fichier IFS non valide.');
+        // Support pour les deux structures possibles
+        const food8 = data.data?.modules?.food_8 || data.modules?.food_8;
+
+        console.log('📄 File structure:', {
+            hasData: !!data.data,
+            hasModules: !!data.modules,
+            hasFood8Direct: !!data.modules?.food_8,
+            hasFood8Nested: !!data.data?.modules?.food_8
+        });
+
+        if (!food8) {
+            this.uiManager.showError('Format de fichier IFS non valide : module food_8 introuvable.');
             this.uiManager.resetToUploadState();
             return;
         }
 
-        const food8 = data.data.modules.food_8;
         console.log('✅ Found food_8 module. Starting processing logic...');
         this.dataProcessor.processAuditDataLogic(food8);
     }
