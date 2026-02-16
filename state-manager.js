@@ -57,7 +57,15 @@ class State {
 
     setChecklistSimpleFilter(filterType) {
         const currentFilters = this.state.activeFilters;
-        const newChecklistFilters = { ...currentFilters.checklist, simpleFilter: filterType === 'ALL' ? null : filterType };
+        // When applying a quick simple filter, reset potentially conflicting detailed filters
+        const newChecklistFilters = {
+            ...currentFilters.checklist,
+            score: '',
+            chapter: '',
+            status: '',
+            search: '',
+            simpleFilter: filterType === 'ALL' ? null : filterType
+        };
         this.setState({ activeFilters: { ...currentFilters, checklist: newChecklistFilters } });
     }
 

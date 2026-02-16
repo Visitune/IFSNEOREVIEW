@@ -17,6 +17,12 @@ class UIManager {
     }
 
     onStateChange(newState) {
+        // Skip full re-render if it's just a simple filter change (performance & stability)
+        if (this.dataProcessor && this.dataProcessor._filterChangeOnly) {
+            console.log('UIManager: Skipping re-render for filter-only change');
+            return;
+        }
+
         console.log('UIManager State changed:', newState);
 
         // Always refresh all table views
@@ -1124,6 +1130,8 @@ class UIManager {
         );
 
         this.loadConversationHistory(this.currentFieldId);
+        this.renderHistoryTimeline(this.currentFieldId);
+        this.setupModalForCurrentMode(this.currentFieldId);
         this.dataProcessor.refreshAllCounters();
         this.showSuccess('✅ Marqué comme résolu');
     }
@@ -1231,6 +1239,7 @@ class UIManager {
             );
 
             this.loadConversationHistory(this.currentFieldId);
+            this.renderHistoryTimeline(this.currentFieldId);
             this.showSuccess('Commentaire modifié.');
         }
     }
@@ -1263,6 +1272,7 @@ class UIManager {
         );
 
         this.loadConversationHistory(this.currentFieldId);
+        this.renderHistoryTimeline(this.currentFieldId);
         this.showSuccess('Commentaire supprimé.');
     }
 

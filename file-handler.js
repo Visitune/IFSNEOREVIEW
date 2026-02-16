@@ -1642,4 +1642,103 @@ class FileHandler {
         printWindow.document.write(html);
         printWindow.document.close();
     }
+
+    // Helper methods
+    sanitizeFileName(name) {
+        return (name || 'file').replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    }
+
+    getDateStamp() {
+        const now = new Date();
+        return now.toISOString().split('T')[0];
+    }
+
+    importActionPlanExcel(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = new Uint8Array(e.target.result);
+                if (typeof XLSX === 'undefined') {
+                    throw new Error("Bibliothèque XLSX manquante. Rechargez la page.");
+                }
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // Array of arrays
+
+                if (!json || json.length < 2) throw new Error("Fichier Excel vide ou invalide");
+
+                // Find header row (look for 'Exigence' or 'Requirement')
+                let headerRowIndex = json.findIndex(row =>
+                    row && row.some(cell => (cell + '').toLowerCase().includes('exigence') || (cell + '').toLowerCase().includes('requirement'))
+                );
+                if (headerRowIndex === -1) headerRowIndex = 0;
+
+                const headers = json[headerRowIndex].map(h => (h + '').toLowerCase().trim());
+                const rows = json.slice(headerRowIndex + 1);
+
+                // Map headers to indices
+                const colIdx = {
+                    req: headers.findIndex(h => h.includes('exigence') || h.includes('requirement')),
+                    correction: headers.findIndex(h => h.includes('correction') || h.includes('immediate')),
+                    action: headers.findIndex(h => h.includes('action') || h.includes('corrective')),
+                    deadline: headers.findIndex(h => h.includes('date') || h.includes('echeance') || h.includes('deadline')),
+                    status: headers.findIndex(h => h.includes('statut') || h.includes('status'))
+                };
+
+                if (colIdx.req === -1) throw new Error("Colonne 'Exigence' introuvable");
+
+                let updatedCount = 0;
+                const checklistData = [...this.state.get().checklistData];
+
+                rows.forEach(row => {
+                    const reqNum = (row[colIdx.req] || '').toString().trim();
+                    if (!reqNum) return;
+
+                    const itemIndex = checklistData.findIndex(i => i.requirementNumber === reqNum);
+                    if (itemIndex !== -1) {
+                        const item = { ...checklistData[itemIndex] };
+                        let changed = false;
+
+                        if (colIdx.correction !== -1 && row[colIdx.correction]) {
+                            item.correction = row[colIdx.correction];
+                            changed = true;
+                        }
+                        if (colIdx.action !== -1 && row[colIdx.action]) {
+                            item.correctiveAction = row[colIdx.action];
+                            changed = true;
+                        }
+                        if (colIdx.deadline !== -1 && row[colIdx.deadline]) {
+                            // Try to parse partial date if Excel date handling is tricky
+                            item.correctiveActionDueDate = row[colIdx.deadline];
+                            changed = true;
+                        }
+
+                        if (changed) {
+                            checklistData[itemIndex] = item;
+                            updatedCount++;
+                        }
+                    }
+                });
+
+                if (updatedCount > 0) {
+                    this.state.setState({ checklistData });
+                    this.state.saveState();
+                    this.uiManager.showSuccess(`${updatedCount} actions mises à jour depuis Excel.`);
+                } else {
+                    this.uiManager.showInfo("Aucune action mise à jour (correspondance Exigence introuvable ?)");
+                }
+
+            } catch (error) {
+                console.error("Import Excel Error:", error);
+                this.uiManager.showError("Erreur import Excel: " + error.message);
+            } finally {
+                event.target.value = null; // Reset input
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    }
 }

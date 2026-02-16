@@ -1,3 +1,16 @@
+// Utility function
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 class DataProcessor {
     constructor(state, uiManager) {
         this.state = state;
@@ -143,9 +156,9 @@ class DataProcessor {
         }
 
         // Re-apply filters whenever the state changes.
-        // This is called after the UIManager has re-rendered the tables.
+        // Use reapplyChecklistFilter to ensure DOM filtering and persisted state stay in sync.
         this.filterProfileTable();
-        this.filterChecklist();
+        this.reapplyChecklistFilter();
         this.filterNonConformities();
     }
 
@@ -553,13 +566,70 @@ class DataProcessor {
                 const actionDateKey = findKey(['corrective', 'action', 'date']) || findKey(['corrective', 'action', 'deadline']) || findKey(['action', 'date']);
                 const evidenceKey = findKey(['evidence']) || findKey(['preuve']);
 
+                // Normalize score label to a canonical token (A, B, C, D, KO, NA)
+                // Logic:
+                // 1. Check exact match (normalized)
+                // 2. Check if label STARTS with the score followed by space/paren (e.g. "A (Standard)", "B (Deviation)")
+                // 3. Check known localized strings if needed
+
+                const rawScoreLabel = (item.scoring.score?.label || '').toString().trim();
+                const rawScoreValue = item.scoring.score?.value;
+                const normLabel = rawScoreLabel.toUpperCase();
+
+                let normalizedScore = 'N/D';
+
+                // Strict matching strategies
+                if (/^(A|B|C|D|NA|KO)$/.test(normLabel)) {
+                    normalizedScore = normLabel;
+                }
+                else if (/^A[\s(]/.test(normLabel)) normalizedScore = 'A';
+                else if (/^B[\s(]/.test(normLabel)) normalizedScore = 'B';
+                else if (/^C[\s(]/.test(normLabel)) normalizedScore = 'C';
+                else if (/^D[\s(]/.test(normLabel)) normalizedScore = 'D';
+                else if (/^KO[\s(]/.test(normLabel)) normalizedScore = 'KO';
+                else if (/^NA[\s(]/.test(normLabel) || /^NON[\s-]APPLICABLE/.test(normLabel)) normalizedScore = 'NA';
+                else if (/^NOT[\s-]APPLICABLE/.test(normLabel)) normalizedScore = 'NA';
+                else if (/^N\/A/.test(normLabel)) normalizedScore = 'NA';
+                else if (/^N\.A/.test(normLabel)) normalizedScore = 'NA';
+
+                else if (/^N\/A/.test(normLabel)) normalizedScore = 'NA';
+                else if (/^N\.A/.test(normLabel)) normalizedScore = 'NA';
+
+                // Fallback: If no score detected from label, try to infer from value if possible
+                if (normalizedScore === 'N/D' && rawScoreValue !== undefined && rawScoreValue !== null) {
+                    const val = parseInt(rawScoreValue);
+                    if (val === 20) normalizedScore = 'A';
+                    else if (val === 15) normalizedScore = 'B';
+                    else if (val === 5) normalizedScore = 'C';
+
+                    // Special handling for 0 value
+                    else if (val === 0) {
+                        // CRITICAL FIX: 0 value with undefined/empty label is typically "NA" (Not Applicable/Evaluated)
+                        // rather than "D" (Major Non-Conformity). 
+                        // Real "D" almost always carries an explicit label.
+                        normalizedScore = 'NA';
+                    }
+                }
+
+                // If still N/D, keep it as valid as possible for display
+                if (normalizedScore === 'N/D' && rawScoreLabel.length > 0) {
+                    // Try to find a standalone letter
+                    const match = normLabel.match(/\b(A|B|C|D|NA|KO)\b/);
+                    if (match) normalizedScore = match[0];
+                }
+
+                if (normalizedScore === 'N/D') normalizedScore = ''; // Empty defaults to nothing
+
+                // Correction for historical issue where D was matched in "Deviation" word
+                // If we resolved it as 'D' because of fallback, double check if it's really D.
+
                 newChecklistData.push({
                     uuid: item.uuid,
                     requirementNumber: item.requirementNumber,
                     chapter: item.chapter,
                     theme: item.theme,
                     sstheme: item.sstheme,
-                    score: item.scoring.score?.label || 'N/D',
+                    score: normalizedScore,
                     scoreValue: item.scoring.score?.value,
                     explanation: answers.explanationText || '',
                     detailedExplanation: (answers.englishExplanationText || '') + fieldAnswersText,
@@ -928,9 +998,12 @@ class DataProcessor {
         const tbody = document.getElementById('checklistTableBody');
         if (!tbody) return;
 
-        // Use the new filtered data source instead of the raw one
-        const checklistData = this.state.getFilteredChecklistData();
+        // Render the full checklist dataset; filtering will be applied on the DOM
+        const checklistData = this.state.get().checklistData || [];
         const conversations = this.state.get().conversations;
+
+        // Setup filters/buttons regardless of data state (so buttons work)
+        this.setupTableFilters();
 
         if (!checklistData || checklistData.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" class="text-center p-10">Aucun élément ne correspond au filtre actif.</td></tr>';
@@ -939,7 +1012,8 @@ class DataProcessor {
 
         let html = '';
         checklistData.forEach(item => {
-            const isNC = ['B', 'C', 'D'].includes(item.score);
+            const normalizedScore = (item.score || '').toString().trim().toUpperCase();
+            const isNC = ['B', 'C', 'D'].includes(normalizedScore);
             const constatFieldId = `ckl-${item.uuid}`;
             const paFieldId = `pa-${item.uuid}`;
 
@@ -951,14 +1025,14 @@ class DataProcessor {
             const paStatus = this.getConversationStatus(paConv);
             const paCount = paConv?.thread?.length || 0;
 
-            html += `<tr class="table-row-clickable" data-chapter="${item.chapter}" data-score="${item.score}" data-comment-status="${constatStatus !== 'none' ? constatStatus : (paStatus !== 'none' ? paStatus : 'none')}">
+            html += `<tr class="table-row-clickable" data-chapter="${item.chapter}" data-score="${normalizedScore}" data-comment-status="${constatStatus !== 'none' ? constatStatus : (paStatus !== 'none' ? paStatus : 'none')}">
                         <td class="text-center">
                             <button class="btn-info-pop" onclick="event.stopPropagation(); window.showExigenceDetails('${item.requirementNumber}')" title="Détails de l'exigence">
                                 <i class="fas fa-info-circle"></i>
                             </button>
                         </td>
                         <td class="font-medium">${item.requirementNumber}</td>
-                        <td><span class="score-badge score-${item.score}">${item.score}</span></td>
+                        <td><span class="score-badge score-${normalizedScore}">${item.score}</span></td>
                         <td class="max-w-xs text-xs">${item.explanation || ''}</td>
                         <td class="max-w-xs text-xs">${item.detailedExplanation || ''}</td>
                         
@@ -985,10 +1059,50 @@ class DataProcessor {
         });
 
         tbody.innerHTML = html;
-        // Optimization: setupTableFilters should probably only be called once, not on every render.
-        // But since it has removal logic, it's okay for now.
-        this.setupTableFilters();
-        this.filterChecklist();
+        // Apply the simple filter directly at the end of render
+        const simple = this.state.get().activeFilters?.checklist?.simpleFilter || null;
+        this.filterChecklistDOM(simple || 'ALL');
+    }
+
+    // DOM-only filtering for checklist table (fast, independent from persisted state)
+    filterChecklistDOM(filterType) {
+        const tbody = document.getElementById('checklistTableBody');
+        if (!tbody) return;
+
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const normalize = (v) => (v || '').toString().trim().toUpperCase();
+
+        rows.forEach(row => {
+            // placeholder rows may have single cell
+            if (row.cells.length <= 1) return;
+            const rowScore = normalize(row.dataset.score);
+            const rowCommentStatus = (row.dataset.commentStatus || '').toString();
+            let show = true;
+
+            if (!filterType || filterType === 'ALL') {
+                show = true;
+            } else if (filterType === 'NC') {
+                show = ['B', 'C', 'D'].includes(rowScore);
+            } else if (filterType === 'NA') {
+                show = rowScore === 'NA';
+            } else if (filterType === 'HAS_COMMENT') {
+                show = rowCommentStatus && rowCommentStatus !== 'none';
+            }
+
+            row.style.display = show ? '' : 'none';
+        });
+
+        // Update button active states
+        const btns = ['filter-nc', 'filter-na', 'filter-comments-only', 'filter-all'];
+        btns.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.classList.toggle('active', (filterType === 'ALL' && id === 'filter-all') ||
+                (filterType === 'NC' && id === 'filter-nc') ||
+                (filterType === 'NA' && id === 'filter-na') ||
+                (filterType === 'HAS_COMMENT' && id === 'filter-comments-only')
+            );
+        });
     }
 
     renderNonConformitiesTable() {
@@ -1383,6 +1497,13 @@ class DataProcessor {
         };
 
         this.state.setState({ conversations: newConversations, hasUnsavedChanges: true });
+        // Immediately reapply checklist filter so UI updates consistently when comments change
+        try {
+            this.reapplyChecklistFilter();
+        } catch (e) {
+            // fail silently but log for debug
+            console.warn('Error reapplying checklist filter after comment add', e);
+        }
     }
 
     getConversationStatus(conversation) {
@@ -1559,13 +1680,14 @@ class DataProcessor {
 
         if (!checklistData) return;
 
-        const ncNaItems = checklistData.filter(i => ['B', 'C', 'D', 'NA'].includes(i.score));
+        const normalize = (s) => (s || '').toString().trim().toUpperCase();
+        const ncNaItems = checklistData.filter(i => ['B', 'C', 'D', 'NA'].includes(normalize(i.score)));
 
         this.updateElementText('totalNC', ncNaItems.length);
-        this.updateElementText('scoreB', checklistData.filter(i => i.score === 'B').length);
-        this.updateElementText('scoreC', checklistData.filter(i => i.score === 'C').length);
-        this.updateElementText('scoreD', checklistData.filter(i => i.score === 'D').length);
-        this.updateElementText('naCount', checklistData.filter(i => i.score === 'NA').length);
+        this.updateElementText('scoreB', checklistData.filter(i => normalize(i.score) === 'B').length);
+        this.updateElementText('scoreC', checklistData.filter(i => normalize(i.score) === 'C').length);
+        this.updateElementText('scoreD', checklistData.filter(i => normalize(i.score) === 'D').length);
+        this.updateElementText('naCount', checklistData.filter(i => normalize(i.score) === 'NA').length);
 
         const ncComments = ncNaItems.filter(item => {
             const fieldId = `nc-${item.uuid}`;
@@ -1642,19 +1764,17 @@ class DataProcessor {
         // These are now handled by state changes, but we keep the window binding for the UI buttons
         window.showAll = () => this.showAll();
         window.showOnlyWithComments = () => this.showOnlyWithComments();
+        // Expose a simple API for buttons to call
+        window.applyChecklistFilter = (f) => this.applyChecklistSimpleFilter(f);
 
         // QUICK FILTER BUTTONS (Added)
-        const setupButtonFilter = (btnId, actions) => {
+        const setupButtonFilter = (btnId, filterType) => {
             const btn = document.getElementById(btnId);
             if (btn) {
-                // Remove potential existing listeners if needed, or just add one.
-                // Since this might be called multiple times, we should probably handle it, but simple add is fine for now if not re-run often.
-                // Ideally use the same _handler pattern if we want to be safe.
                 const handler = (e) => {
                     e.preventDefault();
-                    const activeFilters = { ...this.state.get().activeFilters };
-                    actions(activeFilters.checklist);
-                    this.state.setState({ activeFilters });
+                    console.log(`applyChecklistSimpleFilter requested: ${filterType}`);
+                    window.applyChecklistFilter(filterType);
                 };
                 if (btn._clickHandler) btn.removeEventListener('click', btn._clickHandler);
                 btn.addEventListener('click', handler);
@@ -1665,22 +1785,10 @@ class DataProcessor {
         // Quick filters should not mutate the internal filters object directly
         // Use the State helper to set the checklist simple filter which will
         // trigger a proper state update and re-render.
-        setupButtonFilter('filter-nc', () => {
-            this.state.setChecklistSimpleFilter('NC');
-        });
-
-        setupButtonFilter('filter-na', () => {
-            this.state.setChecklistSimpleFilter('NA');
-        });
-
-        setupButtonFilter('filter-comments-only', () => {
-            this.state.setChecklistSimpleFilter('HAS_COMMENT');
-        });
-
-        setupButtonFilter('filter-all', () => {
-            // Reset via the provided helper to ensure consistent persistence
-            this.showAll();
-        });
+        setupButtonFilter('filter-nc', 'NC');
+        setupButtonFilter('filter-na', 'NA');
+        setupButtonFilter('filter-comments-only', 'HAS_COMMENT');
+        setupButtonFilter('filter-all', 'ALL');
 
         window.setAuditorTaskFilter = (filterType) => {
             const activeFilters = { ...this.state.get().activeFilters };
@@ -1834,6 +1942,36 @@ class DataProcessor {
             row.style.display = show ? '' : 'none';
         });
     }
+
+    // Re-apply the current checklist filter in a single place (reads persisted filter and applies DOM filter)
+    reapplyChecklistFilter() {
+        const applyWhenReady = (filterType, attemptsLeft = 10) => {
+            try {
+                const tbody = document.getElementById('checklistTableBody');
+                const rows = tbody ? Array.from(tbody.querySelectorAll('tr')).filter(r => r.cells.length > 1) : [];
+                if (!tbody || rows.length === 0) {
+                    if (attemptsLeft > 0) {
+                        // Retry shortly to wait for render
+                        setTimeout(() => applyWhenReady(filterType, attemptsLeft - 1), 100);
+                        return;
+                    } else {
+                        // Give up and do nothing
+                        console.warn('reapplyChecklistFilter: table not ready after retries');
+                        return;
+                    }
+                }
+
+                console.log('reapplyChecklistFilter applying filter:', filterType);
+                this.filterChecklistDOM(filterType);
+            } catch (e) {
+                console.warn('reapplyChecklistFilter failed', e);
+            }
+        };
+
+        const active = this.state.get().activeFilters || {};
+        const simple = active.checklist?.simpleFilter || null;
+        applyWhenReady(simple ? simple : 'ALL');
+    }
     filterProfileTable() {
         const filters = this.state.get().activeFilters.profil;
         const { status, search } = filters;
@@ -1883,6 +2021,27 @@ class DataProcessor {
                 details.style.display = 'none';
             }
         });
+    }
+
+    // Public helper to apply a simple filter from UI buttons
+    applyChecklistSimpleFilter(filterType) {
+        // Set a flag to prevent UIManager from full re-rendering on this state change
+        this._filterChangeOnly = true;
+        try {
+            // Apply DOM filter first for instant feedback
+            this.filterChecklistDOM(filterType === 'ALL' ? 'ALL' : filterType);
+
+            // Persist in state (this will trigger state subscribers, but they will check our flag)
+            if (this.state && typeof this.state.setChecklistSimpleFilter === 'function') {
+                this.state.setChecklistSimpleFilter(filterType === 'ALL' ? 'ALL' : filterType);
+            }
+        } catch (e) {
+            console.warn('applyChecklistSimpleFilter failed', e);
+        } finally {
+            // Reset the flag after the sync notification cycle
+            // We use a small timeout to ensure it stays during the entire reactive cycle
+            setTimeout(() => { this._filterChangeOnly = false; }, 0);
+        }
     }
 
     renderDossierTable() {
