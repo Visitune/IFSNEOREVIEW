@@ -1662,29 +1662,24 @@ class DataProcessor {
             }
         };
 
-        setupButtonFilter('filter-nc', (filters) => {
-            filters.score = 'B,C,D';
-            filters.chapter = '';
-            filters.simpleFilter = 'NC';
+        // Quick filters should not mutate the internal filters object directly
+        // Use the State helper to set the checklist simple filter which will
+        // trigger a proper state update and re-render.
+        setupButtonFilter('filter-nc', () => {
+            this.state.setChecklistSimpleFilter('NC');
         });
 
-        setupButtonFilter('filter-na', (filters) => {
-            filters.score = 'NA';
-            filters.chapter = '';
-            filters.simpleFilter = 'NA';
+        setupButtonFilter('filter-na', () => {
+            this.state.setChecklistSimpleFilter('NA');
         });
 
-        setupButtonFilter('filter-comments-only', (filters) => {
-            filters.status = 'with_comments';
-            filters.simpleFilter = 'HAS_COMMENT';
+        setupButtonFilter('filter-comments-only', () => {
+            this.state.setChecklistSimpleFilter('HAS_COMMENT');
         });
 
-        setupButtonFilter('filter-all', (filters) => {
-            filters.chapter = '';
-            filters.score = '';
-            filters.status = '';
-            filters.search = '';
-            filters.simpleFilter = null;
+        setupButtonFilter('filter-all', () => {
+            // Reset via the provided helper to ensure consistent persistence
+            this.showAll();
         });
 
         window.setAuditorTaskFilter = (filterType) => {
